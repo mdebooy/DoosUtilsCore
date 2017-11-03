@@ -6,7 +6,7 @@
  * you may not use this work except in compliance with the Licence. You may
  * obtain a copy of the Licence at:
  *
- * http://www.osor.eu/eupl
+ * http://ec.europa.eu/idabc/eupl
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" BASIS, WITHOUT
@@ -14,34 +14,15 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package eu.debooy.doosutils.exception;
+package eu.debooy.doosutils;
 
 
 /**
+ * @depreacted Gebruik de standaard Java <pre>Comparator<?></pre> om een
+ *             afwijkende sortering te krijgen. 
  * @author Marco de Booij
  */
-public class BestandException extends Exception {
-  private static final  long  serialVersionUID  = 1L;
-
-  /**
-   * @param message Explanation of the exception
-   */
-  public BestandException(String message) {
-    super(message);
-  }
-
-  /**
-   * @param cause   Cause of the exception
-   */
-  public BestandException(Throwable cause) {
-    super(cause);
-  }
-
-  /**
-   * @param message Explanation of the exception
-   * @param cause   Cause of the exception
-   */
-  public BestandException(String message, Throwable cause) {
-    super(message, cause);
-  }
+@Deprecated
+public interface SortStrategy {
+  int sortingAlgorithm(Object obj1, Object obj2);
 }

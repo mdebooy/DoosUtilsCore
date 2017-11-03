@@ -6,15 +6,15 @@
     <version>2.2.2-SNAPSHOT</version>
   </parent>
   <groupId>eu.debooy.doosutils</groupId>
-  <artifactId>doosutils-file</artifactId>
+  <artifactId>doosutils-core</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-SNAPSHOT</version>
-  <name>Utility classes voor DOOS Applicaties (File)</name>
-  <description>Utility classes voor Bestand bewerkingen.</description>
+  <version>2.0.1-SNAPSHOT</version>
+  <name>Utility classes voor DOOS Applicaties (core)</name>
+  <description>Core utility classes voor DOOS Applicaties.</description>
   <inceptionYear>2009</inceptionYear>
   <scm>
-    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/DoosUtilsFile.git</developerConnection>
-    <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/DoosUtilsFile.git</connection>
+    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/doosutils.git/doosutils-core</developerConnection>
+    <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/doosutils.git/doosutils-core</connection>
   </scm>
 
   <developers>
@@ -32,19 +32,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>eu.debooy.doosutils</groupId>
-      <artifactId>doosutils-util</artifactId>
-      <version>1.3.1</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
 </project>
