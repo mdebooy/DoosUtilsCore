@@ -38,7 +38,7 @@ public final class Banner {
     DoosUtils.naarScherm("|  |    |     |    |  |");
     DoosUtils.naarScherm("|  /_____\\   /_____\\  |");
     DoosUtils.naarScherm("| [_______]_[_______] | E-Mail : marco.development@debooy.eu");
-    DoosUtils.naarScherm("|       [_____]       | Website: http://www.debooy.eu");
+    DoosUtils.naarScherm("|       [_____]       | Website: https://www.debooy.eu");
     DoosUtils.naarScherm("+----------+----------+----------+----------+----------+----------+----------+");
     DoosUtils.naarScherm(String.format("%77s", "v"
                                                + manifestInfo.getBuildVersion()
