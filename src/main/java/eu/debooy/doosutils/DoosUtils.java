@@ -90,7 +90,7 @@ public final class DoosUtils {
     int     splitsLengte  = maxLengte - beginLengte;
     String  begin         = pBegin;
     String  leeg          =
-        (beginLengte == 0 ? "" : String.format("%" + beginLengte +"s", " "));
+        (beginLengte == 0 ? "" : stringMetLengte(" ", beginLengte));
     String  string        = pString;
 
     while (string.length() > splitsLengte) {
@@ -130,5 +130,20 @@ public final class DoosUtils {
     }
 
     return string;
+  }
+
+  public static String stringMetLengte(String string, int lengte) {
+    return String.format("%" + lengte +"s", string);
+  }
+
+  public static String stringMetLengte(String string, int lengte,
+                                       String padding) {
+    StringBuilder sb  = new StringBuilder(string);
+    while (sb.length() < lengte) {
+      sb.append(padding);
+    }
+    sb.setLength(lengte);
+
+    return sb.toString();
   }
 }
