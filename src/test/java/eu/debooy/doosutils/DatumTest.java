@@ -37,16 +37,16 @@ public class DatumTest extends TestCase {
   @Test
   public void testToDate2() throws ParseException {
     @SuppressWarnings("unused")
-    Date  datum = Datum.toDate("01/01/2010 01:01:01", "dd/MM/yyyy HH:mm:ss");
+    Date  datum = Datum.toDate("01/01/2010 01:01:01", DoosConstants.DATUM_TIJD);
   }
 
   @Test
   public void testToDate3() {
     try {
       @SuppressWarnings("unused")
-      Date  datum = Datum.toDate("01:01:2010", "dd/MM/yyyy");
+      Date  datum = Datum.toDate("01:01:2010", DoosConstants.DATUM);
     } catch (ParseException e) {
-      ; // Verwachte ParseException
+      assertTrue(e.getMessage(), false);
     }
   }
 
@@ -60,8 +60,8 @@ public class DatumTest extends TestCase {
   @Test
   public void testFromDate2() throws ParseException {
     Date    datum       = Datum.toDate("01/01/2010 01:01:01",
-                                       "dd/MM/yyyy HH:mm:ss");
+                                       DoosConstants.DATUM_TIJD);
     @SuppressWarnings("unused")
-    String  datumString = Datum.fromDate(datum, "dd/MM/yyyy HH:mm:ss");
+    String  datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
   }
 }
