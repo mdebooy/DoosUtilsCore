@@ -29,15 +29,24 @@ import org.junit.Test;
  */
 public class DatumTest extends TestCase {
   @Test
-  public void testToDate1() throws ParseException {
-    @SuppressWarnings("unused")
-    Date  datum = Datum.toDate("01/01/2010");
+  public void testToDate1() {
+    try {
+      @SuppressWarnings("unused")
+      Date  datum = Datum.toDate("01/01/2010");
+    } catch (ParseException e) {
+      assertTrue(e.getMessage(), true);
+    }
   }
 
   @Test
-  public void testToDate2() throws ParseException {
-    @SuppressWarnings("unused")
-    Date  datum = Datum.toDate("01/01/2010 01:01:01", DoosConstants.DATUM_TIJD);
+  public void testToDate2() {
+    try {
+      @SuppressWarnings("unused")
+      Date  datum = Datum.toDate("01/01/2010 01:01:01",
+                                 DoosConstants.DATUM_TIJD);
+    } catch (ParseException e) {
+      assertTrue(e.getMessage(), true);
+    }
   }
 
   @Test
@@ -46,22 +55,30 @@ public class DatumTest extends TestCase {
       @SuppressWarnings("unused")
       Date  datum = Datum.toDate("01:01:2010", DoosConstants.DATUM);
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), false);
+      assertTrue(e.getMessage(), true);
     }
   }
 
   @Test
-  public void testFromDate1() throws ParseException {
-    Date    datum       = Datum.toDate("01/01/2010");
-    @SuppressWarnings("unused")
-    String  datumString = Datum.fromDate(datum);
+  public void testFromDate1() {
+    try {
+      Date    datum       = Datum.toDate("01/01/2010");
+      @SuppressWarnings("unused")
+      String  datumString = Datum.fromDate(datum);
+    } catch (ParseException e) {
+      assertTrue(e.getMessage(), true);
+    }
   }
 
   @Test
-  public void testFromDate2() throws ParseException {
-    Date    datum       = Datum.toDate("01/01/2010 01:01:01",
-                                       DoosConstants.DATUM_TIJD);
-    @SuppressWarnings("unused")
-    String  datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
+  public void testFromDate2() {
+    try {
+      Date    datum = Datum.toDate("01/01/2010 01:01:01",
+                                   DoosConstants.DATUM_TIJD);
+      @SuppressWarnings("unused")
+      String  datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
+    } catch (ParseException e) {
+      assertTrue(e.getMessage(), true);
+    }
   }
 }
