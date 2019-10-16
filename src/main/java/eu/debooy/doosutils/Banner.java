@@ -20,15 +20,12 @@ package eu.debooy.doosutils;
 /**
  * @author Marco de Booy
  */
-public final class Banner {
+public final class MarcoBanner implements Banner {
   private static  ManifestInfo  manifestInfo  = new ManifestInfo();
 
-  private Banner() {}
+  private MarcoBanner() {}
 
-  /**
-   * Print de Banner.
-   */
-  public static void printBanner(String titel) {
+  public void printBanner(String titel) {
     DoosUtils.naarScherm("+----------+----------+----------+----------+----------+----------+----------+");
     DoosUtils.naarScherm("|          |          |");
     DoosUtils.naarScherm("|   |\\__   *   __/|   | " + titel);
