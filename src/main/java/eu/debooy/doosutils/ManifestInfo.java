@@ -65,16 +65,19 @@ public class ManifestInfo {
       try {
         manifest  = new Manifest(manifestUrl.openStream());
       } catch (FileNotFoundException fnfe) {
-        classContainer  =
-          classContainer.substring(0, classContainer.indexOf(LIB));
-        manifestUrl     =
-          new URL((new StringBuilder()).append(classContainer).append(MANIFEST)
-                                       .toString());
-        try {
-          manifest        = new Manifest(manifestUrl.openStream());
-        } catch (IOException e) {
-          buildVersion  = VERSION_UNSTABLE;
-          buildDate     = DATE_UNKNOWN;
+        System.out.println(classContainer);
+        if (classContainer.indexOf(LIB) >= 0) {
+          classContainer  =
+            classContainer.substring(0, classContainer.indexOf(LIB));
+          manifestUrl     =
+            new URL((new StringBuilder()).append(classContainer).append(MANIFEST)
+                                         .toString());
+          try {
+            manifest        = new Manifest(manifestUrl.openStream());
+          } catch (IOException e) {
+            buildVersion  = VERSION_UNSTABLE;
+            buildDate     = DATE_UNKNOWN;
+          }
         }
       } catch (IOException e) {
         buildVersion  = VERSION_UNSTABLE;
