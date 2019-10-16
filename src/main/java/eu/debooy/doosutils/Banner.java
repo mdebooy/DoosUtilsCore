@@ -47,6 +47,7 @@ public final class Banner {
     DoosUtils.naarScherm("");
     DoosUtils.naarScherm("de Booij Onderhoud en Ontwikkeling van Systemen");
     DoosUtils.naarScherm("________________________________________________________________________________");
+    DoosUtils.naarScherm("");
   }
 
   public static void printMarcoBanner(String titel) {
