@@ -38,7 +38,7 @@ public final class Banner {
     DoosUtils.naarScherm("     _  ____   ____   _____ ");
     DoosUtils.naarScherm("    | |/ __ \\ / __ \\ / ____|");
     DoosUtils.naarScherm("  __| | |  | | |  | | |___");
-    DoosUtils.naarScherm(" / _  | |  | | |  | |\\___ \\      Utilities");
+    DoosUtils.naarScherm(" / _  | |  | | |  | |\\___ \\      " + titel);
     DoosUtils.naarScherm("| (_| | |__| | |__| |____| |");
     DoosUtils.naarScherm(" \\____|\\____/ \\____/|_____/" +
                          String.format("%53s",
