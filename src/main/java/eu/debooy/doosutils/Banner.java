@@ -20,12 +20,36 @@ package eu.debooy.doosutils;
 /**
  * @author Marco de Booy
  */
-public final class MarcoBanner implements Banner {
+public final class Banner {
   private static  ManifestInfo  manifestInfo  = new ManifestInfo();
 
-  private MarcoBanner() {}
+  private Banner() {}
 
-  public void printBanner(String titel) {
+  /**
+   * @deprecated Gebruik printMarcoBanner(String titel)
+   */
+  @Deprecated
+  public static void printBanner(String titel) {
+    printMarcoBanner(titel);
+  }
+
+  public static void printDoosBanner(String titel) {
+    DoosUtils.naarScherm("________________________________________________________________________________");
+    DoosUtils.naarScherm("     _  ____   ____   _____ ");
+    DoosUtils.naarScherm("    | |/ __ \\ / __ \\ / ____|");
+    DoosUtils.naarScherm("  __| | |  | | |  | | |___");
+    DoosUtils.naarScherm(" / _  | |  | | |  | |\\___ \\      Utilities");
+    DoosUtils.naarScherm("| (_| | |__| | |__| |____| |");
+    DoosUtils.naarScherm(" \\____|\\____/ \\____/|_____/" +
+                         String.format("%53s",
+                                       "v" + manifestInfo.getBuildVersion()
+                                       + " | " + manifestInfo.getBuildDate()));
+    DoosUtils.naarScherm("");
+    DoosUtils.naarScherm("de Booij Onderhoud en Ontwikkeling van Systemen");
+    DoosUtils.naarScherm("________________________________________________________________________________");
+  }
+
+  public static void printMarcoBanner(String titel) {
     DoosUtils.naarScherm("+----------+----------+----------+----------+----------+----------+----------+");
     DoosUtils.naarScherm("|          |          |");
     DoosUtils.naarScherm("|   |\\__   *   __/|   | " + titel);
