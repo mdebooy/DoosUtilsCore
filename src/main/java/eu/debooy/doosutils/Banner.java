@@ -45,7 +45,7 @@ public final class Banner {
                                        "v" + manifestInfo.getBuildVersion()
                                        + " | " + manifestInfo.getBuildDate()));
     DoosUtils.naarScherm("");
-    DoosUtils.naarScherm("de Booij Onderhoud en Ontwikkeling van Systemen");
+    DoosUtils.naarScherm("de Booij Ontwikkeling en Onderhoud van Systemen");
     DoosUtils.naarScherm("________________________________________________________________________________");
     DoosUtils.naarScherm("");
   }
