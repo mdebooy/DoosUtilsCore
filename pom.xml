@@ -9,8 +9,8 @@
   <artifactId>doosutils-core</artifactId>
   <packaging>jar</packaging>
   <version>2.1.1-SNAPSHOT</version>
-  <name>Utility classes voor DOOS Applicaties (core)</name>
-  <description>Core utility classes voor DOOS Applicaties.</description>
+  <name>Utility classes voor dOOS Applicaties (core)</name>
+  <description>Core utility classes voor dOOS Applicaties.</description>
   <inceptionYear>2009</inceptionYear>
   <scm>
     <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/DoosUtilsCore.git</developerConnection>
@@ -23,7 +23,7 @@
       <name>Marco de Booij</name>
       <id>booymar</id>
       <email>marco.developer@debooy.eu</email>
-      <organization>DOOS</organization>
+      <organization>dOOS</organization>
       <roles>
         <role>Project Manager</role>
         <role>Java Developer</role>
