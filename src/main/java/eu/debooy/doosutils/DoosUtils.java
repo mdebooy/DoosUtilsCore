@@ -16,6 +16,9 @@
  */
 package eu.debooy.doosutils;
 
+import java.io.Console;
+import java.util.Scanner;
+
 
 /**
  * @author Marco de Booij
@@ -25,16 +28,31 @@ public final class DoosUtils {
 
   /**
    * Schrijft een foutmelding op het scherm.
-   * 
+   *
    * @param regel
    */
   public static void foutNaarScherm(String regel) {
     System.err.println(regel);
   }
 
+  public static String getWachtwoord(String prompt) {
+    String  password  = "";
+    Console console   = System.console();
+    if (null == console) {
+      Scanner invoer  = new Scanner(System.in);
+      System.out.print(prompt + " ");
+      password  = invoer.next();
+      invoer.close();
+    } else {
+      password  = new String(console.readPassword(prompt + " "));
+    }
+
+    return password;
+  }
+
   /**
    * Is de parameter null of leeg?
-   * 
+   *
    * @param obj
    * @return
    */
@@ -44,7 +62,7 @@ public final class DoosUtils {
 
   /**
    * Is de parameter niet null of leeg?
-   * 
+   *
    * @param obj
    * @return
    */
@@ -61,7 +79,7 @@ public final class DoosUtils {
 
   /**
    * Schrijft een melding op het scherm.
-   * 
+   *
    * @param regel
    */
   public static void naarScherm(String regel) {
@@ -70,7 +88,7 @@ public final class DoosUtils {
 
   /**
    * Schrijf regel(s) van maxLengte op het scherm.
-   * 
+   *
    * @param pString
    * @param maxLengte
    */
@@ -80,7 +98,7 @@ public final class DoosUtils {
 
   /**
    * Schrijf regel(s) van maxLengte op het scherm.
-   * 
+   *
    * @param pBegin
    * @param pString
    * @param maxLengte
@@ -105,7 +123,7 @@ public final class DoosUtils {
 
   /**
    * Maak van een null String een lege String.
-   * 
+   *
    * @param string
    * @return
    */
@@ -119,7 +137,7 @@ public final class DoosUtils {
 
   /**
    * Maak van een null String een lege String.
-   * 
+   *
    * @param string
    * @param waarde
    * @return String
