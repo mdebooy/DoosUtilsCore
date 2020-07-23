@@ -16,7 +16,6 @@
  */
 package eu.debooy.doosutils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,8 +32,10 @@ public class ManifestInfo {
   private static final String  MANIFEST         = "/META-INF/MANIFEST.MF";
   private static final String  VERSION_UNSTABLE = "UNSTABLE";
 
-  private static String        buildVersion;
-  private static String        buildDate;
+  private static  String    buildVersion;
+  private static  String    buildDate;
+  private static  Manifest  manifest      = null;
+
 
   static {
     buildDetails();
@@ -42,19 +43,17 @@ public class ManifestInfo {
 
   private static void buildDetails() {
     try {
-      URL       manifestUrl     = null;
-      Manifest  manifest        = null;
+      URL       manifestUrl;
       String    classContainer  = ManifestInfo.class.getProtectionDomain()
                                               .getCodeSource()
                                               .getLocation().toString();
 
-      if (classContainer.indexOf(LIB) >= 0) {
+      if (classContainer.contains(LIB)) {
         classContainer  =
           classContainer.substring(0, classContainer.indexOf(LIB));
         manifestUrl     =
           new URL((new StringBuilder()).append(classContainer).append(MANIFEST)
                                        .toString());
-
       } else {
         manifestUrl     =
           new URL((new StringBuilder()).append("jar:").append(classContainer)
@@ -62,31 +61,18 @@ public class ManifestInfo {
                                        .toString());
 
       }
-      try {
-        manifest  = new Manifest(manifestUrl.openStream());
-      } catch (FileNotFoundException fnfe) {
-        System.out.println(classContainer);
-        if (classContainer.indexOf(LIB) >= 0) {
-          classContainer  =
-            classContainer.substring(0, classContainer.indexOf(LIB));
-          manifestUrl     =
-            new URL((new StringBuilder()).append(classContainer).append(MANIFEST)
-                                         .toString());
-          try {
-            manifest        = new Manifest(manifestUrl.openStream());
-          } catch (IOException e) {
-            buildVersion  = VERSION_UNSTABLE;
-            buildDate     = DATE_UNKNOWN;
-          }
-        }
-      } catch (IOException e) {
-        buildVersion  = VERSION_UNSTABLE;
-        buildDate     = DATE_UNKNOWN;
+      getManifest(manifestUrl);
+      while (null == manifest
+          && classContainer.contains(LIB)) {
+        classContainer  =
+          classContainer.substring(0, classContainer.indexOf(LIB));
+        manifestUrl     =
+          new URL((new StringBuilder()).append(classContainer).append(MANIFEST)
+                                       .toString());
+        getManifest(manifestUrl);
       }
-      if (null == manifest) {
-        buildVersion  = VERSION_UNSTABLE;
-        buildDate     = DATE_UNKNOWN;
-      } else {
+
+      if (null != manifest) {
         Attributes  attr  = manifest.getMainAttributes();
         buildVersion  = attr.getValue("Implementation-Version");
         buildDate     = attr.getValue("Build-Time");
@@ -103,5 +89,14 @@ public class ManifestInfo {
 
   public String getBuildDate() {
     return buildDate;
+  }
+
+  private static void getManifest(URL manifestUrl) {
+    try {
+    manifest  = new Manifest(manifestUrl.openStream());
+    } catch (IOException e) {
+      buildVersion  = VERSION_UNSTABLE;
+      buildDate     = DATE_UNKNOWN;
+    }
   }
 }

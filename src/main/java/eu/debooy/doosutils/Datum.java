@@ -30,24 +30,11 @@ public final class Datum {
 
   private Datum() {}
 
-  /**
-   * Converteerd een java.util.Date naar een String
-   * 
-   * @return de datum als Date
-   * @throws ParseException 
-   */
   public static String fromDate(Date datum) throws ParseException {
     return fromDate(datum, DoosConstants.DATUM);
   }
 
-  /**
-   * Converteerd een java.util.Date naar een String
-   * 
-   * @return de datum als Date
-   * @throws ParseException 
-   */
-  public static String fromDate(Date datum, String formaat)
-      throws ParseException {
+  public static String fromDate(Date datum, String formaat) {
     if (null == datum) {
       return null;
     }
@@ -57,22 +44,10 @@ public final class Datum {
     return datumFormaat.format(datum);
   }
 
-  /**
-   * Converteerd een Datum in een java.util.Date
-   * 
-   * @return de datum als Date
-   * @throws ParseException 
-   */
   public static Date toDate(String datum) throws ParseException {
     return toDate(datum, DoosConstants.DATUM);
   }
 
-  /**
-   * Converteerd een Datum in een java.util.Date
-   * 
-   * @return de datum als Date
-   * @throws ParseException 
-   */
   public static Date toDate(String datum, String formaat)
       throws ParseException {
     if (DoosUtils.isBlankOrNull(datum)) {
