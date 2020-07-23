@@ -44,10 +44,10 @@ public class Batchjob {
   protected static final  String  HLP_PARAMSVERPLICHT = "help.paramsverplicht";
   protected static final  String  HLP_UITVOERDIR      = "help.uitvoerdir";
 
-  protected static final  String  LBL_FOUT        = "label.fout";
-  protected static final  String  LBL_OPTIE       = "label.optie";
+  protected static final  String  LBL_FOUT  = "label.fout";
+  protected static final  String  LBL_OPTIE = "label.optie";
 
-  protected static final  String  MSG_KLAAR     = "msg.klaar";
+  protected static final  String  MSG_KLAAR = "msg.klaar";
 
   protected static final  String  PAR_CHARSETIN   = "charsetin";
   protected static final  String  PAR_CHARSETUIT  = "charsetuit";
