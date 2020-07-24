@@ -30,7 +30,7 @@ public final class Datum {
 
   private Datum() {}
 
-  public static String fromDate(Date datum) throws ParseException {
+  public static String fromDate(Date datum) {
     return fromDate(datum, DoosConstants.DATUM);
   }
 
