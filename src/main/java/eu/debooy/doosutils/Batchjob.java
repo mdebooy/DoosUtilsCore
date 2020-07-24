@@ -94,16 +94,12 @@ public abstract class Batchjob {
     return parameters.containsKey(parameter);
   }
 
-  protected static boolean isFoutloos(List<String> fouten) {
+  protected static void printFouten(List<String> fouten) {
     if (!fouten.isEmpty() ) {
-      help();
       fouten.forEach(fout -> {
         DoosUtils.foutNaarScherm(fout);
       });
-      return false;
     }
-
-    return true;
   }
 
   protected static void setParameter(Arguments arguments, String parameter) {
