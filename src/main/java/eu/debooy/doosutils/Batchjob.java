@@ -36,12 +36,16 @@ public abstract class Batchjob {
 
   protected static final  String  EXT_CSV   = ".csv";
   protected static final  String  EXT_JSON  = ".json";
+  protected static final  String  EXT_PGN   = ".pgn";
+  protected static final  String  EXT_TEX   = ".tex";
+  protected static final  String  EXT_ZIP   = ".zip";
+
 
   protected static final  String  HLP_CHARSETIN       = "help.charsetin";
   protected static final  String  HLP_CHARSETUIT      = "help.charsetuit";
   protected static final  String  HLP_INVOERDIR       = "help.invoerdir";
-  protected static final  String  HLP_PARAMVERPLICHT  = "help.paramverplicht";
   protected static final  String  HLP_PARAMSVERPLICHT = "help.paramsverplicht";
+  protected static final  String  HLP_PARAMVERPLICHT  = "help.paramverplicht";
   protected static final  String  HLP_UITVOERDIR      = "help.uitvoerdir";
 
   protected static final  String  LBL_FOUT  = "label.fout";
@@ -53,6 +57,7 @@ public abstract class Batchjob {
   protected static final  String  PAR_CHARSETUIT  = "charsetuit";
   protected static final  String  PAR_INVOERDIR   = "invoerdir";
   protected static final  String  PAR_JSONBESTAND = "jsonbestand";
+  protected static final  String  PAR_READONLY    = "readonly";
   protected static final  String  PAR_UITVOERDIR  = "uitvoerdir";
 
   protected static final  String  PFX_PARAMDASHES = "  --";
@@ -102,6 +107,42 @@ public abstract class Batchjob {
     }
   }
 
+  public static void setBestandParameter(Arguments arguments,
+                                         String parameter) {
+    setBestandParameter(arguments, parameter, "");
+  }
+
+  public static void setBestandParameter(Arguments arguments,
+                                         String parameter, String extentie) {
+    if (arguments.hasArgument(parameter)) {
+      String  bestand = arguments.getArgument(parameter);
+      if (DoosUtils.isNotBlankOrNull(extentie)
+          && bestand.endsWith(extentie)) {
+        bestand = bestand.substring(0, bestand.length() - extentie.length());
+      }
+      parameters.put(parameter, bestand);
+    }
+  }
+
+  public static void setDirParameter(Arguments arguments, String parameter) {
+    setDirParameter(arguments, parameter, ".");
+  }
+
+  public static void setDirParameter(Arguments arguments, String parameter,
+                                     String defaultDir) {
+    String  directory;
+    if (arguments.hasArgument(parameter)) {
+      directory = arguments.getArgument(parameter);
+    } else {
+      directory = defaultDir;
+    }
+    if (!directory.endsWith(File.separator)) {
+      directory += File.separator;
+    }
+
+    parameters.put(parameter, directory);
+  }
+
   protected static void setParameter(Arguments arguments, String parameter) {
     if (arguments.hasArgument(parameter)) {
       parameters.put(parameter,
@@ -121,41 +162,5 @@ public abstract class Batchjob {
 
   protected static void setParameter(String parameter, String waarde) {
     parameters.put(parameter, waarde);
-  }
-
-  public static void setDirParameter(Arguments arguments, String parameter) {
-    setDirParameter(arguments, parameter, ".");
-  }
-
-  public static void setDirParameter(Arguments arguments, String parameter,
-                                     String defaultDir) {
-    String  directory;
-    if (arguments.hasArgument(parameter)) {
-      directory = arguments.getArgument(parameter);
-    } else {
-      directory = defaultDir;
-    }
-    if (!parameter.endsWith(File.separator)) {
-      directory += File.separator;
-    }
-
-    parameters.put(parameter, directory);
-  }
-
-  public static void setBestandParameter(Arguments arguments,
-                                         String parameter) {
-    setBestandParameter(arguments, parameter, "");
-  }
-
-  public static void setBestandParameter(Arguments arguments,
-                                         String parameter, String extentie) {
-    if (arguments.hasArgument(parameter)) {
-      String  bestand = arguments.getArgument(parameter);
-      if (DoosUtils.isNotBlankOrNull(extentie)
-          && parameter.endsWith(extentie)) {
-        bestand = bestand.substring(0, parameter.length() - extentie.length());
-      }
-      parameters.put(parameter, bestand);
-    }
   }
 }
