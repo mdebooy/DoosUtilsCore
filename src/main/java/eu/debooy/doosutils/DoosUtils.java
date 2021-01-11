@@ -1,5 +1,5 @@
 /**
- * Copyright 2005 Marco de Booij
+ * Copyright (c) 2005 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -36,13 +36,13 @@ public final class DoosUtils {
   }
 
   public static String getWachtwoord(String prompt) {
-    String  password  = "";
+    String  password;
     Console console   = System.console();
     if (null == console) {
-      Scanner invoer  = new Scanner(System.in);
-      System.out.print(prompt + " ");
-      password  = invoer.next();
-      invoer.close();
+      try (Scanner invoer = new Scanner(System.in)) {
+        System.out.print(prompt + " ");
+        password  = invoer.next();
+      }
     } else {
       password  = new String(console.readPassword(prompt + " "));
     }
@@ -163,5 +163,16 @@ public final class DoosUtils {
     sb.setLength(lengte);
 
     return sb.toString();
+  }
+
+  public static int telTeken(String string, char teken) {
+    int aantal  = 0;
+    for (int i = 0; i < string.length(); i++) {
+      if (string.charAt(i) == teken) {
+        aantal++;
+      }
+    }
+
+    return aantal;
   }
 }
