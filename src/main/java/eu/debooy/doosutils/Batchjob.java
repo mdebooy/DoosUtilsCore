@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Marco de Booij
+ * Copyright (c) 2020 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -33,11 +33,13 @@ public abstract class Batchjob {
 
   protected static final  String  ERR_BEVATDIRECTORY  = "error.bevatdirectory";
   protected static final  String  ERR_INVALIDPARAMS   = "error.invalid.params";
+  protected static final  String  ERR_NOBOOLEAN       = "error.no.boolean";
 
   protected static final  String  EXT_CSV   = ".csv";
   protected static final  String  EXT_JSON  = ".json";
   protected static final  String  EXT_PGN   = ".pgn";
   protected static final  String  EXT_TEX   = ".tex";
+  protected static final  String  EXT_TRF   = ".trf";
   protected static final  String  EXT_ZIP   = ".zip";
 
 
@@ -151,12 +153,12 @@ public abstract class Batchjob {
   }
 
   protected static void setParameter(Arguments arguments,
-                                     String parameter, String dafaultwaarde) {
+                                     String parameter, String defaultwaarde) {
     if (arguments.hasArgument(parameter)) {
       parameters.put(parameter,
                      arguments.getArgument(parameter));
     } else {
-      parameters.put(parameter, dafaultwaarde);
+      parameters.put(parameter, defaultwaarde);
     }
   }
 
