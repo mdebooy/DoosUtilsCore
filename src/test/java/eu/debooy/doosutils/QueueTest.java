@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Marco de Booy
+ * Copyright (c) 2016 Marco de Booy
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,10 +16,8 @@
  */
 package eu.debooy.doosutils;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.NoSuchElementException;
-
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 
@@ -29,13 +27,13 @@ import org.junit.Test;
 public class QueueTest {
   @Test(expected = NoSuchElementException.class)
   public void queueLinkedListException1() {
-    Queue<Integer> queue  = new QueueLinkedList<Integer>();
+    Queue<Integer> queue  = new QueueLinkedList<>();
     queue.dequeue();
   }
 
   @Test(expected = NoSuchElementException.class)
   public void queueLinkedListException2() {
-    Queue<Integer> queue  = new QueueLinkedList<Integer>();
+    Queue<Integer> queue  = new QueueLinkedList<>();
     queue.enqueue(1);
     queue.dequeue();
     queue.dequeue();
@@ -43,19 +41,19 @@ public class QueueTest {
 
   @Test
   public void queueLinkedList() {
-    Queue<Integer> queue  = new QueueLinkedList<Integer>();
+    Queue<Integer> queue  = new QueueLinkedList<>();
     queue.enqueue(1);
     queue.enqueue(2);
     queue.enqueue(3);
     queue.enqueue(3);
     queue.enqueue(4);
-    assertTrue(5 == queue.size());
-    assertTrue(1 == queue.dequeue());
-    assertTrue(2 == queue.dequeue());
-    assertTrue(3 == queue.dequeue());
-    assertTrue(3 == queue.dequeue());
-    assertTrue(4 == queue.dequeue());
-    assertTrue("".equals(queue.toString()));
-    assertTrue(0 == queue.size());
+    assertEquals(5, queue.size());
+    assertEquals(1, queue.dequeue().intValue());
+    assertEquals(2, queue.dequeue().intValue());
+    assertEquals(3, queue.dequeue().intValue());
+    assertEquals(3, queue.dequeue().intValue());
+    assertEquals(4, queue.dequeue().intValue());
+    assertEquals("", queue.toString());
+    assertEquals(0, queue.size());
   }
 }

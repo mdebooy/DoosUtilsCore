@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * @author Marco de Booij
  */
 public abstract class Batchjob {
-  private static  ResourceBundle  batchjobResource  =
+  private static final  ResourceBundle  batchjobResource  =
       ResourceBundle.getBundle("BatchjobConstants", Locale.getDefault());
 
   protected static final  String  ERR_BEVATDIRECTORY  = "error.bevatdirectory";
@@ -64,8 +64,11 @@ public abstract class Batchjob {
 
   protected static final  String  PFX_PARAMDASHES = "  --";
 
-  protected static  Map<String, String> parameters  =
-      new HashMap<String, String>();
+  protected static  Map<String, String> parameters  = new HashMap<>();
+
+  private Batchjob () {
+    throw new IllegalStateException("Utility class");
+  }
 
   public static void execute(String[] args) {
   }
@@ -103,9 +106,7 @@ public abstract class Batchjob {
 
   protected static void printFouten(List<String> fouten) {
     if (!fouten.isEmpty() ) {
-      fouten.forEach(fout -> {
-        DoosUtils.foutNaarScherm(fout);
-      });
+      fouten.forEach(fout ->  DoosUtils.foutNaarScherm(fout));
     }
   }
 

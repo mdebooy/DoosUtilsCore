@@ -13,8 +13,8 @@
   <description>Core utility classes voor dOOS Applicaties.</description>
   <inceptionYear>2009</inceptionYear>
   <scm>
-    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/DoosUtilsCore.git</developerConnection>
-    <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/DoosUtilsCore.git</connection>
+    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/local/devops/git/debooy/DoosUtilsCore.git</developerConnection>
+    <connection>scm:git:ssh://ptah.debooy.eu/srv/local/devops/git/debooy/DoosUtilsCore.git</connection>
     <tag>doosutils-core-2.1.0</tag>
   </scm>
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Marco de Booij
+ * Copyright (c) 2015 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,12 +16,13 @@
  */
 package eu.debooy.doosutils;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 
 /**
  * @author Marco de Booij
- * 
+ *
  * Geeft de titel terug zonder lidwoord zodat de titel gesorteerd kan worden.
  */
 public final class SorteerTitel {
@@ -29,29 +30,29 @@ public final class SorteerTitel {
   }
 
   public static String sorteerwaarde(String titel, String taal) {
-    String[]  lidwoorden;
+    String[]  artikelen;
     try {
-      lidwoorden  = Lidwoorden.valueOf(taal.toUpperCase()).getLidwoorden();
+      artikelen  = Lidwoorden.valueOf(taal.toUpperCase()).getLidwoorden();
     } catch (IllegalArgumentException e) {
       return titel;
     }
 
-    if (lidwoorden.length == 0) {
+    if (artikelen.length == 0) {
       return titel;
     }
 
     String  kleineletters = titel.toLowerCase(new Locale(taal));
     // Kijk of de titel begint met een lidwoord en verwijder deze.
-    for (String lidwoord : lidwoorden) {
+    for (String lidwoord : artikelen) {
       if (kleineletters.startsWith(lidwoord)) {
         return titel.substring(lidwoord.length());
       }
     }
-    
+
     return titel;
   }
 
-  public static enum  Lidwoorden {
+  public enum  Lidwoorden {
     DE(new String[]{"das ", "dem ", "den ", "der ", "des ", "die ",
                     "ein ", "eine ", "einem ", "einen", "einer ", "eines "}),
     EN(new String[]{"a ", "an ", "the "}),
@@ -60,13 +61,13 @@ public final class SorteerTitel {
     NL(new String[]{"de ", "een ", "het "});
 
     private Lidwoorden(String[] lidwoorden) {
-      this.lidwoorden = lidwoorden.clone();
+      artikelen = Arrays.copyOf(lidwoorden, 0);
     }
 
     public  String[] getLidwoorden() {
-      return lidwoorden.clone();
+      return Arrays.copyOf(artikelen, 0);
     }
 
-    private String[] lidwoorden;
+    private String[] artikelen;
   }
 }

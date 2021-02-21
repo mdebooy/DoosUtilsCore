@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Marco de Booij
+ * Copyright (c) 2012 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -31,11 +31,11 @@ public class DoosObject {
 
   /**
    * Zoek alle 'getters'.
-   * 
+   *
    * @return
    */
   protected Collection<Method> findGetters() {
-    List<Method>  getters = new ArrayList<Method>();
+    List<Method>  getters = new ArrayList<>();
     for (Method method : this.getClass().getMethods()) {
       for (String prefix : GET_METHODS_PREFIXES) {
         if (method.getName().startsWith(prefix)) {
@@ -56,8 +56,8 @@ public class DoosObject {
    */
   public String toString() {
     StringBuilder sb        = new StringBuilder();
-    String        attribute = null;
-    Object        waarde    = null;
+    String        attribute;
+    Object        waarde;
 
     sb.append(this.getClass().getSimpleName()).append(" (");
     for (Method method : findGetters()) {
@@ -85,18 +85,10 @@ public class DoosObject {
         } else {
           sb.append("<null>");
         }
-      } catch (IllegalArgumentException e) {
-        // Enkel als de methode niet kan worden 'invoked'.
-        sb.append("IllegalArgument: " + method.getName() + " - "
-                  + e.getLocalizedMessage());
-      } catch (IllegalAccessException e) {
-        // Enkel als de methode niet kan worden 'invoked'.
-        sb.append("IllegalAccess: " + method.getName() + " - "
-                  + e.getLocalizedMessage());
-      } catch (InvocationTargetException e) {
-        // Enkel als de methode niet kan worden 'invoked'.
-        sb.append("InvocationTarget: " + method.getName() + " - "
-                  + e.getLocalizedMessage());
+      } catch (IllegalAccessException | IllegalArgumentException |
+               InvocationTargetException e) {
+        sb.append(e.getClass().getName()).append(": ").append(method.getName())
+          .append(" - ").append(e.getLocalizedMessage());
       }
     }
     sb.append(")");

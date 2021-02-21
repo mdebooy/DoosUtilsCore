@@ -18,11 +18,12 @@ package eu.debooy.doosutils;
 
 
 /**
- * @depreacted Gebruik de standaard Java <pre>Comparator<?></pre> om een
- *             afwijkende sortering te krijgen. 
  * @author Marco de Booij
+ * 
+ * @deprecated Gebruik de standaard Java <pre>Comparator<?></pre> om een
+ *             afwijkende sortering te krijgen.
  */
-@Deprecated
+@Deprecated(forRemoval=true)
 public interface SortStrategy {
   int sortingAlgorithm(Object obj1, Object obj2);
 }

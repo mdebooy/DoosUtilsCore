@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Marco de Booy
+ * Copyright (c) 2016 Marco de Booy
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,26 +16,24 @@
  */
 package eu.debooy.doosutils;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.NoSuchElementException;
-
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 
 /**
- * @author Marco de Booij (booymaa)
+ * @author Marco de Booij
  */
 public class StackTest {
   @Test(expected = NoSuchElementException.class)
   public void stackLinkedListException1() {
-    Stack<Integer>  stack = new StackLinkedList<Integer>();
+    Stack<Integer>  stack = new StackLinkedList<>();
     stack.pop();
   }
 
   @Test(expected = NoSuchElementException.class)
   public void stackLinkedListException2() {
-    Stack<Integer>  stack = new StackLinkedList<Integer>();
+    Stack<Integer>  stack = new StackLinkedList<>();
     stack.push(1);
     stack.pop();
     stack.pop();
@@ -43,19 +41,19 @@ public class StackTest {
 
   @Test
   public void stackLinkedList() {
-    Stack<Integer>  stack = new StackLinkedList<Integer>();
+    Stack<Integer>  stack = new StackLinkedList<>();
     stack.push(1);
     stack.push(2);
     stack.push(3);
     stack.push(3);
     stack.push(4);
-    assertTrue(5 == stack.size());
-    assertTrue(4 == stack.pop());
-    assertTrue(3 == stack.pop());
-    assertTrue(3 == stack.pop());
-    assertTrue(2 == stack.pop());
-    assertTrue(1 == stack.pop());
-    assertTrue("".equals(stack.toString()));
-    assertTrue(0 == stack.size());
+    assertEquals(5, stack.size());
+    assertEquals(4, stack.pop().intValue());
+    assertEquals(3, stack.pop().intValue());
+    assertEquals(3, stack.pop().intValue());
+    assertEquals(2, stack.pop().intValue());
+    assertEquals(1, stack.pop().intValue());
+    assertEquals("", stack.toString());
+    assertEquals(0 , stack.size());
   }
 }

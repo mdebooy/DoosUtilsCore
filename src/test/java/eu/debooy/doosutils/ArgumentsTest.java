@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Marco de Booy
+ * Copyright (c) 2009 Marco de Booy
  *
  * Licensed under the EUPL, Version 1.0 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,7 +17,6 @@
 package eu.debooy.doosutils;
 
 import junit.framework.TestCase;
-
 import org.junit.Test;
 
 
@@ -52,7 +51,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.isValid());
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("true".equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
     assertTrue(arguments.hasArgument(INSERT));
   }
 
@@ -71,7 +70,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("true".equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
   }
 
   @Test
@@ -81,7 +80,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("".equals(arguments.getArgument(DELETE)));
+    assertEquals("", arguments.getArgument(DELETE));
   }
 
   @Test
@@ -91,7 +90,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("true".equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
   }
 
   @Test
@@ -101,7 +100,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("true".equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
   }
 
   @Test
@@ -111,7 +110,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("".equals(arguments.getArgument(DELETE)));
+    assertEquals("", arguments.getArgument(DELETE));
   }
 
   @Test
@@ -121,7 +120,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue("true".equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
   }
 
   @Test
@@ -131,7 +130,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue(TRUE.equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
   }
 
   @Test
@@ -151,9 +150,9 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue(TRUE.equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
     assertTrue(arguments.hasArgument(INSERT));
-    assertTrue(TRUE.equals(arguments.getArgument(INSERT)));
+    assertEquals(TRUE, arguments.getArgument(INSERT));
   }
 
   @Test
@@ -164,7 +163,7 @@ public class ArgumentsTest extends TestCase {
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
     assertTrue(arguments.hasArgument(INSERT));
-    assertTrue(TRUE.equals(arguments.getArgument(INSERT)));
+    assertEquals(TRUE, arguments.getArgument(INSERT));
   }
 
   @Test
@@ -174,7 +173,7 @@ public class ArgumentsTest extends TestCase {
 
     assertTrue(arguments.setArguments(args));
     assertTrue(arguments.hasArgument(DELETE));
-    assertTrue(TRUE.equals(arguments.getArgument(DELETE)));
+    assertEquals(TRUE, arguments.getArgument(DELETE));
     assertTrue(arguments.hasArgument(INSERT));
   }
 
@@ -194,7 +193,7 @@ public class ArgumentsTest extends TestCase {
   @Test
   public void testVerplicht() {
     Arguments arguments = new Arguments();
-    String[]  args      = {MINDELETE, TRUE, MINMININSERT + "=" + FALSE, 
+    String[]  args      = {MINDELETE, TRUE, MINMININSERT + "=" + FALSE,
                            UPDATE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));

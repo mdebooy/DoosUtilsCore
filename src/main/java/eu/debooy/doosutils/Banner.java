@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Marco de Booy
+ * Copyright (c) 2010 Marco de Booy
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -21,13 +21,10 @@ package eu.debooy.doosutils;
  * @author Marco de Booy
  */
 public final class Banner {
-  private static  ManifestInfo  manifestInfo  = new ManifestInfo();
+  private static final  ManifestInfo  manifestInfo  = new ManifestInfo();
 
   private Banner() {}
 
-  /**
-   * @deprecated Gebruik printMarcoBanner(String titel)
-   */
   @Deprecated
   public static void printBanner(String titel) {
     printMarcoBanner(titel);

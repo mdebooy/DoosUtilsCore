@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Marco de Booij
+ * Copyright (c) 2009 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.0 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -26,11 +26,11 @@ import java.util.Map;
 /**
  * @author Marco de Booij
  */
-public class Arguments {
+public final class Arguments {
   private boolean             valid       = true;
-  private Map<String, String> arguments   = new HashMap<String, String>();
-  private List<String>        parameters  = new ArrayList<String>();
-  private List<String>        verplicht   = new ArrayList<String>();
+  private Map<String, String> args        = new HashMap<>();
+  private List<String>        parameters  = new ArrayList<>();
+  private List<String>        verplicht   = new ArrayList<>();
 
   public Arguments() {
   }
@@ -39,46 +39,32 @@ public class Arguments {
     setArguments(Arrays.copyOf(args, args.length));
   }
 
-  /**
-   * Return the value of the argument
-   * @param argument
-   * @return value of the argument
-   */
   public String getArgument(String argument) {
-    if (arguments.containsKey(argument)) {
-      return arguments.get(argument);
+    if (args.containsKey(argument)) {
+      return args.get(argument);
     }
 
     return null;
   }
 
-  /**
-   * Checks if the argument is defined.
-   * @param argument
-   * @return
-   */
   public boolean hasArgument(String argument) {
-    return arguments.containsKey(argument);
+    return args.containsKey(argument);
   }
 
-  /**
-   * Returns if the arguments are valid or not.
-   * @return
-   */
   public boolean isValid() {
     boolean juist     = true;
     boolean volledig  = true;
 
     // Alle verplichte parameters aanwezig?
     for (String key: verplicht) {
-      if (!arguments.containsKey(key)) {
+      if (!args.containsKey(key)) {
         volledig  = false;
       }
     }
 
     // Enkel juiste parameters aanwezig?
-    if (parameters.size() > 0) {
-      for (String parameter: arguments.keySet()) {
+    if (!parameters.isEmpty()) {
+      for (String parameter: args.keySet()) {
         if (!parameters.contains(parameter)) {
           juist = false;
         }
@@ -88,10 +74,6 @@ public class Arguments {
     return juist && valid && volledig;
   }
 
-  /**
-   * @param args
-   * @return
-   */
   public boolean setArguments(String[] args){
     String  key;
     String  value;
@@ -117,16 +99,16 @@ public class Arguments {
             value = "";
           }
         }
-        arguments.put(key, value);
-        continue;
+        this.args.put(key, value);
+      } else {
+        if (args[i].indexOf('=') > 0) {
+          key   = args[i].substring(0, args[i].indexOf('='));
+          value = args[i].substring(args[i].indexOf('=')+1);
+          this.args.put(key, value);
+        } else {
+          valid = false;
+        }
       }
-      if (args[i].indexOf('=') > 0) {
-        key   = args[i].substring(0, args[i].indexOf('='));
-        value = args[i].substring(args[i].indexOf('=')+1);
-        arguments.put(key, value);
-        continue;
-      }
-      valid = false;
     }
 
     return valid;
@@ -140,20 +122,18 @@ public class Arguments {
     this.verplicht  = Arrays.asList(verplicht);
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuilder result  = new StringBuilder();
     result.append("Arguments:");
-    for (String key: arguments.keySet()) {
-      result.append(key).append("=").append(arguments.get(key)).append("|");
-    }
+    args.entrySet().forEach(entry -> {
+      result.append(entry.getKey()).append("=").append(entry.getValue())
+            .append("|");
+    });
     result.append("Verplicht:");
-    for (String key: verplicht) {
+    verplicht.forEach(key -> {
       result.append(key).append("|");
-    }
+    });
 
     return result.toString();
   }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Marco de Booij
+ * Copyright (c) 2016 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.0 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -32,8 +32,7 @@ public class QueueLinkedList<T> implements Queue<T> {
     private Node  volgende;
   }
 
-  public QueueLinkedList() { }
-
+  @Override
   public T dequeue() {
     if (elementen == 0) {
       throw new NoSuchElementException();
@@ -48,6 +47,7 @@ public class QueueLinkedList<T> implements Queue<T> {
     return node;
   }
 
+  @Override
   public QueueLinkedList<T> enqueue(T element) {
     Node node       = laatste;
     laatste         = new Node();
@@ -62,10 +62,12 @@ public class QueueLinkedList<T> implements Queue<T> {
     return this;
   }
 
+  @Override
   public int size() {
     return elementen;
   }
 
+  @Override
   public String toString() {
     StringBuilder sb    = new StringBuilder();
     Node          node  = eerste;

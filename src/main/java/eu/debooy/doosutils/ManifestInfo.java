@@ -34,8 +34,7 @@ public class ManifestInfo {
 
   private static  String    buildVersion;
   private static  String    buildDate;
-  private static  Manifest  manifest      = null;
-
+  private static  Manifest  manif         = null;
 
   static {
     buildDetails();
@@ -62,7 +61,7 @@ public class ManifestInfo {
 
       }
       getManifest(manifestUrl);
-      while (null == manifest
+      while (null == manif
           && classContainer.contains(LIB)) {
         classContainer  =
           classContainer.substring(0, classContainer.indexOf(LIB));
@@ -72,8 +71,8 @@ public class ManifestInfo {
         getManifest(manifestUrl);
       }
 
-      if (null != manifest) {
-        Attributes  attr  = manifest.getMainAttributes();
+      if (null != manif) {
+        Attributes  attr  = manif.getMainAttributes();
         buildVersion  = attr.getValue("Implementation-Version");
         buildDate     = attr.getValue("Build-Time");
       }
@@ -93,7 +92,7 @@ public class ManifestInfo {
 
   private static void getManifest(URL manifestUrl) {
     try {
-    manifest  = new Manifest(manifestUrl.openStream());
+    manif = new Manifest(manifestUrl.openStream());
     } catch (IOException e) {
       buildVersion  = VERSION_UNSTABLE;
       buildDate     = DATE_UNKNOWN;

@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Marco de Booij
+ * Copyright (c) 2016 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.0 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 
 
 /**
- * @author Marco de Booij (booymaa)
+ * @author Marco de Booij
  */
 public class StackLinkedList<T> implements Stack<T> {
   private int   elementen;
@@ -31,8 +31,7 @@ public class StackLinkedList<T> implements Stack<T> {
     private Node  volgende;
   }
 
-  public StackLinkedList() { }
-
+  @Override
   public T pop() {
     if (eerste == null) {
       throw new NoSuchElementException();
@@ -45,10 +44,12 @@ public class StackLinkedList<T> implements Stack<T> {
     return node;
   }
 
+  @Override
   public int size() {
     return elementen;
   }
 
+  @Override
   public StackLinkedList<T> push(T element) {
     Node node       = eerste;
     eerste          = new Node();
@@ -59,6 +60,7 @@ public class StackLinkedList<T> implements Stack<T> {
     return this;
   }
 
+  @Override
   public String toString() {
     StringBuilder sb    = new StringBuilder();
     Node          node  = eerste;
