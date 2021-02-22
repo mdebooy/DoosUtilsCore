@@ -25,7 +25,11 @@ public final class Banner {
 
   private Banner() {}
 
-  @Deprecated
+  /**
+   * @param titel
+   * @deprecated Verwijderd omdat er nu meerdere banners mogelijk zijn.
+   */
+  @Deprecated(forRemoval = false, since = "2.4.0")
   public static void printBanner(String titel) {
     printMarcoBanner(titel);
   }

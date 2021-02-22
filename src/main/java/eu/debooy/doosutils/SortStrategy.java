@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Marco de Booij
+ * Copyright (c) 2011 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,11 +19,11 @@ package eu.debooy.doosutils;
 
 /**
  * @author Marco de Booij
- * 
+ *
  * @deprecated Gebruik de standaard Java <pre>Comparator<?></pre> om een
  *             afwijkende sortering te krijgen.
  */
-@Deprecated(forRemoval=true)
+@Deprecated(forRemoval=false, since = "2.4.0")
 public interface SortStrategy {
   int sortingAlgorithm(Object obj1, Object obj2);
 }

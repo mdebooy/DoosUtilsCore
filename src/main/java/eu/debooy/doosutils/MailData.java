@@ -42,9 +42,6 @@ public class MailData implements Serializable {
   private String              message     = "";
   private String              subject     = "";
 
-  public MailData() {
-  }
-
   public void addBcc(String bcc) {
     this.bcc.put(bcc, bcc);
   }
@@ -227,9 +224,8 @@ public class MailData implements Serializable {
   private String hashToString(Map<String, String> hashtable) {
     StringBuilder stringBuilder = new StringBuilder();
 
-    hashtable.values().forEach(string -> {
-      stringBuilder.append(", ").append(string);
-    });
+    hashtable.values().forEach(string -> stringBuilder.append(", ")
+                                                      .append(string));
 
     return stringBuilder.toString().replaceFirst(", ", "");
   }

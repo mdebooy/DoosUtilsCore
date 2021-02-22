@@ -47,6 +47,14 @@ public final class Arguments {
     return null;
   }
 
+  private String getDashArgument(String arg) {
+    if (arg.startsWith("--")) {
+      return arg.substring(2);
+    }
+
+    return arg.substring(1);
+  }
+
   public boolean hasArgument(String argument) {
     return args.containsKey(argument);
   }
@@ -75,43 +83,44 @@ public final class Arguments {
   }
 
   public boolean setArguments(String[] args){
+    int     i     = 0;
     String  key;
     String  value;
 
-    for (int i = 0; i < args.length; i++) {
+    while (i < args.length) {
       if (args[i].startsWith("-")) {
-        String  argument;
-        if (args[i].startsWith("--")) {
-          argument  = args[i].substring(2);
-        } else {
-          argument  = args[i].substring(1);
-        }
-        if (argument.indexOf('=') > 0) {
-          key   = argument.substring(0, argument.indexOf('='));
-          value = argument.substring(argument.indexOf('=')+1);
+        String  argument  = getDashArgument(args[i]);
+        int     gelijk    = argument.indexOf('=');
+        if (gelijk >= 1) {
+          key   = argument.substring(0, gelijk);
+          value = argument.substring(gelijk+1);
         } else {
           key   = argument;
+          value = "";
           if (i+1 < args.length
               && !args[i+1].startsWith("-")) {
             i++;
             value = args[i];
-          } else {
-            value = "";
           }
         }
         this.args.put(key, value);
       } else {
-        if (args[i].indexOf('=') > 0) {
-          key   = args[i].substring(0, args[i].indexOf('='));
-          value = args[i].substring(args[i].indexOf('=')+1);
-          this.args.put(key, value);
-        } else {
-          valid = false;
-        }
+        setArg(args[i]);
       }
+      i++;
     }
 
     return valid;
+  }
+
+  private void setArg(String arg) {
+    int gelijk  = arg.indexOf('=');
+    if (gelijk < 1) {
+      valid = false;
+    } else {
+      args.put(arg.substring(0, gelijk),
+               arg.substring(gelijk+1));
+    }
   }
 
   public void setParameters(String[] parameters) {
@@ -126,14 +135,11 @@ public final class Arguments {
   public String toString() {
     StringBuilder result  = new StringBuilder();
     result.append("Arguments:");
-    args.entrySet().forEach(entry -> {
+    args.entrySet().forEach(entry ->
       result.append(entry.getKey()).append("=").append(entry.getValue())
-            .append("|");
-    });
+            .append("|"));
     result.append("Verplicht:");
-    verplicht.forEach(key -> {
-      result.append(key).append("|");
-    });
+    verplicht.forEach(key -> result.append(key).append("|"));
 
     return result.toString();
   }
