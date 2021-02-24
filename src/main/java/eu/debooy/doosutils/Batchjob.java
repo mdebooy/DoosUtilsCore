@@ -106,7 +106,7 @@ public abstract class Batchjob {
 
   protected static void printFouten(List<String> fouten) {
     if (!fouten.isEmpty() ) {
-      fouten.forEach(fout ->  DoosUtils.foutNaarScherm(fout));
+      fouten.forEach(DoosUtils::foutNaarScherm);
     }
   }
 
