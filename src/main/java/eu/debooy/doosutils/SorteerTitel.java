@@ -60,14 +60,14 @@ public final class SorteerTitel {
                     "l'", "la ", "le ", "les ", "un ", "une "}),
     NL(new String[]{"de ", "een ", "het "});
 
-    private Lidwoorden(String[] artikelen) {
-      this.artikelen = Arrays.copyOf(artikelen, artikelen.length);
+    private Lidwoorden(String[] lidwoorden) {
+      artikelen = Arrays.copyOf(lidwoorden, lidwoorden.length);
     }
 
     public  String[] getLidwoorden() {
       return Arrays.copyOf(artikelen, artikelen.length);
     }
 
-    private String[] artikelen;
+    private final String[] artikelen;
   }
 }
