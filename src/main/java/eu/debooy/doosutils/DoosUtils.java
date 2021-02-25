@@ -151,6 +151,10 @@ public final class DoosUtils {
   }
 
   public static String stringMetLengte(String string, int lengte) {
+    if (string.length() >= lengte) {
+      return string.substring(0, lengte);
+    }
+
     return String.format("%" + lengte +"s", string);
   }
 
