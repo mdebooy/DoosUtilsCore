@@ -54,6 +54,7 @@ public class DoosObject {
   /**
    * Maak een String van alle attributen die via een getter te benaderen zijn.
    */
+  @Override
   public String toString() {
     StringBuilder sb        = new StringBuilder();
     String        attribute;
