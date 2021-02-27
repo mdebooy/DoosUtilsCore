@@ -178,6 +178,15 @@ public class ArgumentsTest extends TestCase {
   }
 
   @Test
+  public void testMissendeParameter() {
+    Arguments arguments = new Arguments();
+    String[]  args      = {UPDATE + "=" + TRUE};
+
+    assertTrue(arguments.setArguments(args));
+    assertNull(arguments.getArgument(MINMININSERT));
+  }
+
+  @Test
   public void testParameters() {
     Arguments arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE, MINMININSERT + "=" + FALSE,
@@ -188,6 +197,16 @@ public class ArgumentsTest extends TestCase {
     assertFalse(arguments.isValid());
     arguments.setParameters(new String[]{DELETE, INSERT, UPDATE});
     assertTrue(arguments.isValid());
+  }
+
+  @Test
+  public void testMissendeVerplicht() {
+    Arguments arguments = new Arguments();
+    String[]  args      = {UPDATE + "=" + TRUE};
+
+    assertTrue(arguments.setArguments(args));
+    arguments.setVerplicht(new String[]{DELETE});
+    assertFalse(arguments.isValid());
   }
 
   @Test
