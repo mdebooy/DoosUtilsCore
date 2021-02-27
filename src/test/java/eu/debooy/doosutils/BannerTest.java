@@ -47,6 +47,17 @@ public class BannerTest {
   }
 
   @Test
+  public void printBannerTest() {
+    Banner.printMarcoBanner("printBannerTest");
+
+    String[]  banner  = outContent.toString().split("\\n");
+
+    assertEquals(12, banner.length);
+    assertTrue(banner[2].endsWith("printBannerTest"));
+    assertEquals(0, errContent.size());
+  }
+
+  @Test
   public void printDoosBannerTest() {
     Banner.printDoosBanner("printDoosBannerTest");
 
