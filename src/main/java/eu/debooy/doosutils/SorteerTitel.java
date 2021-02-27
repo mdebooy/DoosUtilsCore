@@ -58,7 +58,8 @@ public final class SorteerTitel {
     EN(new String[]{"a ", "an ", "the "}),
     FR(new String[]{"d'", "de ", "de l'", "de la ", "des ", "du ",
                     "l'", "la ", "le ", "les ", "un ", "une "}),
-    NL(new String[]{"de ", "een ", "het "});
+    NL(new String[]{"de ", "een ", "het "}),
+    RU(new String[]{});
 
     private Lidwoorden(String[] lidwoorden) {
       artikelen = Arrays.copyOf(lidwoorden, lidwoorden.length);
