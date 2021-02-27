@@ -46,9 +46,28 @@ public class SorteerTitelTest extends TestCase {
   }
 
   @Test
+  public void testGeenLidwoord() {
+    assertEquals(
+        "Русский язык не имеет статей.",
+        SorteerTitel.sorteerwaarde("Русский язык не имеет статей.", "ru"));
+  }
+
+  @Test
   public void testNederlands() {
     assertEquals("vrouw", SorteerTitel.sorteerwaarde("de vrouw", "nl"));
     assertEquals("vrouw", SorteerTitel.sorteerwaarde("een vrouw", "nl"));
     assertEquals("meisje", SorteerTitel.sorteerwaarde("het meisje", "nl"));
+  }
+
+  @Test
+  public void testOnbekendeTaal() {
+    assertEquals("onbekende taal",
+                  SorteerTitel.sorteerwaarde("onbekende taal", "xx"));
+  }
+
+  @Test
+  public void testZonderLidwoord() {
+    assertEquals("zonder lidwoord",
+                  SorteerTitel.sorteerwaarde("zonder lidwoord", "nl"));
   }
 }
