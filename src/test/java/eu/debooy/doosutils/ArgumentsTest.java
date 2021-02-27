@@ -223,4 +223,17 @@ public class ArgumentsTest extends TestCase {
     arguments.setVerplicht(new String[]{UPDATE});
     assertTrue(arguments.isValid());
   }
+
+  @Test
+  public void testToString() {
+    Arguments arguments = new Arguments();
+    String[]  args      = {UPDATE + "=" + TRUE};
+
+    assertTrue(arguments.setArguments(args));
+    assertEquals("Arguments:update=true|Verplicht:", arguments.toString());
+    arguments.setVerplicht(new String[]{UPDATE});
+    assertTrue(arguments.isValid());
+    assertEquals("Arguments:update=true|Verplicht:update|",
+                 arguments.toString());
+  }
 }
