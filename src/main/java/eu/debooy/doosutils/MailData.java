@@ -58,6 +58,31 @@ public class MailData implements Serializable {
     this.to.put(to, to);
   }
 
+  @Override
+  public boolean equals(Object object) {
+    if (null == object) {
+      return false;
+    }
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof MailData)) {
+      return false;
+    }
+
+    MailData  mailData  = (MailData) object;
+    return new EqualsBuilder().append(bcc, mailData.bcc)
+                              .append(cc, mailData.cc)
+                              .append(contentType, mailData.contentType)
+                              .append(from, mailData.from)
+                              .append(header, mailData.header)
+                              .append(message, mailData.message)
+                              .append(sentDate, mailData.sentDate)
+                              .append(subject, mailData.subject)
+                              .append(to, mailData.to)
+                              .isEquals();
+  }
+
   public Map<String, String> getBcc() {
     return bcc;
   }
@@ -114,6 +139,35 @@ public class MailData implements Serializable {
     return to.size();
   }
 
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(bcc)
+                                .append(cc)
+                                .append(contentType)
+                                .append(from)
+                                .append(header)
+                                .append(message)
+                                .append(sentDate)
+                                .append(subject)
+                                .append(to)
+                                .toHashCode();
+  }
+
+  /**
+   * Transfer the values of a HashTable into a String.
+   *
+   * @param hashtable
+   * @return
+   */
+  private String hashToString(Map<String, String> hashtable) {
+    StringBuilder stringBuilder = new StringBuilder();
+
+    hashtable.values().forEach(string -> stringBuilder.append(", ")
+                                                      .append(string));
+
+    return stringBuilder.toString().replaceFirst(", ", "");
+  }
+
   public void setBcc(Map<String, String> bcc) {
     this.bcc = bcc;
   }
@@ -139,12 +193,11 @@ public class MailData implements Serializable {
   }
 
   public void setContentType(String contentType) {
-    if (contentType == null
-        || contentType.isEmpty()) {
+    if (DoosUtils.isBlankOrNull(contentType)) {
       this.contentType = DEF_CONTENTTYPE;
+    } else {
+      this.contentType = contentType;
     }
-
-    this.contentType = contentType;
   }
 
   public void setFrom(String from) {
@@ -173,61 +226,6 @@ public class MailData implements Serializable {
 
   public void setTo(String to) {
     this.to.put(to, to);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (null == object) {
-      return false;
-    }
-    if (this == object) {
-      return true;
-    }
-    if (!(object instanceof MailData)) {
-      return false;
-    }
-
-    MailData  mailData  = (MailData) object;
-    return new EqualsBuilder().appendSuper(super.equals(object))
-                              .append(bcc, mailData.bcc)
-                              .append(cc, mailData.cc)
-                              .append(contentType, mailData.contentType)
-                              .append(from, mailData.from)
-                              .append(header, mailData.header)
-                              .append(message, mailData.message)
-                              .append(sentDate, mailData.sentDate)
-                              .append(subject, mailData.subject)
-                              .append(to, mailData.to)
-                              .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder().append(bcc)
-                                .append(cc)
-                                .append(contentType)
-                                .append(from)
-                                .append(header)
-                                .append(message)
-                                .append(sentDate)
-                                .append(subject)
-                                .append(to)
-                                .toHashCode();
-  }
-
-  /**
-   * Transfer the values of a HashTable into a String.
-   *
-   * @param hashtable
-   * @return
-   */
-  private String hashToString(Map<String, String> hashtable) {
-    StringBuilder stringBuilder = new StringBuilder();
-
-    hashtable.values().forEach(string -> stringBuilder.append(", ")
-                                                      .append(string));
-
-    return stringBuilder.toString().replaceFirst(", ", "");
   }
 
   @Override
