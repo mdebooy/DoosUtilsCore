@@ -66,10 +66,6 @@ public abstract class Batchjob {
 
   protected static  Map<String, String> parameters  = new HashMap<>();
 
-  private Batchjob () {
-    throw new IllegalStateException("Utility class");
-  }
-
   public static void execute(String[] args) {
   }
 
