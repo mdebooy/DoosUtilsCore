@@ -48,7 +48,7 @@ public class BannerTest {
 
   @Test
   public void printBannerTest() {
-    Banner.printMarcoBanner("printBannerTest");
+    Banner.printBanner("printBannerTest");
 
     String[]  banner  = outContent.toString().split("\\n");
 
