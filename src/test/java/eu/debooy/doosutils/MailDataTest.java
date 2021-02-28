@@ -17,7 +17,13 @@
 package eu.debooy.doosutils;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 
@@ -25,15 +31,54 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class MailDataTest {
-  public static final String  SIMPLE_MAILDATA =
+  private static final String  SIMPLE_MAILDATA =
       "{contentType=text/html from=from@junit.tst to=to@junit.tst "
       + "cc=cc@unit.tst bcc=bcc@junit.tst header=value "
       + "sentDate=Thu Jan 01 01:00:00 CET 1970 subject=subject "
       + "message=message}";
+  private static final  String  DEF_CONTENTTYPE = "text/html; charset=UTF-8";
+  private static final  String  TST_CONTENTTYPE = "content";
+
+  @Test
+  public void testContentType() {
+    MailData mailData = new MailData();
+
+    mailData.setContentType(TST_CONTENTTYPE);
+    assertEquals(TST_CONTENTTYPE, mailData.getContentType());
+    mailData.setContentType(null);
+    assertEquals(DEF_CONTENTTYPE, mailData.getContentType());
+    mailData.setContentType(TST_CONTENTTYPE);
+    assertEquals(TST_CONTENTTYPE, mailData.getContentType());
+    mailData.setContentType("");
+    assertEquals(DEF_CONTENTTYPE, mailData.getContentType());
+    mailData.setContentType(TST_CONTENTTYPE);
+    assertEquals(TST_CONTENTTYPE, mailData.getContentType());
+    mailData.setContentType("     ");
+    assertEquals(DEF_CONTENTTYPE, mailData.getContentType());
+  }
+
+  @Test
+  public void testEquals() {
+    MailData mailData1  = new MailData();
+    MailData mailData2  = new MailData();
+
+    mailData1.setSubject("mailData1");
+    mailData1.setSentDate(new Date(1));
+    mailData2.setSubject("mailData2");
+    mailData2.setSentDate(new Date(1));
+
+    assertFalse(mailData1.equals(null));
+    assertTrue(mailData1.equals(mailData1));
+    assertFalse(mailData1.equals(""));
+    assertFalse(mailData1.equals(mailData2));
+    mailData2.setSubject("mailData1");
+    assertTrue(mailData1.equals(mailData2));
+  }
 
   @Test
   public void testMailData1() {
     MailData mailData = new MailData();
+
     mailData.setBcc("bcc@junit.tst");
     mailData.setCc("cc@unit.tst");
     mailData.setContentType("text/html");
@@ -43,8 +88,13 @@ public class MailDataTest {
     mailData.setSentDate(new Date(1));
     mailData.setSubject("subject");
     mailData.setTo("to@junit.tst");
-    assertEquals(SIMPLE_MAILDATA, mailData.toString());
+
+    assertEquals(1, mailData.getBccSize());
+    assertEquals(1, mailData.getCcSize());
+    assertEquals(1, mailData.getHeaderSize());
+    assertEquals(1, mailData.getToSize());
     assertEquals(-385379184, mailData.hashCode());
+    assertEquals(SIMPLE_MAILDATA, mailData.toString());
   }
 
   @Test
@@ -59,7 +109,45 @@ public class MailDataTest {
     mailData.setSentDate(new Date(1));
     mailData.setSubject("subject");
     mailData.addTo("to@junit.tst");
-    assertEquals(SIMPLE_MAILDATA, mailData.toString());
+    assertEquals(1, mailData.getBccSize());
+    assertEquals(1, mailData.getCcSize());
+    assertEquals(1, mailData.getHeaderSize());
+    assertEquals(1, mailData.getToSize());
     assertEquals(-385379184, mailData.hashCode());
+    assertEquals(SIMPLE_MAILDATA, mailData.toString());
+  }
+
+  @Test
+  public void testMailData3() {
+    Map<String, String> adressen  = new HashMap<>();
+    MailData mailData = new MailData();
+
+    adressen.put("adres1@junit.tst", "");
+    adressen.put("adres2@junit.tst", "Adres 2");
+
+    mailData.setBcc(adressen);
+    mailData.setCc(adressen);
+    mailData.setHeader(adressen);
+    mailData.setTo(adressen);
+
+    assertEquals(2, mailData.getBccSize());
+    assertEquals(2, mailData.getCcSize());
+    assertEquals(2, mailData.getHeaderSize());
+    assertEquals(2, mailData.getToSize());
+    assertEquals(adressen, mailData.getBcc());
+    assertEquals(adressen, mailData.getCc());
+    assertEquals(adressen, mailData.getHeader());
+    assertEquals(adressen, mailData.getTo());
+  }
+
+  @Test
+  public void testSendDate() {
+    MailData mailData = new MailData();
+
+    mailData.setSentDate(new Date(1));
+    mailData.setSentDate(null);
+
+    assertNotEquals(new Date(1), mailData.getSentDate());
+    assertNotNull(mailData.getSentDate());
   }
 }
