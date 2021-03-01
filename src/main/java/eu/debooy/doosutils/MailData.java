@@ -120,10 +120,6 @@ public class MailData implements Serializable {
   }
 
   public Date getSentDate() {
-    if (sentDate == null) {
-      return new Date();
-    }
-
     return new Date(sentDate.getTime());
   }
 
