@@ -20,9 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
@@ -67,12 +65,12 @@ public class MailDataTest {
     mailData2.setSubject("mailData2");
     mailData2.setSentDate(new Date(1));
 
-    assertFalse(mailData1.equals(null));
-    assertTrue(mailData1.equals(mailData1));
-    assertFalse(mailData1.equals(""));
-    assertFalse(mailData1.equals(mailData2));
+    assertNotEquals(null, mailData1);
+    assertEquals(mailData1, mailData1);
+    assertNotEquals("", mailData1);
+    assertNotEquals(mailData2, mailData1);
     mailData2.setSubject("mailData1");
-    assertTrue(mailData1.equals(mailData2));
+    assertEquals(mailData2, mailData1);
   }
 
   @Test
@@ -91,7 +89,10 @@ public class MailDataTest {
 
     assertEquals(1, mailData.getBccSize());
     assertEquals(1, mailData.getCcSize());
+    assertEquals("from@junit.tst", mailData.getFrom());
     assertEquals(1, mailData.getHeaderSize());
+    assertEquals("message", mailData.getMessage());
+    assertEquals("subject", mailData.getSubject());
     assertEquals(1, mailData.getToSize());
     assertEquals(-385379184, mailData.hashCode());
     assertEquals(SIMPLE_MAILDATA, mailData.toString());
@@ -143,6 +144,7 @@ public class MailDataTest {
   @Test
   public void testSendDate() {
     MailData mailData = new MailData();
+    assertNotNull(mailData.getSentDate());
 
     mailData.setSentDate(new Date(1));
     mailData.setSentDate(null);
