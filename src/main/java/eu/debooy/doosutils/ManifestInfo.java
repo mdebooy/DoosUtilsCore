@@ -92,7 +92,7 @@ public class ManifestInfo {
 
   private static void getManifest(URL manifestUrl) {
     try {
-    manif = new Manifest(manifestUrl.openStream());
+      manif = new Manifest(manifestUrl.openStream());
     } catch (IOException e) {
       buildVersion  = VERSION_UNSTABLE;
       buildDate     = DATE_UNKNOWN;
