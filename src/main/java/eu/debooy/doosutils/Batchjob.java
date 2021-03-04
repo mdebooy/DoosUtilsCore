@@ -34,6 +34,7 @@ public abstract class Batchjob {
   protected static final  String  ERR_BEVATDIRECTORY  = "error.bevatdirectory";
   protected static final  String  ERR_INVALIDPARAMS   = "error.invalid.params";
   protected static final  String  ERR_NOBOOLEAN       = "error.no.boolean";
+  protected static final  String  ERR_TOOLONBEKEND    = "error.tool.onbekend";
 
   protected static final  String  EXT_CSV   = ".csv";
   protected static final  String  EXT_JSON  = ".json";
