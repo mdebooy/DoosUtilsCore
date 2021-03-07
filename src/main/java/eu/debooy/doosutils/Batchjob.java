@@ -58,9 +58,11 @@ public abstract class Batchjob {
 
   protected static final  String  PAR_CHARSETIN   = "charsetin";
   protected static final  String  PAR_CHARSETUIT  = "charsetuit";
+  protected static final  String  PAR_CSVBESTAND  = "csvbestand";
   protected static final  String  PAR_INVOERDIR   = "invoerdir";
   protected static final  String  PAR_JSONBESTAND = "jsonbestand";
   protected static final  String  PAR_READONLY    = "readonly";
+  protected static final  String  PAR_TAAL        = "taal";
   protected static final  String  PAR_UITVOERDIR  = "uitvoerdir";
 
   protected static final  String  PFX_PARAMDASHES = "  --";
