@@ -26,11 +26,6 @@ import java.util.Scanner;
 public final class DoosUtils {
   private DoosUtils() {}
 
-  /**
-   * Schrijft een foutmelding op het scherm.
-   *
-   * @param regel
-   */
   public static void foutNaarScherm(String regel) {
     System.err.println(regel);
   }
@@ -50,48 +45,30 @@ public final class DoosUtils {
     return password;
   }
 
-  /**
-   * Is de parameter null of leeg?
-   *
-   * @param obj
-   * @return
-   */
   public static boolean isBlankOrNull(Object obj) {
     return obj == null || obj.toString().trim().equals("");
   }
 
-  /**
-   * Is de parameter niet null of leeg?
-   *
-   * @param obj
-   * @return
-   */
+  public static boolean isFalse(String waarde) {
+    return DoosConstants.ONWAAR.equalsIgnoreCase(waarde);
+  }
+
   public static boolean isNotBlankOrNull(Object obj) {
     return obj != null && !obj.toString().trim().equals("");
   }
 
-  /**
-   * Schrijft een lege regel op het scherm.
-   */
+  public static boolean isTrue(String waarde) {
+    return DoosConstants.WAAR.equalsIgnoreCase(waarde);
+  }
+
   public static void naarScherm() {
     naarScherm("");
   }
 
-  /**
-   * Schrijft een melding op het scherm.
-   *
-   * @param regel
-   */
   public static void naarScherm(String regel) {
     System.out.println(regel);
   }
 
-  /**
-   * Schrijf regel(s) van maxLengte op het scherm.
-   *
-   * @param pString
-   * @param maxLengte
-   */
   public static void naarScherm(String pString, int maxLengte) {
     naarScherm("", pString, maxLengte);
   }
@@ -121,12 +98,6 @@ public final class DoosUtils {
     DoosUtils.naarScherm(begin + string);
   }
 
-  /**
-   * Maak van een null String een lege String.
-   *
-   * @param string
-   * @return
-   */
   public static String nullToEmpty(String string) {
     if (null == string) {
       return "";
@@ -135,19 +106,28 @@ public final class DoosUtils {
     return string;
   }
 
-  /**
-   * Maak van een null String een lege String.
-   *
-   * @param string
-   * @param waarde
-   * @return String
-   */
-  public static String nullToValue(String string, String waarde) {
-    if (null == string) {
-      return waarde;
+  public static Integer nullToValue(Integer waarde, Integer defaultWaarde) {
+    if (null == waarde) {
+      return defaultWaarde;
     }
 
-    return string;
+    return waarde;
+  }
+
+  public static Long nullToValue(Long waarde, Long defaultWaarde) {
+    if (null == waarde) {
+      return defaultWaarde;
+    }
+
+    return waarde;
+  }
+
+  public static String nullToValue(String waarde, String defaultWaarde) {
+    if (null == waarde) {
+      return defaultWaarde;
+    }
+
+    return waarde;
   }
 
   public static String stringMetLengte(String string, int lengte) {

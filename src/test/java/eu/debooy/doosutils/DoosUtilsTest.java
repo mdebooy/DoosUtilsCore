@@ -64,11 +64,23 @@ public class DoosUtilsTest {
   }
 
   @Test
+  public void isFalseTest() {
+    assertTrue(DoosUtils.isFalse(DoosConstants.ONWAAR));
+    assertFalse(DoosUtils.isFalse(DoosConstants.WAAR));
+  }
+
+  @Test
   public void isNotBlankOrNullTest() {
     assertFalse(DoosUtils.isNotBlankOrNull(null));
     assertFalse(DoosUtils.isNotBlankOrNull(""));
     assertFalse(DoosUtils.isNotBlankOrNull(" "));
     assertTrue(DoosUtils.isNotBlankOrNull("x"));
+  }
+
+  @Test
+  public void isTrueTest() {
+    assertTrue(DoosUtils.isTrue(DoosConstants.WAAR));
+    assertFalse(DoosUtils.isTrue(DoosConstants.ONWAAR));
   }
 
   @Test
@@ -118,7 +130,25 @@ public class DoosUtilsTest {
   }
 
   @Test
-  public void nullToValueTest() {
+  public void nullToValueIntegerTest() {
+    Integer defaultWaarde = 10;
+    Integer waarde        = null;
+    assertEquals(defaultWaarde,  DoosUtils.nullToValue(waarde, defaultWaarde));
+    waarde  = 11;
+    assertEquals(waarde, DoosUtils.nullToValue(waarde, defaultWaarde));
+  }
+
+  @Test
+  public void nullToValueLongTest() {
+    Long  defaultWaarde = 10L;
+    Long  waarde        = null;
+    assertEquals(defaultWaarde,  DoosUtils.nullToValue(waarde, defaultWaarde));
+    waarde  = 11L;
+    assertEquals(waarde, DoosUtils.nullToValue(waarde, defaultWaarde));
+  }
+
+  @Test
+  public void nullToValueStringTest() {
     assertEquals("x",  DoosUtils.nullToValue(null, "x"));
     assertEquals("",  DoosUtils.nullToValue("", "x"));
     assertEquals("a", DoosUtils.nullToValue("a", "x"));
