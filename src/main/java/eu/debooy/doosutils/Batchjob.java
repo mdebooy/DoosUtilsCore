@@ -53,6 +53,7 @@ public abstract class Batchjob {
 
   protected static final  String  LBL_FOUT  = "label.fout";
   protected static final  String  LBL_OPTIE = "label.optie";
+  protected static final  String  LBL_PARAM = "label.param";
 
   protected static final  String  MSG_KLAAR = "msg.klaar";
 
