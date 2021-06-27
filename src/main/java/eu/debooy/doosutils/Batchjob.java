@@ -49,11 +49,13 @@ public abstract class Batchjob {
   protected static final  String  HLP_INVOERDIR       = "help.invoerdir";
   protected static final  String  HLP_PARAMSVERPLICHT = "help.paramsverplicht";
   protected static final  String  HLP_PARAMVERPLICHT  = "help.paramverplicht";
+  protected static final  String  HLP_TEXBESTAND      = "help.texbestand";
   protected static final  String  HLP_UITVOERDIR      = "help.uitvoerdir";
 
-  protected static final  String  LBL_FOUT  = "label.fout";
-  protected static final  String  LBL_OPTIE = "label.optie";
-  protected static final  String  LBL_PARAM = "label.param";
+  protected static final  String  LBL_FOUT        = "label.fout";
+  protected static final  String  LBL_OPTIE       = "label.optie";
+  protected static final  String  LBL_PARAM       = "label.param";
+  protected static final  String  LBL_TEXBESTAND  = "label.texbestand";
 
   protected static final  String  MSG_KLAAR = "msg.klaar";
 
@@ -64,6 +66,7 @@ public abstract class Batchjob {
   protected static final  String  PAR_JSONBESTAND = "jsonbestand";
   protected static final  String  PAR_READONLY    = "readonly";
   protected static final  String  PAR_TAAL        = "taal";
+  protected static final  String  PAR_TEXBESTAND  = "texbestand";
   protected static final  String  PAR_UITVOERDIR  = "uitvoerdir";
 
   protected static final  String  PFX_PARAMDASHES = "  --";
