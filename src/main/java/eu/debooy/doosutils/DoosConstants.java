@@ -36,6 +36,8 @@ public final class DoosConstants {
 
   public static final String  SMTP_HOST     = "smtp.debooy.eu";
 
+  public static final String  NOI18N        = "errors.geen.i18n";
+
   public static final String  EOL           =
     System.getProperty("line.separator");
 }
