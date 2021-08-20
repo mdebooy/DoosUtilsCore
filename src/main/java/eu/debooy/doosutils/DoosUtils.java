@@ -106,6 +106,14 @@ public final class DoosUtils {
     return string;
   }
 
+  public static Double nullToValue(Double waarde, Double defaultWaarde) {
+    if (null == waarde) {
+      return defaultWaarde;
+    }
+
+    return waarde;
+  }
+
   public static Integer nullToValue(Integer waarde, Integer defaultWaarde) {
     if (null == waarde) {
       return defaultWaarde;
