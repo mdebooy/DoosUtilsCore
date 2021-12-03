@@ -1,0 +1,15 @@
+{
+  "_jar": "ParameterBundle.jar",
+  "applicatie": "ParameterBundle",
+  "banner": "Parameter Bundle",
+  "help": "Hiermee kunnen de parameters voor een applicatie worden gedefinieerd.",
+  "parameters": [
+    {
+      "parameter": "help",
+      "kort": "h",
+      "lang": "help",
+      "help": "Geeft deze helptekst.",
+      "verplicht": false
+    }
+  ]
+}

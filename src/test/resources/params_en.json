@@ -1,0 +1,14 @@
+{
+  "applicatie": "ParameterBundleEN",
+  "banner": "",
+  "help": "With this file the parameters for the application are defined.",
+  "parameters": [
+    {
+      "parameter": "helpEN",
+      "kort": "h",
+      "lang": "help",
+      "help": "Gives this helptext.",
+      "verplicht": false
+    }
+  ]
+}

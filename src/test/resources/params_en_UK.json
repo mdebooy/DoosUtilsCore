@@ -1,0 +1,14 @@
+{
+  "applicatie": "ParameterBundleEN",
+  "banner": "The return of the Banner.",
+  "help": "With this file the parameters for the application are defined (en_UK).",
+  "parameters": [
+    {
+      "parameter": "help",
+      "kort": "k",
+      "lang": "help",
+      "help": "Gives this helptext (en_UK).",
+      "verplicht": false
+    }
+  ]
+}
