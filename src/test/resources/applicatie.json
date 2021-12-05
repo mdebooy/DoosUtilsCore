@@ -34,7 +34,7 @@
       "parameter": "help",
       "kort": "h",
       "lang": "help",
-      "help": "Geeft deze helptekst.",
+      "help": "Επιστρέφει αυτό το κείμενο βοήθειας.",
       "type": "boolean",
       "verplicht": false
     },
@@ -74,7 +74,7 @@
     {
       "parameter": "kort",
       "format": "yyyy/MM/dd",
-      "help": "Enkel een -. De datum (yyyy/mm/dd).",
+      "help": "Enkel één -. De datum (yyyy/mm/dd).",
       "kort": "k",
       "standaard": "2021/12/21",
       "type": "Date",

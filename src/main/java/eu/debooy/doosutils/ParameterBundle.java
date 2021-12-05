@@ -19,9 +19,9 @@ package eu.debooy.doosutils;
 import static eu.debooy.doosutils.Batchjob.EXT_JSON;
 import static eu.debooy.doosutils.DoosConstants.NA;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +47,8 @@ public class ParameterBundle {
   public static final String  ERR_ARG_DUBBEL    = "error.arg.dubbel";
   public static final String  ERR_ARG_FOUTIEF   = "error.arg.foutief";
   public static final String  ERR_ARG_ONBEKEND  = "error.arg.onbekend";
+  public static final String  ERR_ARG_AFWEZIG   = "error.arg.afwezig";
+  public static final String  ERR_ARGS_AFWEZIG  = "error.args.afwezig";
   public static final String  ERR_CONF_AFWEZIG  = "error.config.param.afwezig";
   public static final String  ERR_CONFS_AFWEZIG = "error.config.params.afwezig";
   public static final String  ERR_CONF_BESTAND  = "error.config.afwezig";
@@ -73,33 +75,37 @@ public class ParameterBundle {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private       String                  applicatie  = NA;
-  private       String                  banner;
-  private final String                  baseName;
-  private       int                     breedte     = 80;
-  private final ClassLoader             classloader;
-  private final List<String>            errors      = new ArrayList<>();
-  private       String                  help;
-  private       String                  jar;
-  private final Map<String, String>     kort        = new TreeMap<>();
-  private final Map<String, String>     lang        = new TreeMap<>();
-  private final Locale                  locale;
-  private final Map<String, Parameter>  params      = new TreeMap<>();
-  private       int                     prefix      = 20;
+  private       String                    applicatie  = NA;
+  private final List<String>              argumenten  = new ArrayList<>();
+  private       String                    banner;
+  private final String                    baseName;
+  private       int                       breedte     = 80;
+  private final ClassLoader               classloader;
+  private final List<String>              errors      = new ArrayList<>();
+  private       String                    help;
+  private       String                    jar;
+  private final Map<String, String>       kort        = new TreeMap<>();
+  private final Map<String, String>       lang        = new TreeMap<>();
+  private final Locale                    locale;
+  private final Map<String, Parameter>    params      = new TreeMap<>();
+  private       int                       prefix      = 20;
+  private final IParameterBundleValidator validator;
 
   private ParameterBundle(Builder builder) {
     baseName    = builder.getBaseName();
     classloader = builder.getClassloader();
     locale      = builder.getLocale();
+    validator   = builder.getValidator();
 
     init();
   }
 
   public static final class Builder {
-    private String      baseName    = PARAMBUNDLE;
-    private ClassLoader classloader =
+    private String                    baseName    = PARAMBUNDLE;
+    private ClassLoader               classloader =
         ParameterBundle.class.getClassLoader();
-    private Locale      locale      = Locale.getDefault();
+    private Locale                    locale      = Locale.getDefault();
+    private IParameterBundleValidator validator;
 
     public ParameterBundle build() {
       return new ParameterBundle(this);
@@ -117,6 +123,10 @@ public class ParameterBundle {
       return locale;
     }
 
+    public IParameterBundleValidator getValidator() {
+      return validator;
+    }
+
     public Builder setClassloader(ClassLoader classloader) {
       this.classloader = classloader;
       return this;
@@ -131,6 +141,48 @@ public class ParameterBundle {
       this.locale = locale;
       return this;
     }
+
+    public Builder setValidator(IParameterBundleValidator validator) {
+      this.validator = validator;
+      return this;
+    }
+  }
+
+  private boolean checkArgs() {
+    List<String>  afwezig = new ArrayList<>();
+    params.values()
+          .stream()
+          .filter(param -> param.isVerplicht())
+          .map(param -> param.getParameter())
+          .forEach(sleutel -> {
+      if (!argumenten.contains(sleutel)) {
+        if (kort.containsValue(sleutel)) {
+          afwezig.add("-" + getArgument(sleutel, kort));
+        } else {
+          afwezig.add("--" + getArgument(sleutel, lang));
+        }
+      }
+     });
+
+    if (afwezig.size() == 1) {
+      errors.add(
+          MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
+                               afwezig.get(0)));
+    }
+    if (afwezig.size() > 1) {
+      errors.add(
+          MessageFormat.format(
+              resourceBundle.getString(ERR_ARGS_AFWEZIG),
+              String.join(", ", afwezig.subList(0, afwezig.size()-1)),
+              afwezig.get(afwezig.size()-1)));
+    }
+
+    var fouten  = errors.size();
+    if (null != validator) {
+      errors.addAll(validator.valideer(params));
+    }
+
+    return afwezig.isEmpty() && fouten == errors.size();
   }
 
   private void checkConfiguratie() {
@@ -178,6 +230,16 @@ public class ParameterBundle {
 
   public String getApplicatie() {
     return applicatie;
+  }
+
+  private String getArgument(String parameter,
+                             Map<String, String> parameters) {
+    return parameters.entrySet()
+                     .stream()
+                     .filter(p -> p.getValue().equals(parameter))
+                     .map(Map.Entry::getKey)
+                     .findFirst()
+                     .orElse("");
   }
 
   public String getBanner() {
@@ -317,22 +379,23 @@ public class ParameterBundle {
   }
 
   public void printParameters() {
+    DoosUtils.naarScherm("kort: " + kort.toString());
+    DoosUtils.naarScherm("lang: " + lang.toString());
     params.values().forEach(param -> DoosUtils.naarScherm(param.toString()));
   }
 
   private JSONObject readJson(String bestand) {
-    URL         bundle  = classloader.getResource(bestand);
+    InputStream is    = classloader.getResourceAsStream(bestand);
     JSONObject  json;
 
-    if (bundle == null) {
+    if (null == is) {
       throw new MissingResourceException(
           MessageFormat.format(resourceBundle.getString(ERR_CONF_BESTAND),
                                bestand),
           this.getClass().getName(), baseName);
     }
-
     try (BufferedReader  invoer  =
-              new BufferedReader(new FileReader(bundle.getFile()))) {
+              new BufferedReader(new InputStreamReader(is))) {
       json    = (JSONObject) new JSONParser().parse(invoer);
     } catch (IOException | ParseException e) {
       throw new MissingResourceException(
@@ -415,16 +478,15 @@ public class ParameterBundle {
       String  waarde;
       if (args[i].trim().startsWith("--")) {
         if (args[i].contains("=")) {
-          var split = args[i].substring(2).split("=");
-          parameter = lang.get(split[0]);
-          waarde    = split[1];
+          parameter = lang.get(args[i].substring(2).split("=")[0]);
+          waarde    = stripQuotes(args[i].substring(args[i].indexOf("=")+1));
         } else {
           parameter = lang.get(args[i].substring(2));
-          waarde    = metVolgende ? args[i+1] : "";
+          waarde    = metVolgende ? stripQuotes(args[i+1]) : "";
         }
       } else {
         parameter = kort.get(args[i].substring(1));
-        waarde    = metVolgende ? args[i+1] : "";
+        waarde    = metVolgende ? stripQuotes(args[i+1]) : "";
       }
 
       if (!setArg(parameter, waarde)) {
@@ -433,6 +495,7 @@ public class ParameterBundle {
                                         args[i]));
         correct = false;
       }
+      argumenten.add(parameter);
 
       if (metVolgende) {
         i++;
@@ -440,7 +503,7 @@ public class ParameterBundle {
       i++;
     }
 
-    return correct;
+    return correct && checkArgs();
   }
 
   private void setParamArg(String arg, String param,
@@ -470,12 +533,8 @@ public class ParameterBundle {
       return;
     }
 
-    var huidig  = args.entrySet()
-                      .stream()
-                      .filter(p -> p.getValue().equals(param))
-                      .map(Map.Entry::getKey)
-                      .findFirst()
-                      .orElse("");
+    var huidig  = getArgument(param, args);
+
     if (huidig.equals(arg)) {
       return;
     }
@@ -503,8 +562,10 @@ public class ParameterBundle {
       } else {
         if (params.containsKey(sleutel)) {
           var param = params.get(sleutel);
-          setParamArgB(param.getKort(), param.getParameter(), kort);
-          setParamArgB(param.getLang(), param.getParameter(), lang);
+          setParamArgB(jParam.get(Parameter.JSON_PAR_KORT).toString(),
+                       param.getParameter(), kort);
+          setParamArgB(jParam.get(Parameter.JSON_PAR_LANG).toString(),
+                       param.getParameter(), lang);
           setParams(jParam, param);
         } else {
           errors.add(
@@ -518,9 +579,19 @@ public class ParameterBundle {
   private void setParams(JSONObject parameters, Parameter param) {
     Parameter.paramI18N
              .stream()
-             .filter(sleutel -> (parameters.containsKey(sleutel)))
+             .filter(sleutel -> parameters.containsKey(sleutel))
              .forEachOrdered(sleutel ->
                      param.set(sleutel, parameters.get(sleutel).toString()));
+  }
+
+  private String stripQuotes(String string) {
+    if (string.startsWith("\"")
+        && string.endsWith("\"")
+        && string.length() > 1) {
+      return (string.substring(1, string.length() - 1));
+    }
+
+    return string;
   }
 
   @Override
