@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
@@ -68,7 +67,6 @@ public class Parameter {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private String[]  extra;
   private String    help;
   private String    format;
   private String    kort;
@@ -82,9 +80,6 @@ public class Parameter {
   private Parameter() {}
 
   public Parameter(JSONObject jParam) {
-    if (jParam.containsKey(JSON_PAR_EXTRA)) {
-      setExtra((JSONArray) jParam.get(JSON_PAR_EXTRA));
-    }
     if (jParam.containsKey(JSON_PAR_PARAMETER)) {
       setParam(jParam.get(JSON_PAR_PARAMETER).toString());
     }
@@ -104,10 +99,6 @@ public class Parameter {
     if (!jParam.containsKey(JSON_PAR_STANDAARD)) {
       setStandaard();
     }
-  }
-
-  public String[] getExtra() {
-    return extra;
   }
 
   public String getFormat() {
@@ -169,13 +160,6 @@ public class Parameter {
         break;
       default:
         break;
-    }
-  }
-
-  private void setExtra(JSONArray params) {
-    extra = new String[params.size()];
-    for (var i = 0; i < params.size(); i++) {
-      extra[i]  = params.get(i).toString();
     }
   }
 
@@ -284,7 +268,6 @@ public class Parameter {
             + "format: [" + DoosUtils.nullToEmpty(format) + "], "
             + "verplicht: [" + verplicht + "], "
             + "waarde: ["+ (null == waarde ? NULL : waarde.toString()) + "], "
-            + "extra: [" + (null == extra ? NULL : extra) + "], "
             + "help: [" + DoosUtils.nullToValue(help, NULL) + "]";
   }
 
