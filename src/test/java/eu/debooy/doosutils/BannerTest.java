@@ -47,21 +47,10 @@ public class BannerTest {
   }
 
   @Test
-  public void printBannerTest() {
-    Banner.printBanner("printBannerTest");
-
-    String[]  banner  = outContent.toString().split("\\n");
-
-    assertEquals(12, banner.length);
-    assertTrue(banner[2].endsWith("printBannerTest"));
-    assertEquals(0, errContent.size());
-  }
-
-  @Test
   public void printDoosBannerTest() {
     Banner.printDoosBanner("printDoosBannerTest");
 
-    String[]  banner  = outContent.toString().split("\\n");
+    var banner  = outContent.toString().split("\\n");
 
     assertEquals(10, banner.length);
     assertTrue(banner[4].endsWith("printDoosBannerTest"));
@@ -72,7 +61,7 @@ public class BannerTest {
   public void printMarcoBannerTest() {
     Banner.printMarcoBanner("printMarcoBannerTest");
 
-    String[]  banner  = outContent.toString().split("\\n");
+    var banner  = outContent.toString().split("\\n");
 
     assertEquals(12, banner.length);
     assertTrue(banner[2].endsWith("printMarcoBannerTest"));

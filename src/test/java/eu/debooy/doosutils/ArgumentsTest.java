@@ -47,7 +47,7 @@ public class ArgumentsTest extends TestCase {
   @Test
   public void testInitialize() {
     String[]  args      = {MINDELETE, TRUE, MININSERT};
-    Arguments arguments = new Arguments(args);
+    var       arguments = new Arguments(args);
 
     assertTrue(arguments.isValid());
     assertTrue(arguments.hasArgument(DELETE));
@@ -57,7 +57,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testZonderMinZonderWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {DELETE};
 
     assertFalse(arguments.setArguments(args));
@@ -65,7 +65,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testZonderMinMetWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {DELETE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -75,7 +75,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testEnkelMinZonderWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE};
 
     assertTrue(arguments.setArguments(args));
@@ -85,7 +85,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testEnkelMinMetWaarde1() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -95,7 +95,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testEnkelMinMetWaarde2() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -105,7 +105,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testDubbelMinZonderWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINMINDELETE};
 
     assertTrue(arguments.setArguments(args));
@@ -115,7 +115,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testDubbelMinMetWaarde1() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINMINDELETE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -125,7 +125,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testDubbelMinMetWaarde2() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINMINDELETE, TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -135,7 +135,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testTweeParametersZonderWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, MININSERT};
 
     assertTrue(arguments.setArguments(args));
@@ -145,7 +145,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testTweeParametersMetWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE, MININSERT, TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -157,7 +157,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testTweeParametersZonderMetWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, MININSERT, TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -168,7 +168,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testTweeParametersMetZonderWaarde() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE, MININSERT};
 
     assertTrue(arguments.setArguments(args));
@@ -179,7 +179,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testMissendeParameter() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {UPDATE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -188,7 +188,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testParameters() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE, MINMININSERT + "=" + FALSE,
                            UPDATE + "=" + TRUE};
 
@@ -201,7 +201,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testMissendeVerplicht() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {UPDATE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));
@@ -211,7 +211,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testVerplicht() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {MINDELETE, TRUE, MINMININSERT + "=" + FALSE,
                            UPDATE + "=" + TRUE};
 
@@ -226,7 +226,7 @@ public class ArgumentsTest extends TestCase {
 
   @Test
   public void testToString() {
-    Arguments arguments = new Arguments();
+    var       arguments = new Arguments();
     String[]  args      = {UPDATE + "=" + TRUE};
 
     assertTrue(arguments.setArguments(args));

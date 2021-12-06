@@ -39,7 +39,7 @@ public class MailDataTest {
 
   @Test
   public void testContentType() {
-    MailData mailData = new MailData();
+    var mailData  = new MailData();
 
     mailData.setContentType(TST_CONTENTTYPE);
     assertEquals(TST_CONTENTTYPE, mailData.getContentType());
@@ -57,8 +57,8 @@ public class MailDataTest {
 
   @Test
   public void testEquals() {
-    MailData mailData1  = new MailData();
-    MailData mailData2  = new MailData();
+    var mailData1 = new MailData();
+    var mailData2 = new MailData();
 
     mailData1.setSubject("mailData1");
     mailData1.setSentDate(new Date(1));
@@ -75,7 +75,7 @@ public class MailDataTest {
 
   @Test
   public void testMailData1() {
-    MailData mailData = new MailData();
+    var mailData  = new MailData();
 
     mailData.setBcc("bcc@junit.tst");
     mailData.setCc("cc@unit.tst");
@@ -100,7 +100,7 @@ public class MailDataTest {
 
   @Test
   public void testMailData2() {
-    MailData mailData = new MailData();
+    var mailData  = new MailData();
     mailData.addBcc("bcc@junit.tst");
     mailData.addCc("cc@unit.tst");
     mailData.setContentType("text/html");
@@ -121,7 +121,7 @@ public class MailDataTest {
   @Test
   public void testMailData3() {
     Map<String, String> adressen  = new HashMap<>();
-    MailData mailData = new MailData();
+    var                 mailData  = new MailData();
 
     adressen.put("adres1@junit.tst", "");
     adressen.put("adres2@junit.tst", "Adres 2");
@@ -143,7 +143,7 @@ public class MailDataTest {
 
   @Test
   public void testSendDate() {
-    MailData mailData = new MailData();
+    var mailData  = new MailData();
     assertNotNull(mailData.getSentDate());
 
     mailData.setSentDate(new Date(1));

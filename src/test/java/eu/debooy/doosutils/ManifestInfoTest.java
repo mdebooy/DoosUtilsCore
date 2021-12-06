@@ -26,7 +26,7 @@ import org.junit.Test;
 public class ManifestInfoTest {
   @Test
   public void testInitialize() {
-    ManifestInfo  manifestInfo  = new ManifestInfo();
+    var manifestInfo  = new ManifestInfo();
 
     assertEquals("UNKNOWN", manifestInfo.getBuildDate());
     assertEquals("UNSTABLE", manifestInfo.getBuildVersion());

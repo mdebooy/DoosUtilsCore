@@ -121,7 +121,7 @@ public abstract class Batchjob {
   public static void setBestandParameter(Arguments arguments,
                                          String parameter, String extentie) {
     if (arguments.hasArgument(parameter)) {
-      String  bestand = arguments.getArgument(parameter);
+      var bestand = arguments.getArgument(parameter);
       if (DoosUtils.isNotBlankOrNull(extentie)
           && bestand.endsWith(extentie)) {
         bestand = bestand.substring(0, bestand.length() - extentie.length());

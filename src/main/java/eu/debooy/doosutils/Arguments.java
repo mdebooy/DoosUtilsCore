@@ -60,11 +60,11 @@ public final class Arguments {
   }
 
   public boolean isValid() {
-    boolean juist     = true;
-    boolean volledig  = true;
+    var juist     = true;
+    var volledig  = true;
 
     // Alle verplichte parameters aanwezig?
-    for (String key: verplicht) {
+    for (var key: verplicht) {
       if (!args.containsKey(key)) {
         volledig  = false;
       }
@@ -72,7 +72,7 @@ public final class Arguments {
 
     // Enkel juiste parameters aanwezig?
     if (!parameters.isEmpty()) {
-      for (String parameter: args.keySet()) {
+      for (var parameter: args.keySet()) {
         if (!parameters.contains(parameter)) {
           juist = false;
         }
@@ -83,14 +83,14 @@ public final class Arguments {
   }
 
   public boolean setArguments(String[] args){
-    int     i     = 0;
+    var     i     = 0;
     String  key;
     String  value;
 
     while (i < args.length) {
       if (args[i].startsWith("-")) {
-        String  argument  = getDashArgument(args[i]);
-        int     gelijk    = argument.indexOf('=');
+        var argument  = getDashArgument(args[i]);
+        var gelijk    = argument.indexOf('=');
         if (gelijk >= 1) {
           key   = argument.substring(0, gelijk);
           value = argument.substring(gelijk+1);
@@ -114,7 +114,7 @@ public final class Arguments {
   }
 
   private void setArg(String arg) {
-    int gelijk  = arg.indexOf('=');
+    var gelijk  = arg.indexOf('=');
     if (gelijk < 1) {
       valid = false;
     } else {
@@ -133,7 +133,7 @@ public final class Arguments {
 
   @Override
   public String toString() {
-    StringBuilder result  = new StringBuilder();
+    var result  = new StringBuilder();
     result.append("Arguments:");
     args.entrySet().forEach(entry ->
       result.append(entry.getKey()).append("=").append(entry.getValue())

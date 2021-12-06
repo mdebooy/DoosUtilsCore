@@ -19,7 +19,6 @@ package eu.debooy.doosutils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 
@@ -42,10 +41,10 @@ public class ManifestInfo {
 
   private static void buildDetails() {
     try {
-      URL       manifestUrl;
-      String    classContainer  = ManifestInfo.class.getProtectionDomain()
-                                              .getCodeSource()
-                                              .getLocation().toString();
+      URL manifestUrl;
+      var classContainer  = ManifestInfo.class.getProtectionDomain()
+                                        .getCodeSource()
+                                        .getLocation().toString();
 
       if (classContainer.contains(LIB)) {
         classContainer  =
@@ -72,7 +71,7 @@ public class ManifestInfo {
       }
 
       if (null != manif) {
-        Attributes  attr  = manif.getMainAttributes();
+        var attr  = manif.getMainAttributes();
         buildVersion  = attr.getValue("Implementation-Version");
         buildDate     = attr.getValue("Build-Time");
       }
@@ -83,11 +82,11 @@ public class ManifestInfo {
   }
 
   public String getBuildVersion() {
-    return buildVersion;
+    return DoosUtils.nullToValue(buildVersion, VERSION_UNSTABLE);
   }
 
   public String getBuildDate() {
-    return buildDate;
+    return DoosUtils.nullToValue(buildDate, DATE_UNKNOWN);
   }
 
   private static void getManifest(URL manifestUrl) {

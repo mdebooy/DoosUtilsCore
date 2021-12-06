@@ -103,7 +103,7 @@ public class DoosUtilsTest {
   public void naarScherm3Test() {
     DoosUtils.naarScherm("test test test", 5);
 
-    String[]  regel = outContent.toString().split("\\n");
+    var regel = outContent.toString().split("\\n");
 
     assertEquals(3, regel.length);
     assertEquals("test", regel[0]);
@@ -114,7 +114,7 @@ public class DoosUtilsTest {
   public void naarScherm4Test() {
     DoosUtils.naarScherm("-", "test test test", 6);
 
-    String[]  regel = outContent.toString().split("\\n");
+    var regel = outContent.toString().split("\\n");
 
     assertEquals(3, regel.length);
     assertEquals("-test", regel[0]);

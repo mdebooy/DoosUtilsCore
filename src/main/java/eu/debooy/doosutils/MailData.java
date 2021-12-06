@@ -70,7 +70,7 @@ public class MailData implements Serializable {
       return false;
     }
 
-    MailData  mailData  = (MailData) object;
+    var mailData  = (MailData) object;
     return new EqualsBuilder().append(bcc, mailData.bcc)
                               .append(cc, mailData.cc)
                               .append(contentType, mailData.contentType)
@@ -156,7 +156,7 @@ public class MailData implements Serializable {
    * @return
    */
   private String hashToString(Map<String, String> hashtable) {
-    StringBuilder stringBuilder = new StringBuilder();
+    var stringBuilder = new StringBuilder();
 
     hashtable.values().forEach(string -> stringBuilder.append(", ")
                                                       .append(string));

@@ -49,7 +49,7 @@ public class QueueLinkedList<T> implements Queue<T> {
 
   @Override
   public QueueLinkedList<T> enqueue(T element) {
-    Node node       = laatste;
+    var node        = laatste;
     laatste         = new Node();
     laatste.element = element;
 
@@ -69,8 +69,8 @@ public class QueueLinkedList<T> implements Queue<T> {
 
   @Override
   public String toString() {
-    StringBuilder sb    = new StringBuilder();
-    Node          node  = eerste;
+    var sb    = new StringBuilder();
+    var node  = eerste;
     while (node != null) {
       sb.append(", ").append(node.element);
       node = node.volgende;

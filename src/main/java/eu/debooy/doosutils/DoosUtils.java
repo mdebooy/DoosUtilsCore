@@ -16,7 +16,6 @@
  */
 package eu.debooy.doosutils;
 
-import java.io.Console;
 import java.util.Scanner;
 
 
@@ -32,7 +31,7 @@ public final class DoosUtils {
 
   public static String getWachtwoord(String prompt) {
     String  password;
-    Console console   = System.console();
+    var     console   = System.console();
     if (null == console) {
       try (Scanner invoer = new Scanner(System.in)) {
         System.out.print(prompt + " ");
@@ -81,15 +80,15 @@ public final class DoosUtils {
    * @param maxLengte
    */
   public static void naarScherm(String pBegin, String pString, int maxLengte) {
-    int     beginLengte   = pBegin.length();
-    int     splitsLengte  = maxLengte - beginLengte;
-    String  begin         = pBegin;
-    String  leeg          =
+    var beginLengte   = pBegin.length();
+    var splitsLengte  = maxLengte - beginLengte;
+    var begin         = pBegin;
+    var leeg          =
         (beginLengte == 0 ? "" : stringMetLengte(" ", beginLengte));
-    String  string        = pString;
+    var string        = pString;
 
     while (string.length() > splitsLengte) {
-      int splits  = string.substring(1, splitsLengte).lastIndexOf(" ");
+      var splits  = string.substring(1, splitsLengte).lastIndexOf(" ");
       DoosUtils.naarScherm(begin + string.substring(0, splits + 1));
       begin   = leeg;
       string  = string.substring(splits + 2);
@@ -148,7 +147,7 @@ public final class DoosUtils {
 
   public static String stringMetLengte(String string, int lengte,
                                        String padding) {
-    StringBuilder sb  = new StringBuilder(string);
+    var sb  = new StringBuilder(string);
     while (sb.length() < lengte) {
       sb.append(padding);
     }
@@ -158,7 +157,7 @@ public final class DoosUtils {
   }
 
   public static int telTeken(String string, char teken) {
-    int aantal  = 0;
+    var aantal  = 0;
     for (int i = 0; i < string.length(); i++) {
       if (string.charAt(i) == teken) {
         aantal++;

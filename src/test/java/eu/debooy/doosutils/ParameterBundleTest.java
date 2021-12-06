@@ -23,16 +23,18 @@ import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_BESTAND;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_ONBEKEND;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_BANNER;
 import static eu.debooy.doosutils.ParameterBundle.PARAMBUNDLE;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -181,6 +183,27 @@ public class ParameterBundleTest {
   }
 
   @Test
+  public void testHelp() {
+    var errContent  = new ByteArrayOutputStream();
+    var outContent  = new ByteArrayOutputStream();
+
+    System.setOut(new PrintStream(outContent));
+    System.setErr(new PrintStream(errContent));
+
+    ParameterBundle parameterBundle =
+      new ParameterBundle.Builder().setBaseName(APPLICATIE)
+                                   .setLocale(LOCALE).build();
+    parameterBundle.help();
+
+    var help  = outContent.toString().split("\\n");
+
+    assertEquals(22, help.length);
+
+    System.setErr(new PrintStream(System.err));
+    System.setOut(new PrintStream(System.out));
+  }
+
+  @Test
   public void testInit1() {
     Locale.setDefault(LOCALE);
 
@@ -247,18 +270,20 @@ public class ParameterBundleTest {
 
   @Test
   public void testInit5() {
-    Locale.setDefault(new Locale("en", "uk"));
+    Locale.setDefault(new Locale("nl"));
 
     String[]  args    = new String[] {"-k"};
 
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName(PARAMS).build();
+        new ParameterBundle.Builder().setBaseName(PARAMS)
+                                     .setLocale(new Locale("en", "uk")).build();
     parameterBundle.setArgs(args);
     String[]  errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
     assertEquals("ParameterBundle", parameterBundle.getApplicatie());
     assertEquals(1, errors.length);
+    Locale.setDefault(new Locale("en", "uk"));
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
                              "helpEN", "en_UK"), errors[0]);

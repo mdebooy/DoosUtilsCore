@@ -35,7 +35,7 @@ public class KeyValueTest extends TestCase {
 
   @Test
   public void testVeranderKey() {
-    KeyValue  kv  = new KeyValue("key", "value");
+    var kv  = new KeyValue("key", "value");
     kv.setSleutel("key1");
 
     assertEquals("key1", kv.getSleutel());
@@ -43,7 +43,7 @@ public class KeyValueTest extends TestCase {
 
   @Test
   public void testVeranderValue() {
-    KeyValue  kv  = new KeyValue("key", "value");
+    var kv  = new KeyValue("key", "value");
     kv.setWaarde("value1");
 
     assertEquals("value1", kv.getWaarde());

@@ -51,7 +51,7 @@ public class StackLinkedList<T> implements Stack<T> {
 
   @Override
   public StackLinkedList<T> push(T element) {
-    Node node       = eerste;
+    var node        = eerste;
     eerste          = new Node();
     eerste.element  = element;
     eerste.volgende = node;
@@ -62,8 +62,8 @@ public class StackLinkedList<T> implements Stack<T> {
 
   @Override
   public String toString() {
-    StringBuilder sb    = new StringBuilder();
-    Node          node  = eerste;
+    var sb    = new StringBuilder();
+    var node  = eerste;
     while (node != null) {
       sb.append(", ").append(node.element);
       node = node.volgende;

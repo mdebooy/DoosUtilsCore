@@ -36,8 +36,8 @@ public class DoosObject {
    */
   protected Collection<Method> findGetters() {
     List<Method>  getters = new ArrayList<>();
-    for (Method method : this.getClass().getMethods()) {
-      for (String prefix : GET_METHODS_PREFIXES) {
+    for (var method : this.getClass().getMethods()) {
+      for (var prefix : GET_METHODS_PREFIXES) {
         if (method.getName().startsWith(prefix)) {
           if (method.getParameterTypes() == null
               || method.getParameterTypes().length == 0) {
@@ -56,12 +56,12 @@ public class DoosObject {
    */
   @Override
   public String toString() {
-    StringBuilder sb        = new StringBuilder();
-    String        attribute;
-    Object        waarde;
+    var     sb        = new StringBuilder();
+    String  attribute;
+    Object  waarde;
 
     sb.append(this.getClass().getSimpleName()).append(" (");
-    for (Method method : findGetters()) {
+    for (var method : findGetters()) {
       try {
         if (method.getName().startsWith("get")) {
           attribute = method.getName().substring(3);

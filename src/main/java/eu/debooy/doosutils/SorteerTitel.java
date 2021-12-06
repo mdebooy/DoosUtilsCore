@@ -41,7 +41,7 @@ public final class SorteerTitel {
       return titel;
     }
 
-    String  kleineletters = titel.toLowerCase(new Locale(taal));
+    var kleineletters = titel.toLowerCase(new Locale(taal));
     // Kijk of de titel begint met een lidwoord en verwijder deze.
     for (String lidwoord : artikelen) {
       if (kleineletters.startsWith(lidwoord)) {
