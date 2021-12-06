@@ -20,7 +20,6 @@ import static eu.debooy.doosutils.Batchjob.EXT_JSON;
 import static eu.debooy.doosutils.DoosConstants.NA;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -152,8 +151,8 @@ public class ParameterBundle {
     List<String>  afwezig = new ArrayList<>();
     params.values()
           .stream()
-          .filter(param -> param.isVerplicht())
-          .map(param -> param.getParameter())
+          .filter(Parameter::isVerplicht)
+          .map(Parameter::getParameter)
           .forEach(sleutel -> {
       if (!argumenten.contains(sleutel)) {
         if (kort.containsValue(sleutel)) {
@@ -179,7 +178,7 @@ public class ParameterBundle {
 
     var fouten  = errors.size();
     if (null != validator) {
-      errors.addAll(validator.valideer(params));
+      errors.addAll(validator.valideer(params, argumenten));
     }
 
     return afwezig.isEmpty() && fouten == errors.size();
@@ -221,7 +220,7 @@ public class ParameterBundle {
   }
 
   private void checkParams() {
-    params.values().forEach(param -> checkParam(param));
+    params.values().forEach(this::checkParam);
   }
 
   public Object get(String parameter) {
@@ -352,7 +351,7 @@ public class ParameterBundle {
 
   private void init() throws MissingResourceException {
     // Standaard parameters
-    JSONObject  json  = readJson(baseName + EXT_JSON);
+    var json  = readJson(baseName + EXT_JSON);
     setConfiguratie(json);
 
     try {
@@ -385,7 +384,7 @@ public class ParameterBundle {
   }
 
   private JSONObject readJson(String bestand) {
-    InputStream is    = classloader.getResourceAsStream(bestand);
+    var         is    = classloader.getResourceAsStream(bestand);
     JSONObject  json;
 
     if (null == is) {
@@ -394,8 +393,7 @@ public class ParameterBundle {
                                bestand),
           this.getClass().getName(), baseName);
     }
-    try (BufferedReader  invoer  =
-              new BufferedReader(new InputStreamReader(is))) {
+    try (var invoer  = new BufferedReader(new InputStreamReader(is))) {
       json    = (JSONObject) new JSONParser().parse(invoer);
     } catch (IOException | ParseException e) {
       throw new MissingResourceException(
@@ -457,9 +455,24 @@ public class ParameterBundle {
     return (fouten == errors.size());
   }
 
+  public boolean setArgLang(String arg, String arg2) {
+    String  parameter;
+    String  waarde;
+    if (arg.contains("=")) {
+      parameter = lang.get(arg.substring(2).split("=")[0]);
+      waarde    = stripQuotes(arg.substring(arg.indexOf("=")+1));
+    } else {
+      parameter = lang.get(arg.substring(2));
+      waarde    = arg2;
+    }
+    argumenten.add(parameter);
+
+    return setArg(parameter, waarde);
+  }
+
   public boolean setArgs(String[] args) {
-    boolean correct = true;
-    var     i       = 0;
+    var correct = true;
+    var i       = 0;
 
     while (i < args.length) {
       if (!args[i].trim().startsWith("-")
@@ -472,34 +485,28 @@ public class ParameterBundle {
         continue;
       }
 
-      String  parameter;
-      var     metVolgende = (i+1 < args.length
-                              && !args[i+1].trim().startsWith("-"));
-      String  waarde;
-      if (args[i].trim().startsWith("--")) {
-        if (args[i].contains("=")) {
-          parameter = lang.get(args[i].substring(2).split("=")[0]);
-          waarde    = stripQuotes(args[i].substring(args[i].indexOf("=")+1));
-        } else {
-          parameter = lang.get(args[i].substring(2));
-          waarde    = metVolgende ? stripQuotes(args[i+1]) : "";
-        }
-      } else {
-        parameter = kort.get(args[i].substring(1));
-        waarde    = metVolgende ? stripQuotes(args[i+1]) : "";
-      }
-
-      if (!setArg(parameter, waarde)) {
-        errors.add(
-            MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
-                                        args[i]));
-        correct = false;
-      }
-      argumenten.add(parameter);
-
-      if (metVolgende) {
+      String  parameter = args[i];
+      String  waarde    = "";
+      if (i+1 < args.length
+          && !args[i+1].trim().startsWith("-")) {
+        waarde  = stripQuotes(args[i+1]);
         i++;
       }
+
+      if (parameter.trim().startsWith("--")) {
+        correct = setArgLang(parameter, waarde);
+      } else {
+        parameter = kort.get(parameter.substring(1));
+        correct   = setArg(parameter, waarde);
+        argumenten.add(parameter);
+      }
+
+      if (!correct) {
+        errors.add(
+            MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
+                                 parameter));
+      }
+
       i++;
     }
 

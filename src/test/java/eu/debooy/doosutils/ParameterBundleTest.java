@@ -138,9 +138,9 @@ public class ParameterBundleTest {
     String[]  errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
-    parameterBundle.printParameters();
     assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
     assertEquals(d2112, parameterBundle.getDate("kort"));
+    assertEquals(".", parameterBundle.getString("indir"));
     assertEquals("/temp", parameterBundle.getString("uitdir"));
     assertFalse(parameterBundle.getBoolean("exclude"));
     assertTrue(parameterBundle.getBoolean("help"));
@@ -148,6 +148,36 @@ public class ParameterBundleTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
                              "-b", "--lang"), errors[0]);
+  }
+
+  @Test
+  public void testApplicatie5() {
+    Locale.setDefault(LOCALE);
+
+    String[]  args      = new String[] {"--aantal=\"230\"", "-k", "2112/12/21",
+                                        "--uitvoerdir=\"/temp\"", "--exclude",
+                                        "--help"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder()
+                           .setBaseName(APPLICATIE)
+                           .setValidator(new ParameterBundleValidator())
+                           .build();
+    parameterBundle.setArgs(args);
+    String[]  errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
+    assertEquals(d2112, parameterBundle.getDate("kort"));
+    assertEquals(".", parameterBundle.getString("indir"));
+    assertEquals("/temp", parameterBundle.getString("uitdir"));
+    assertFalse(parameterBundle.getBoolean("exclude"));
+    assertTrue(parameterBundle.getBoolean("help"));
+    assertEquals(2, errors.length);
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+                             "-b", "--lang"), errors[0]);
+    assertEquals("PAR-9000 Datum ligt in de toekomst.", errors[1]);
   }
 
   @Test

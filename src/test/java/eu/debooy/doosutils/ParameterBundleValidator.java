@@ -16,14 +16,27 @@
  */
 package eu.debooy.doosutils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * @author Marco de Booij
  */
-public interface IParameterBundleValidator {
-  public List<String> valideer(Map<String, Parameter> params,
-                               List<String> argumenten);
+public class ParameterBundleValidator implements IParameterBundleValidator {
+
+  @Override
+  public List<String> valideer(Map<String, Parameter> parameters,
+                               List<String> argumenten) {
+    List<String>  errors  = new ArrayList<>();
+    if (argumenten.contains("kort")) {
+      var vandaag = new Date();
+      if (((Date) parameters.get("kort").getWaarde()).after(vandaag)) {
+        errors.add("PAR-9000 Datum ligt in de toekomst.");
+      }
+    }
+
+    return errors;
+  }
 }
