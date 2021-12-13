@@ -16,8 +16,6 @@
  */
 package eu.debooy.doosutils;
 
-import static eu.debooy.doosutils.Batchjob.EXT_JSON;
-import static eu.debooy.doosutils.DoosConstants.NA;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -55,6 +53,9 @@ public class ParameterBundle {
   public static final String  ERR_PAR_AFWEZIG   = "error.param.afwezig";
   public static final String  ERR_PARS_AFWEZIG  = "error.params.afwezig";
   public static final String  ERR_PAR_ONBEKEND  = "error.param.onbekend";
+
+  protected static final  String  EXT_JSON  = ".json";
+
   public static final String  PARAMBUNDLE       = "ParameterBundle";
 
   public  static final  String  JSON_KEY_APPLICATIE = "applicatie";
@@ -74,7 +75,7 @@ public class ParameterBundle {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private       String                    applicatie  = NA;
+  private       String                    applicatie  = DoosConstants.NA;
   private final List<String>              argumenten  = new ArrayList<>();
   private       String                    banner;
   private final String                    baseName;
@@ -188,7 +189,7 @@ public class ParameterBundle {
     var afwezig = new ArrayList<String>();
 
     if (DoosUtils.isBlankOrNull(applicatie)
-        || NA.equalsIgnoreCase(applicatie)) {
+        || DoosConstants.NA.equalsIgnoreCase(applicatie)) {
       afwezig.add(JSON_KEY_APPLICATIE);
     }
     if (DoosUtils.isBlankOrNull(banner)) {
@@ -223,6 +224,10 @@ public class ParameterBundle {
     params.values().forEach(this::checkParam);
   }
 
+  public boolean containsParameter(String parameter) {
+    return DoosUtils.isNotBlankOrNull(get(parameter));
+  }
+
   public Object get(String parameter) {
     return getParameter(parameter);
   }
@@ -249,6 +254,24 @@ public class ParameterBundle {
     return baseName;
   }
 
+  public String getBestand(String parameter) {
+    if (DoosUtils.isBlankOrNull(params.get(parameter).getExtensie())) {
+      return getString(parameter);
+    }
+
+    return getBestand(parameter, params.get(parameter).getExtensie());
+  }
+
+  public String getBestand(String parameter, String extensie) {
+    var bestand = DoosUtils.nullToValue(getString(parameter), "bestand");
+
+    if (bestand.endsWith(extensie)) {
+      return bestand;
+    }
+
+    return bestand + extensie;
+  }
+
   public Boolean getBoolean(String parameter) {
     return (Boolean) getParameter(parameter);
   }
@@ -261,8 +284,8 @@ public class ParameterBundle {
     return (Double) getParameter(parameter);
   }
 
-  public String[] getErrors() {
-    return errors.toArray(new String[errors.size()]);
+  public List<String> getErrors() {
+    return new ArrayList<>(errors);
   }
 
   public String getHelp() {
@@ -290,6 +313,12 @@ public class ParameterBundle {
   }
 
   public String getString(String parameter) {
+    var param = getParameter(parameter);
+
+    if (null == param) {
+      return null;
+    }
+
     return getParameter(parameter).toString();
   }
 
@@ -311,7 +340,7 @@ public class ParameterBundle {
       var tekst = new StringBuilder();
       tekst.append(" -")
            .append(DoosUtils.nullToValue(param.getKort(),
-                    DoosUtils.nullToEmpty(param.getLang())));
+                    "-" + DoosUtils.nullToEmpty(param.getLang())));
       if (!param.getType().equalsIgnoreCase(Parameter.TPY_BOOLEAN)) {
         tekst.append(" ")
              .append(DoosUtils.nullToValue(param.getLang(),
@@ -344,7 +373,10 @@ public class ParameterBundle {
         DoosUtils.naarScherm(sPfix.toString(), breedte);
         pfix  = pString;
       }
-      DoosUtils.naarScherm(pfix, param.getHelp(), breedte);
+      DoosUtils.naarScherm(pfix,
+                           MessageFormat.format(param.getHelp(),
+                                                param.getStandaard()),
+                           breedte);
     });
     DoosUtils.naarScherm();
   }
@@ -407,7 +439,7 @@ public class ParameterBundle {
 
   private void setConfiguratie(JSONObject json) {
     if (json.containsKey(JSON_KEY_APPLICATIE)
-        && NA.equals(applicatie)) {
+        && DoosConstants.NA.equals(applicatie)) {
       applicatie  = json.get(JSON_KEY_APPLICATIE).toString();
     }
     if (json.containsKey(JSON_KEY_BANNER)) {
@@ -485,8 +517,8 @@ public class ParameterBundle {
         continue;
       }
 
-      String  parameter = args[i];
-      String  waarde    = "";
+      var parameter = args[i];
+      var waarde    = "";
       if (i+1 < args.length
           && !args[i+1].trim().startsWith("-")) {
         waarde  = stripQuotes(args[i+1]);

@@ -16,8 +16,7 @@
  */
 package eu.debooy.doosutils;
 
-import static eu.debooy.doosutils.DoosConstants.NULL;
-import static eu.debooy.doosutils.ParameterBundle.PARAMBUNDLE;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -31,11 +30,11 @@ import org.json.simple.JSONObject;
 /**
  * @author Marco de Booij
  */
-public class Parameter {
+public final class Parameter {
   public static final String  ERR_PAR_DATE    = "error.param.date";
   public static final String  ERR_PAR_FORMAT  = "error.param.format";
 
-  public static final String  JSON_PAR_EXTRA      = "extra";
+  public static final String  JSON_PAR_EXTENSIE   = "extensie";
   public static final String  JSON_PAR_FORMAT     = "format";
   public static final String  JSON_PAR_HELP       = "help";
   public static final String  JSON_PAR_KORT       = "kort";
@@ -48,8 +47,10 @@ public class Parameter {
 
   public static final String  TPY_BESTAND = "bestand";
   public static final String  TPY_BOOLEAN = "boolean";
+  public static final String  TPY_CHARSET = "charset";
   public static final String  TPY_DATE    = "date";
   public static final String  TPY_DOUBLE  = "double";
+  public static final String  TPY_LOCALE  = "locale";
   public static final String  TPY_LONG    = "long";
   public static final String  TPY_MAP     = "map";
   public static final String  TPY_STRING  = "string";
@@ -58,17 +59,19 @@ public class Parameter {
       Arrays.asList(JSON_PAR_FORMAT, JSON_PAR_HELP, JSON_PAR_KORT,
                     JSON_PAR_LANG, JSON_PAR_STANDAARD);
   protected static final  List<String>  paramSleutel  =
-      Arrays.asList(JSON_PAR_EXTRA, JSON_PAR_FORMAT, JSON_PAR_HELP,
+      Arrays.asList(JSON_PAR_EXTENSIE, JSON_PAR_FORMAT, JSON_PAR_HELP,
                     JSON_PAR_KORT, JSON_PAR_LANG, JSON_PAR_PARAMETER,
                     JSON_PAR_STANDAARD, JSON_PAR_TYPE, JSON_PAR_VERPLICHT);
   protected static final  List<String>  typeIntern    =
-      Arrays.asList(TPY_BESTAND, TPY_MAP);
+      Arrays.asList(TPY_BESTAND, TPY_CHARSET, TPY_LOCALE, TPY_MAP);
 
   private static final  ResourceBundle  resourceBundle  =
-      ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
+      ResourceBundle.getBundle(ParameterBundle.PARAMBUNDLE,
+                               Locale.getDefault());
 
-  private String    help;
+  private String    extensie;
   private String    format;
+  private String    help;
   private String    kort;
   private String    lang;
   private String    param;
@@ -77,9 +80,12 @@ public class Parameter {
   private boolean   verplicht = false;
   private Object    waarde;
 
-  private Parameter() {}
+  protected Parameter() {}
 
   public Parameter(JSONObject jParam) {
+    if (jParam.containsKey(JSON_PAR_EXTENSIE)) {
+      setExtensie(jParam.get(JSON_PAR_EXTENSIE).toString());
+    }
     if (jParam.containsKey(JSON_PAR_PARAMETER)) {
       setParam(jParam.get(JSON_PAR_PARAMETER).toString());
     }
@@ -96,9 +102,18 @@ public class Parameter {
       }
     });
 
+    if (!jParam.containsKey(JSON_PAR_KORT)
+        && !jParam.containsKey(JSON_PAR_LANG)) {
+      setLang(param);
+    }
+
     if (!jParam.containsKey(JSON_PAR_STANDAARD)) {
       setStandaard();
     }
+  }
+
+  public String getExtensie() {
+    return extensie;
   }
 
   public String getFormat() {
@@ -143,6 +158,9 @@ public class Parameter {
 
   public final void set(String attribuut, Object waarde) {
     switch (attribuut.toLowerCase()) {
+      case JSON_PAR_EXTENSIE:
+        setExtensie((String) waarde);
+        break;
       case JSON_PAR_FORMAT:
         setFormat((String) waarde);
         break;
@@ -160,6 +178,14 @@ public class Parameter {
         break;
       default:
         break;
+    }
+  }
+
+  public void setExtensie(String extensie) {
+    if (extensie.startsWith(".")) {
+      this.extensie   = extensie;
+    } else {
+      this.extensie   = "." + extensie;
     }
   }
 
@@ -208,6 +234,14 @@ public class Parameter {
       standaard = Boolean.FALSE;
       waarde    = standaard;
     }
+    if (TPY_CHARSET.equalsIgnoreCase(type)) {
+      standaard = Charset.defaultCharset().name();
+      waarde    = standaard;
+    }
+    if (TPY_LOCALE.equalsIgnoreCase(type)) {
+      standaard = Locale.getDefault().getLanguage();
+      waarde    = standaard;
+    }
     if (TPY_MAP.equalsIgnoreCase(type)) {
       standaard = ".";
       waarde    = standaard;
@@ -223,11 +257,24 @@ public class Parameter {
   }
 
   public final void setWaarde(Object waarde) {
-    this.waarde     = waarde;
+    if (waarde instanceof String) {
+      setWaarde(waarde.toString());
+    } else {
+      this.waarde   = waarde;
+    }
   }
 
   public final void setWaarde(String waarde) {
     switch (type.toLowerCase()) {
+      case TPY_BESTAND:
+        if (DoosUtils.isNotBlankOrNull(extensie)
+            && waarde.endsWith(extensie)) {
+          this.waarde =
+              waarde.substring(0, waarde.length() - extensie.length());
+        } else {
+          this.waarde = waarde;
+        }
+        break;
       case TPY_BOOLEAN:
         if (waarde.isBlank()) {
           this.waarde = !((Boolean) standaard);
@@ -243,13 +290,13 @@ public class Parameter {
         }
         break;
       case TPY_DOUBLE:
-        this.waarde     = Double.valueOf(waarde);
+        this.waarde   = Double.valueOf(waarde);
         break;
       case TPY_LONG:
-        this.waarde     = Long.valueOf(waarde);
+        this.waarde   = Long.valueOf(waarde);
         break;
       default:
-        this.waarde     = waarde;
+        this.waarde   = waarde;
         break;
     }
   }
@@ -260,15 +307,23 @@ public class Parameter {
         + standaard.getClass().getSimpleName() + "> ");
 
     return param + ": ["
-            + "kort: [" + DoosUtils.nullToValue(kort, NULL) + "], "
-            + "lang: [" + DoosUtils.nullToValue(lang, NULL) + "], "
+            + "kort: [" + DoosUtils.nullToValue(kort, DoosConstants.NULL)
+              + "], "
+            + "lang: [" + DoosUtils.nullToValue(lang, DoosConstants.NULL)
+              + "], "
             + "standaard: [" + sType
-                + (null == standaard ? NULL : standaard.toString()) + "], "
-            + "type: [" + DoosUtils.nullToValue(type, NULL) + "], "
-            + "format: [" + DoosUtils.nullToEmpty(format) + "], "
+                + (null == standaard ? DoosConstants.NULL
+                                     : standaard.toString()) + "], "
+            + "type: [" + DoosUtils.nullToValue(type, DoosConstants.NULL)
+              + "], "
+            + "format: [" + DoosUtils.nullToValue(format, DoosConstants.NULL)
+              + "], "
+            + "extensie: [" + DoosUtils.nullToValue(extensie,
+                                                    DoosConstants.NULL) + "], "
             + "verplicht: [" + verplicht + "], "
-            + "waarde: ["+ (null == waarde ? NULL : waarde.toString()) + "], "
-            + "help: [" + DoosUtils.nullToValue(help, NULL) + "]";
+            + "waarde: ["+ (null == waarde ? DoosConstants.NULL
+                                           : waarde.toString()) + "], "
+            + "help: [" + DoosUtils.nullToValue(help, DoosConstants.NULL) + "]";
   }
 
   public List<String> valideer() {

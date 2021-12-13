@@ -17,6 +17,7 @@
 package eu.debooy.doosutils;
 
 import java.text.ParseException;
+import java.util.Date;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class DatumTest extends TestCase {
     try {
       var datum = Datum.toDate("01/01/2010");
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), true);
+      fail("Geen ParseException verwacht.");
     }
   }
 
@@ -40,7 +41,7 @@ public class DatumTest extends TestCase {
       var datum = Datum.toDate("01/01/2010 01:01:01",
                                DoosConstants.DATUM_TIJD);
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), true);
+      fail("Geen ParseException verwacht.");
     }
   }
 
@@ -48,29 +49,55 @@ public class DatumTest extends TestCase {
   public void testToDate3() {
     try {
       var datum = Datum.toDate("01:01:2010", DoosConstants.DATUM);
+      fail("Er had een ParseException moeten wezen.");
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), true);
+      assertEquals("Format.parseObject(String) failed", e.getMessage());
     }
+  }
+
+  @Test
+  public void testToDate4() {
+    var datum = new Date();
+    try {
+      datum = Datum.toDate(null, DoosConstants.DATUM);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+
+    assertNull(datum);
   }
 
   @Test
   public void testFromDate1() {
+    String  datumString = null;
     try {
-      var datum       = Datum.toDate("01/01/2010");
-      var datumString = Datum.fromDate(datum);
+      var datum   = Datum.toDate("01/01/2010");
+      datumString = Datum.fromDate(datum);
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), true);
+      fail("Geen ParseException verwacht.");
     }
+
+    assertEquals("01/01/2010", datumString);
   }
 
   @Test
   public void testFromDate2() {
+    String  datumString = null;
     try {
-      var datum       = Datum.toDate("01/01/2010 01:01:01",
+      var datum   = Datum.toDate("01/01/2010 01:01:01",
                                DoosConstants.DATUM_TIJD);
-      var datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
+      datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
     } catch (ParseException e) {
-      assertTrue(e.getMessage(), true);
+      fail("Geen ParseException verwacht.");
     }
+
+    assertEquals("01/01/2010 01:01:01", datumString);
+  }
+
+  @Test
+  public void testFromDate3() {
+    var datumString = Datum.fromDate(null, DoosConstants.DATUM_TIJD);
+
+    assertNull(datumString);
   }
 }

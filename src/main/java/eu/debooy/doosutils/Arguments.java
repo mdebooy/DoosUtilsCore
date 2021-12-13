@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * @author Marco de Booij
  */
+@Deprecated(since="2.1.3")
 public final class Arguments {
   private boolean             valid       = true;
   private Map<String, String> args        = new HashMap<>();

@@ -11,16 +11,14 @@
       "kort": "i",
       "lang": "invoerdir",
       "help": "De map waar het bestand in staat. Als deze parameter niet is opgegeven dan is het gelijk aan de huidige map.",
-      "type": "map",
-      "verplicht": false
+      "type": "map"
     },
     {
       "parameter": "uitdir",
       "kort": "u",
       "lang": "uitvoerdir",
       "help": "De map waar de uitvoer in gaat staan. Als deze parameter niet is opgegeven dan is het gelijk aan de invoerdir.",
-      "type": "map",
-      "verplicht": false
+      "type": "map"
     },
     {
       "parameter": "bestand",
@@ -43,8 +41,7 @@
       "kort": "o",
       "lang": "opstand",
       "help": "Moet de uitvoer gesorteerd worden op stand? Opgegeven is 'ja', niet opgegeven is 'nee'.",
-      "type": "boolean",
-      "verplicht": false
+      "type": "boolean"
     },
     {
       "parameter": "aantal",
@@ -68,8 +65,7 @@
       "help": "Een 'omgekeerde' boolean voor exclude.",
       "kort": "y",
       "lang": "include",
-      "standaard": true,
-      "verplicht": false
+      "standaard": true
     },
     {
       "parameter": "kort",

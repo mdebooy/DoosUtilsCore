@@ -16,6 +16,9 @@
  */
 package eu.debooy.doosutils;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -23,7 +26,26 @@ import java.util.Scanner;
  * @author Marco de Booij
  */
 public final class DoosUtils {
+  private static final  String[]  GET_METHODS_PREFIXES  = {"get", "is"};
+
   private DoosUtils() {}
+
+  public static Method[] findGetters(Method[] methodes) {
+    List<Method>  getters = new ArrayList<>();
+    for (var method : methodes) {
+      if (method.getParameterTypes().length == 0) {
+        for (String prefix : GET_METHODS_PREFIXES) {
+          if (method.getName().startsWith(prefix)) {
+              getters.add(method);
+            break;
+          }
+        }
+      }
+    }
+    methodes = new Method[getters.size()];
+
+    return getters.toArray(methodes);
+  }
 
   public static void foutNaarScherm(String regel) {
     System.err.println(regel);
@@ -33,7 +55,7 @@ public final class DoosUtils {
     String  password;
     var     console   = System.console();
     if (null == console) {
-      try (Scanner invoer = new Scanner(System.in)) {
+      try (var invoer = new Scanner(System.in)) {
         System.out.print(prompt + " ");
         password  = invoer.next();
       }
@@ -158,7 +180,7 @@ public final class DoosUtils {
 
   public static int telTeken(String string, char teken) {
     var aantal  = 0;
-    for (int i = 0; i < string.length(); i++) {
+    for (var i = 0; i < string.length(); i++) {
       if (string.charAt(i) == teken) {
         aantal++;
       }
