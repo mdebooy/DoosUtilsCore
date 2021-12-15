@@ -75,20 +75,21 @@ public class ParameterBundle {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private       String                    applicatie  = DoosConstants.NA;
+  private String  applicatie  = DoosConstants.NA;
+  private String  banner;
+  private int     breedte     = 80;
+  private String  help;
+  private String  jar;
+  private int     prefix      = 20;
+
   private final List<String>              argumenten  = new ArrayList<>();
-  private       String                    banner;
   private final String                    baseName;
-  private       int                       breedte     = 80;
   private final ClassLoader               classloader;
   private final List<String>              errors      = new ArrayList<>();
-  private       String                    help;
-  private       String                    jar;
   private final Map<String, String>       kort        = new TreeMap<>();
   private final Map<String, String>       lang        = new TreeMap<>();
   private final Locale                    locale;
   private final Map<String, Parameter>    params      = new TreeMap<>();
-  private       int                       prefix      = 20;
   private final IParameterBundleValidator validator;
 
   private ParameterBundle(Builder builder) {
@@ -491,13 +492,12 @@ public class ParameterBundle {
     String  parameter;
     String  waarde;
     if (arg.contains("=")) {
-      parameter = lang.get(arg.substring(2).split("=")[0]);
+      parameter = lang.get(arg.split("=")[0]);
       waarde    = stripQuotes(arg.substring(arg.indexOf("=")+1));
     } else {
-      parameter = lang.get(arg.substring(2));
+      parameter = lang.get(arg);
       waarde    = arg2;
     }
-    argumenten.add(parameter);
 
     return setArg(parameter, waarde);
   }
@@ -526,17 +526,26 @@ public class ParameterBundle {
       }
 
       if (parameter.trim().startsWith("--")) {
-        correct = setArgLang(parameter, waarde);
+        parameter   = parameter.substring(2);
+        correct     = setArgLang(parameter, waarde);
+        if (parameter.contains("=")) {
+          parameter = parameter.split("=")[0];
+        }
+        parameter   = lang.get(parameter);
       } else {
-        parameter = kort.get(parameter.substring(1));
-        correct   = setArg(parameter, waarde);
-        argumenten.add(parameter);
+        parameter   = kort.get(parameter.substring(1));
+        correct     = setArg(parameter, waarde);
       }
 
-      if (!correct) {
+      argumenten.add(parameter);
+
+      Parameter param = params.get(parameter);
+      if (!correct
+          || DoosUtils.isBlankOrNull(param.getWaarde())) {
         errors.add(
             MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
-                                 parameter));
+                "-" + DoosUtils.nullToValue(param.getKort(),
+                    "-" + DoosUtils.nullToEmpty(param.getLang()))));
       }
 
       i++;

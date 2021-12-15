@@ -17,6 +17,8 @@
 package eu.debooy.doosutils;
 
 import static eu.debooy.doosutils.ParameterBundle.ERR_ARGS_AFWEZIG;
+import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_AFWEZIG;
+import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_FOUTIEF;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_BESTAND;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_ONBEKEND;
@@ -81,7 +83,8 @@ public class ParameterBundleTest {
     Locale.setDefault(LOCALE);
 
     String[]  args      = new String[] {"-a", "230", "-k", "2112/12/21",
-                                        "-u", "/temp", "-x", "-h"};
+                                        "-u", "/tmp", "-x", "-h", "-b",
+                                        "bestand"};
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE).build();
@@ -91,23 +94,21 @@ public class ParameterBundleTest {
     assertFalse(parameterBundle.isValid());
     assertEquals(Long.valueOf(230), parameterBundle.get("aantal"));
     assertEquals(d2112, (Date) parameterBundle.get("kort"));
-    assertEquals("/temp", (String) parameterBundle.get("uitdir"));
+    assertEquals("/tmp", (String) parameterBundle.get("uitdir"));
     assertFalse((Boolean) parameterBundle.get("exclude"));
     assertTrue((Boolean) parameterBundle.get("help"));
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
-                             "-b", "--lang"), errors.get(0));
+        MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
+                             "--lang"), errors.get(0));
   }
 
   @Test
   public void testApplicatie3() {
     Locale.setDefault(LOCALE);
 
-    String[]  args      = new String[] {"--aantal", "\"230\"",
-                                        "-k", "2112/12/21",
-                                        "--uitvoerdir", "/temp", "--exclude",
-                                        "--help"};
+    String[]  args      = new String[] {"-a", "230", "-k", "2112/12/21",
+                                        "-u", "/tmp", "-x", "-h"};
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE).build();
@@ -115,11 +116,11 @@ public class ParameterBundleTest {
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
-    assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
-    assertEquals(d2112, parameterBundle.getDate("kort"));
-    assertEquals("/temp", parameterBundle.getString("uitdir"));
-    assertFalse(parameterBundle.getBoolean("exclude"));
-    assertTrue(parameterBundle.getBoolean("help"));
+    assertEquals(Long.valueOf(230), parameterBundle.get("aantal"));
+    assertEquals(d2112, (Date) parameterBundle.get("kort"));
+    assertEquals("/tmp", (String) parameterBundle.get("uitdir"));
+    assertFalse((Boolean) parameterBundle.get("exclude"));
+    assertTrue((Boolean) parameterBundle.get("help"));
     assertEquals(1, errors.size());
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
@@ -130,8 +131,9 @@ public class ParameterBundleTest {
   public void testApplicatie4() {
     Locale.setDefault(LOCALE);
 
-    String[]  args      = new String[] {"--aantal=\"230\"", "-k", "2112/12/21",
-                                        "--uitvoerdir=\"/temp\"", "--exclude",
+    String[]  args      = new String[] {"--aantal", "\"230\"",
+                                        "-k", "2112/12/21",
+                                        "--uitvoerdir", "/tmp", "--exclude",
                                         "--help"};
 
     ParameterBundle parameterBundle =
@@ -142,8 +144,7 @@ public class ParameterBundleTest {
     assertFalse(parameterBundle.isValid());
     assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
     assertEquals(d2112, parameterBundle.getDate("kort"));
-    assertEquals(".", parameterBundle.getString("indir"));
-    assertEquals("/temp", parameterBundle.getString("uitdir"));
+    assertEquals("/tmp", parameterBundle.getString("uitdir"));
     assertFalse(parameterBundle.getBoolean("exclude"));
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(1, errors.size());
@@ -157,7 +158,33 @@ public class ParameterBundleTest {
     Locale.setDefault(LOCALE);
 
     String[]  args      = new String[] {"--aantal=\"230\"", "-k", "2112/12/21",
-                                        "--uitvoerdir=\"/temp\"", "--exclude",
+                                        "--uitvoerdir=\"/tmp\"", "--exclude",
+                                        "--help"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName(APPLICATIE).build();
+    parameterBundle.setArgs(args);
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
+    assertEquals(d2112, parameterBundle.getDate("kort"));
+    assertEquals(".", parameterBundle.getString("indir"));
+    assertEquals("/tmp", parameterBundle.getString("uitdir"));
+    assertFalse(parameterBundle.getBoolean("exclude"));
+    assertTrue(parameterBundle.getBoolean("help"));
+    assertEquals(1, errors.size());
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+                             "-b", "--lang"), errors.get(0));
+  }
+
+  @Test
+  public void testApplicatie6() {
+    Locale.setDefault(LOCALE);
+
+    String[]  args      = new String[] {"--aantal=\"230\"", "-k", "2112/12/21",
+                                        "--uitvoerdir=\"/tmp\"", "--exclude",
                                         "--help"};
 
     ParameterBundle parameterBundle =
@@ -172,7 +199,7 @@ public class ParameterBundleTest {
     assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
     assertEquals(d2112, parameterBundle.getDate("kort"));
     assertEquals(".", parameterBundle.getString("indir"));
-    assertEquals("/temp", parameterBundle.getString("uitdir"));
+    assertEquals("/tmp", parameterBundle.getString("uitdir"));
     assertFalse(parameterBundle.getBoolean("exclude"));
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(2, errors.size());
@@ -197,10 +224,10 @@ public class ParameterBundleTest {
 
     var help  = outContent.toString().split("\\n");
 
-    assertEquals(22, help.length);
-
     System.setErr(new PrintStream(System.err));
     System.setOut(new PrintStream(System.out));
+
+    assertEquals(22, help.length);
   }
 
   @Test
@@ -272,7 +299,7 @@ public class ParameterBundleTest {
   public void testInit5() {
     Locale.setDefault(new Locale("nl"));
 
-    String[]  args    = new String[] {"-k"};
+    String[]  args    = new String[] {"-k", "helptekst"};
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMS)
@@ -287,6 +314,31 @@ public class ParameterBundleTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
                              "helpEN", "en_UK"), errors.get(0));
+    assertEquals("en_UK", parameterBundle.getLocale().toString());
+  }
+
+  @Test
+  public void testInit6() {
+    Locale.setDefault(new Locale("nl"));
+
+    String[]  args    = new String[] {"-k"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName(PARAMS)
+                                     .setLocale(new Locale("en", "uk")).build();
+    parameterBundle.setArgs(args);
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals("ParameterBundle", parameterBundle.getApplicatie());
+    assertEquals(2, errors.size());
+    Locale.setDefault(new Locale("en", "uk"));
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
+                             "helpEN", "en_UK"), errors.get(0));
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
+                             "-k"), errors.get(1));
     assertEquals("en_UK", parameterBundle.getLocale().toString());
   }
 }

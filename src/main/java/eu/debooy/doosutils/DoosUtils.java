@@ -51,6 +51,10 @@ public final class DoosUtils {
     System.err.println(regel);
   }
 
+  public static String getEol() {
+    return System.getProperty("line.separator");
+  }
+
   public static String getWachtwoord(String prompt) {
     String  password;
     var     console   = System.console();
@@ -164,7 +168,9 @@ public final class DoosUtils {
       return string.substring(0, lengte);
     }
 
-    return String.format("%" + lengte +"s", string);
+    return String.format(new StringBuilder().append("%")
+                                            .append(lengte)
+                                            .append("s").toString(), string);
   }
 
   public static String stringMetLengte(String string, int lengte,

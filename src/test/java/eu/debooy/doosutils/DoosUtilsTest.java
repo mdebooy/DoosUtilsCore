@@ -56,6 +56,11 @@ public class DoosUtilsTest {
   }
 
   @Test
+  public void getEolTest() {
+    assertEquals(System.getProperty("line.separator"), DoosUtils.getEol());
+  }
+
+  @Test
   public void isBlankOrNullTest() {
     assertTrue(DoosUtils.isBlankOrNull(null));
     assertTrue(DoosUtils.isBlankOrNull(""));

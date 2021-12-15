@@ -31,8 +31,8 @@ import org.json.simple.JSONObject;
  * @author Marco de Booij
  */
 public final class Parameter {
-  public static final String  ERR_PAR_DATE    = "error.param.date";
-  public static final String  ERR_PAR_FORMAT  = "error.param.format";
+  public static final String  ERR_PAR_ATTRIBUUT = "error.param.attribuut";
+  public static final String  ERR_PAR_DATE      = "error.param.date";
 
   public static final String  JSON_PAR_EXTENSIE   = "extensie";
   public static final String  JSON_PAR_FORMAT     = "format";
@@ -329,10 +329,21 @@ public final class Parameter {
   public List<String> valideer() {
     List<String>  errors  = new ArrayList<>();
 
+    if (DoosUtils.isNotBlankOrNull(extensie)
+        && !TPY_BESTAND.equalsIgnoreCase(type)) {
+      errors.add(
+          MessageFormat.format(resourceBundle.getString(ERR_PAR_ATTRIBUUT),
+                               JSON_PAR_EXTENSIE, param));
+    }
     if (DoosUtils.isNotBlankOrNull(format)
         && !TPY_DATE.equalsIgnoreCase(type)) {
-      errors.add(MessageFormat.format(resourceBundle.getString(ERR_PAR_FORMAT),
-                                      param));
+      errors.add(
+          MessageFormat.format(resourceBundle.getString(ERR_PAR_ATTRIBUUT),
+                               JSON_PAR_FORMAT, param));
+    }
+
+    if (null == standaard) {
+      return errors;
     }
     if (TPY_DATE.equalsIgnoreCase(type)
         && !TPY_DATE.equalsIgnoreCase(standaard.getClass().getSimpleName())) {

@@ -39,15 +39,4 @@ public final class DoosConstants {
   public static final String  SMTP_HOST     = "smtp.debooy.eu";
 
   public static final String  NOI18N        = "errors.geen.i18n";
-
-  /**
-    * @deprecated
-    * since 2.1.2
-    * niet correct op ander platform zonder hercompilatie
-    * gebruik System.lineSeparator()
-    */
-  @Deprecated(since="2.1.2")
-  public static final String  EOL           =
-    System.getProperty("line.separator");
-
 }

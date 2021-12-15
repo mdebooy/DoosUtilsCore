@@ -16,7 +16,11 @@
  */
 package eu.debooy.doosutils;
 
+import java.util.Locale;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,7 +32,7 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class ParameterTest {
-  private static JSONParser parser  = new JSONParser();
+  private static final JSONParser parser  = new JSONParser();
 
   @Test
   public void testInit1() {
@@ -49,7 +53,6 @@ public class ParameterTest {
     var         jParam  = "    {\n" +
 "      \"parameter\": \"kort\",\n" +
 "      \"type\": \"Date\",\n" +
-"      \"verplicht\": true\n" +
 "    }";
     JSONObject  json    = null;
     try {
@@ -59,7 +62,17 @@ public class ParameterTest {
     }
     var parameter = new Parameter(json);
 
-    assertEquals("kort: [kort: [<null>], lang: [kort], standaard: [<null>], type: [Date], format: [<null>], extensie: [<null>], verplicht: [true], waarde: [<null>], help: [<null>]", parameter.toString());
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertNull(parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertNull(parameter.getStandaard());
+    assertEquals("Date", parameter.getType());
+    assertFalse(parameter.isVerplicht());
+    assertNull(parameter.getWaarde());
   }
 
   @Test
@@ -81,5 +94,150 @@ public class ParameterTest {
 
     assertEquals("kort: [kort: [<null>], lang: [kort], standaard: [<Date> Wed Dec 21 00:00:00 CET 2112], type: [Date], format: [yyyy/MM/dd], extensie: [<null>], verplicht: [true], waarde: [Wed Dec 21 00:00:00 CET 2112], help: [<null>]", parameter.toString());
     assertEquals("yyyy/MM/dd", parameter.getFormat());
+  }
+
+  @Test
+  public void testInit4() {
+    var         jParam  = "    {\n" +
+"      \"parameter\": \"kort\",\n" +
+"      \"extensie\": \"csv\",\n" +
+"      \"standaard\": \"csvbestand\",\n" +
+"      \"type\": \"bestand\",\n" +
+"      \"verplicht\": true\n" +
+"    }";
+    JSONObject  json    = null;
+    try {
+      json  = (JSONObject) parser.parse(jParam);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+    var parameter = new Parameter(json);
+
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertEquals(".csv", parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertEquals("csvbestand", parameter.getStandaard());
+    assertEquals("bestand", parameter.getType());
+    assertTrue(parameter.isVerplicht());
+    assertEquals("csvbestand", parameter.getWaarde());
+  }
+
+  @Test
+  public void testInit5() {
+    var         jParam  = "    {\n" +
+"      \"parameter\": \"kort\",\n" +
+"      \"standaard\": \"UTF-8\",\n" +
+"      \"type\": \"charset\",\n" +
+"      \"verplicht\": true\n" +
+"    }";
+    JSONObject  json    = null;
+    try {
+      json  = (JSONObject) parser.parse(jParam);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+    var parameter = new Parameter(json);
+
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertNull(parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertEquals("UTF-8", parameter.getStandaard());
+    assertEquals("charset", parameter.getType());
+    assertTrue(parameter.isVerplicht());
+    assertEquals("UTF-8", parameter.getWaarde());
+  }
+
+  @Test
+  public void testInit6() {
+    var         jParam  = "    {\n" +
+"      \"parameter\": \"kort\",\n" +
+"      \"type\": \"charset\",\n" +
+"      \"verplicht\": true\n" +
+"    }";
+    JSONObject  json    = null;
+    try {
+      json  = (JSONObject) parser.parse(jParam);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+    var parameter = new Parameter(json);
+
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertNull(parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertEquals("UTF-8", parameter.getStandaard());
+    assertEquals("charset", parameter.getType());
+    assertTrue(parameter.isVerplicht());
+    assertEquals("UTF-8", parameter.getWaarde());
+  }
+
+  @Test
+  public void testInit8() {
+    var         jParam  = "    {\n" +
+"      \"parameter\": \"kort\",\n" +
+"      \"standaard\": \"nl-BE\",\n" +
+"      \"type\": \"locale\",\n" +
+"      \"verplicht\": true\n" +
+"    }";
+    JSONObject  json    = null;
+    try {
+      json  = (JSONObject) parser.parse(jParam);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+    var parameter = new Parameter(json);
+
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertNull(parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertEquals("nl-BE", parameter.getStandaard());
+    assertEquals("locale", parameter.getType());
+    assertTrue(parameter.isVerplicht());
+    assertEquals("nl-BE", parameter.getWaarde());
+  }
+
+  @Test
+  public void testInit9() {
+    Locale.setDefault(Locale.GERMAN);
+    var         jParam  = "    {\n" +
+"      \"parameter\": \"kort\",\n" +
+"      \"type\": \"locale\",\n" +
+"      \"verplicht\": true\n" +
+"    }";
+    JSONObject  json    = null;
+    try {
+      json  = (JSONObject) parser.parse(jParam);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+    var parameter = new Parameter(json);
+
+    assertEquals("kort", parameter.getParameter());
+    assertTrue(parameter.isValid());
+    assertNull(parameter.getExtensie());
+    assertNull(parameter.getFormat());
+    assertNull(parameter.getHelp());
+    assertNull(parameter.getKort());
+    assertEquals("kort", parameter.getLang());
+    assertEquals("de", parameter.getStandaard());
+    assertEquals("locale", parameter.getType());
+    assertTrue(parameter.isVerplicht());
+    assertEquals("de", parameter.getWaarde());
   }
 }
