@@ -16,6 +16,7 @@
  */
 package eu.debooy.doosutils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static junit.framework.TestCase.assertEquals;
@@ -48,6 +49,20 @@ public class DoosUtilsTest {
   }
 
   @Test
+  public void findGettersTest() {
+    var methodes  = DoosUtils.findGetters(this.getClass().getMethods());
+
+    assertEquals(7, methodes.length);
+    assertEquals("getEolTest", methodes[0].getName());
+    assertEquals("getWachtwoordTest", methodes[1].getName());
+    assertEquals("isBlankOrNullTest", methodes[2].getName());
+    assertEquals("isFalseTest", methodes[3].getName());
+    assertEquals("isNotBlankOrNullTest", methodes[4].getName());
+    assertEquals("isTrueTest", methodes[5].getName());
+    assertEquals("getClass", methodes[6].getName());
+  }
+
+  @Test
   public void foutNaarSchermTest() {
     DoosUtils.foutNaarScherm("Fout");
 
@@ -58,6 +73,18 @@ public class DoosUtilsTest {
   @Test
   public void getEolTest() {
     assertEquals(System.getProperty("line.separator"), DoosUtils.getEol());
+  }
+
+  @Test
+  public void getWachtwoordTest() {
+    var sysInBackup = System.in;
+    var in          = new ByteArrayInputStream("geheim".getBytes());
+    System.setIn(in);
+
+    var wachtwoord  = DoosUtils.getWachtwoord("wachtwoord: ");
+    assertEquals("geheim", wachtwoord);
+
+    System.setIn(sysInBackup);
   }
 
   @Test
@@ -132,6 +159,15 @@ public class DoosUtilsTest {
     assertEquals("",  DoosUtils.nullToEmpty(null));
     assertEquals("",  DoosUtils.nullToEmpty(""));
     assertEquals("x", DoosUtils.nullToEmpty("x"));
+  }
+
+  @Test
+  public void nullToValueDoubleTest() {
+    Double  defaultWaarde = 10.3;
+    Double  waarde        = null;
+    assertEquals(defaultWaarde,  DoosUtils.nullToValue(waarde, defaultWaarde));
+    waarde  = 10.3;
+    assertEquals(waarde, DoosUtils.nullToValue(waarde, defaultWaarde));
   }
 
   @Test

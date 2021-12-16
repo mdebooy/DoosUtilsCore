@@ -1,0 +1,15 @@
+{
+  "_jar": "",
+  "applicatie": "ParameterBundle",
+  "banner": "",
+  "help": "With this file the parameters for the application are defined.",
+  "parameters": [
+    {
+      "parameter": "help",
+      "kort": "h",
+      "lang": "help",
+      "help": "Gives this helptext.",
+      "verplicht": false
+    }
+  ]
+}

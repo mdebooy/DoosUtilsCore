@@ -29,6 +29,30 @@
       "verplicht": true
     },
     {
+      "parameter": "csvbestand",
+      "extensie": "csv",
+      "lang": "csvbestand",
+      "help": "Het CSV bestand.",
+      "type": "bestand",
+      "verplicht": false
+    },
+    {
+      "parameter": "jsonbestand",
+      "extensie": ".json",
+      "lang": "jsonbestand",
+      "help": "Het JSON bestand.",
+      "type": "bestand",
+      "verplicht": false
+    },
+    {
+      "parameter": "csv",
+      "extensie": "csv",
+      "lang": "csv",
+      "help": "Het CSV bestand.",
+      "type": "bestand",
+      "verplicht": false
+    },
+    {
       "parameter": "help",
       "kort": "h",
       "lang": "help",

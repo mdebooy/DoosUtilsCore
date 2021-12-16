@@ -16,14 +16,18 @@
  */
 package eu.debooy.doosutils;
 
+import static eu.debooy.doosutils.Parameter.TPY_BESTAND;
 import static eu.debooy.doosutils.ParameterBundle.ERR_ARGS_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_FOUTIEF;
+import static eu.debooy.doosutils.ParameterBundle.ERR_CONFS_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_BESTAND;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_ONBEKEND;
 import static eu.debooy.doosutils.ParameterBundle.EXT_JSON;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_BANNER;
+import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_HELP;
+import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_JAR;
 import static eu.debooy.doosutils.ParameterBundle.PARAMBUNDLE;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -35,6 +39,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.junit.BeforeClass;
@@ -210,6 +215,44 @@ public class ParameterBundleTest {
   }
 
   @Test
+  public void testApplicatie7() {
+    Locale.setDefault(LOCALE);
+
+    String[]  args      = new String[] {"--aantal=\"230\"", "-k", "2112/12/21",
+                                        "--uitvoerdir=\"/tmp\"", "--exclude",
+                                        "--help", "-b", TPY_BESTAND,
+                                        "--csvbestand", "invoer",
+                                        "--csv", "invoer.json",
+                                        "--jsonbestand", "invoer.json"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder()
+                           .setBaseName(APPLICATIE)
+                           .setValidator(new ParameterBundleValidator())
+                           .build();
+    parameterBundle.setArgs(args);
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(Long.valueOf(230), parameterBundle.getLong("aantal"));
+    assertNull(parameterBundle.getBestand("invoer.csv"));
+    assertEquals(TPY_BESTAND, parameterBundle.getBestand(TPY_BESTAND));
+    assertEquals("invoer.json.csv", parameterBundle.getBestand("csv"));
+    assertEquals("invoer.csv", parameterBundle.getBestand("csvbestand"));
+    assertEquals("invoer.json", parameterBundle.getBestand("jsonbestand"));
+    assertEquals(d2112, parameterBundle.getDate("kort"));
+    assertEquals(".", parameterBundle.getString("indir"));
+    assertEquals("/tmp", parameterBundle.getString("uitdir"));
+    assertFalse(parameterBundle.getBoolean("exclude"));
+    assertTrue(parameterBundle.getBoolean("help"));
+    assertEquals(2, errors.size());
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
+                             "--lang"), errors.get(0));
+    assertEquals("PAR-9000 Datum ligt in de toekomst.", errors.get(1));
+  }
+
+  @Test
   public void testHelp() {
     var errContent  = new ByteArrayOutputStream();
     var outContent  = new ByteArrayOutputStream();
@@ -227,7 +270,7 @@ public class ParameterBundleTest {
     System.setErr(new PrintStream(System.err));
     System.setOut(new PrintStream(System.out));
 
-    assertEquals(22, help.length);
+    assertEquals(26, help.length);
   }
 
   @Test
@@ -261,7 +304,17 @@ public class ParameterBundleTest {
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMETERS).build();
+
     assertTrue(parameterBundle.isValid());
+    assertFalse(parameterBundle.containsParameter(JSON_KEY_HELP));
+    assertFalse(parameterBundle.containsParameter(PARAMETERS));
+    assertEquals("Parameter Bundle", parameterBundle.getBanner());
+    assertEquals(PARAMETERS, parameterBundle.getBaseName());
+    assertEquals("Hiermee kunnen de parameters voor een applicatie worden gedefinieerd.",
+                 parameterBundle.getHelp());
+
+    parameterBundle.setArg(JSON_KEY_HELP, "true");
+    assertTrue(parameterBundle.containsParameter(JSON_KEY_HELP));
   }
 
   @Test
@@ -297,6 +350,23 @@ public class ParameterBundleTest {
 
   @Test
   public void testInit5() {
+    Locale.setDefault(new Locale("fr"));
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName(PARAMS).build();
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals("ParameterBundle", parameterBundle.getApplicatie());
+    assertEquals(1, errors.size());
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_CONFS_AFWEZIG),
+                             JSON_KEY_BANNER, JSON_KEY_JAR), errors.get(0));
+    assertEquals("fr", parameterBundle.getLocale().toString());
+  }
+
+  @Test
+  public void testInit6() {
     Locale.setDefault(new Locale("nl"));
 
     String[]  args    = new String[] {"-k", "helptekst"};
@@ -318,7 +388,7 @@ public class ParameterBundleTest {
   }
 
   @Test
-  public void testInit6() {
+  public void testInit7() {
     Locale.setDefault(new Locale("nl"));
 
     String[]  args    = new String[] {"-k"};

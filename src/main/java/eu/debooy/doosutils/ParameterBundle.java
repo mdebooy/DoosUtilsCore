@@ -58,13 +58,13 @@ public class ParameterBundle {
 
   public static final String  PARAMBUNDLE       = "ParameterBundle";
 
-  public  static final  String  JSON_KEY_APPLICATIE = "applicatie";
-  public  static final  String  JSON_KEY_BANNER     = "banner";
-  private static final  String  JSON_KEY_BREEDTE    = "_breedte";
-  public  static final  String  JSON_KEY_HELP       = "help";
-  private static final  String  JSON_KEY_JAR        = "_jar";
-  public  static final  String  JSON_KEY_PARAMETERS = "parameters";
-  private static final  String  JSON_KEY_PREFIX     = "_prefixlengte";
+  public    static final  String  JSON_KEY_APPLICATIE = "applicatie";
+  public    static final  String  JSON_KEY_BANNER     = "banner";
+  private   static final  String  JSON_KEY_BREEDTE    = "_breedte";
+  public    static final  String  JSON_KEY_HELP       = "help";
+  protected static final  String  JSON_KEY_JAR        = "_jar";
+  public    static final  String  JSON_KEY_PARAMETERS = "parameters";
+  private   static final  String  JSON_KEY_PREFIX     = "_prefixlengte";
 
   private static final  String  LBL_GEBRUIK     = "label.gebruik";
   private static final  String  LBL_PARAMETERS  = "label.parameters";
@@ -256,6 +256,10 @@ public class ParameterBundle {
   }
 
   public String getBestand(String parameter) {
+    if (!params.containsKey(parameter)) {
+      return null;
+    }
+
     if (DoosUtils.isBlankOrNull(params.get(parameter).getExtensie())) {
       return getString(parameter);
     }
@@ -264,7 +268,8 @@ public class ParameterBundle {
   }
 
   public String getBestand(String parameter, String extensie) {
-    var bestand = DoosUtils.nullToValue(getString(parameter), "bestand");
+    var bestand = DoosUtils.nullToValue(getString(parameter),
+                                        Parameter.TPY_BESTAND);
 
     if (bestand.endsWith(extensie)) {
       return bestand;
