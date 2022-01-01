@@ -17,20 +17,19 @@
 package eu.debooy.doosutils;
 
 import static eu.debooy.doosutils.Parameter.TPY_BESTAND;
-import static eu.debooy.doosutils.ParameterBundle.ERR_ARGS_AFWEZIG;
-import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_AFWEZIG;
-import static eu.debooy.doosutils.ParameterBundle.ERR_ARG_FOUTIEF;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONFS_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_BESTAND;
+import static eu.debooy.doosutils.ParameterBundle.ERR_PARS_AFWEZIG;
+import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_AFWEZIG;
+import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_FOUTIEF;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_ONBEKEND;
 import static eu.debooy.doosutils.ParameterBundle.EXT_JSON;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_BANNER;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_HELP;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_JAR;
 import static eu.debooy.doosutils.ParameterBundle.PARAMBUNDLE;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import eu.debooy.doosutils.test.BatchTest;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -49,12 +48,10 @@ import org.junit.Test;
 /**
  * @author Marco de Booij
  */
-public class ParameterBundleTest {
+public class ParameterBundleTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       ParameterBundleTest.class.getClassLoader();
   protected static final  Locale      LOCALE      = new Locale("nl");
-
-  private static  ResourceBundle  resourceBundle;
 
   private static final  String  APPLICATIE  = "applicatie";
   private static final  String  PARAMETERS  = "parameters";
@@ -104,7 +101,7 @@ public class ParameterBundleTest {
     assertTrue((Boolean) parameterBundle.get("help"));
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_AFWEZIG),
                              "--lang"), errors.get(0));
   }
 
@@ -128,7 +125,7 @@ public class ParameterBundleTest {
     assertTrue((Boolean) parameterBundle.get("help"));
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_AFWEZIG),
                              "-b", "--lang"), errors.get(0));
   }
 
@@ -154,7 +151,7 @@ public class ParameterBundleTest {
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_AFWEZIG),
                              "-b", "--lang"), errors.get(0));
   }
 
@@ -180,7 +177,7 @@ public class ParameterBundleTest {
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_AFWEZIG),
                              "-b", "--lang"), errors.get(0));
   }
 
@@ -209,7 +206,7 @@ public class ParameterBundleTest {
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(2, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARGS_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_AFWEZIG),
                              "-b", "--lang"), errors.get(0));
     assertEquals("PAR-9000 Datum ligt in de toekomst.", errors.get(1));
   }
@@ -247,30 +244,22 @@ public class ParameterBundleTest {
     assertTrue(parameterBundle.getBoolean("help"));
     assertEquals(2, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_AFWEZIG),
                              "--lang"), errors.get(0));
     assertEquals("PAR-9000 Datum ligt in de toekomst.", errors.get(1));
   }
 
   @Test
   public void testHelp() {
-    var errContent  = new ByteArrayOutputStream();
-    var outContent  = new ByteArrayOutputStream();
-
-    System.setOut(new PrintStream(outContent));
-    System.setErr(new PrintStream(errContent));
-
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(APPLICATIE)
                                    .setLocale(LOCALE).build();
+
+    before();
     parameterBundle.help();
+    after();
 
-    var help  = outContent.toString().split("\\n");
-
-    System.setErr(new PrintStream(System.err));
-    System.setOut(new PrintStream(System.out));
-
-    assertEquals(26, help.length);
+    assertEquals(29, out.size());
   }
 
   @Test
@@ -362,6 +351,13 @@ public class ParameterBundleTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_CONFS_AFWEZIG),
                              JSON_KEY_BANNER, JSON_KEY_JAR), errors.get(0));
+    assertEquals("ParameterBundle: Applicatie: [ParameterBundle], Banner: [], "
+                  + "BaseName: [params], Extrahelp: [null], Help: [L'aide.], "
+                  + "Locale: [fr], Parameters: [[help: [kort: [h], lang: "
+                  + "[help], standaard: [<null>], type: [string], format: "
+                  + "[<null>], extensie: [<null>], verplicht: [true], waarde: "
+                  + "[<null>], help: [Gives this helptext.]]]",
+                 parameterBundle.toString());
     assertEquals("fr", parameterBundle.getLocale().toString());
   }
 
@@ -405,9 +401,9 @@ public class ParameterBundleTest {
     Locale.setDefault(new Locale("en", "uk"));
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
-                             "helpEN", "en_UK"), errors.get(0));
+                             "helpEN"), errors.get(0));
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_FOUTIEF),
                              "-k"), errors.get(1));
     assertEquals("en_UK", parameterBundle.getLocale().toString());
   }

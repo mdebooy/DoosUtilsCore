@@ -2,7 +2,7 @@
   "_jar": "",
   "applicatie": "ParameterBundle",
   "banner": "",
-  "help": "With this file the parameters for the application are defined.",
+  "help": "L'aide.",
   "parameters": [
     {
       "parameter": "help",

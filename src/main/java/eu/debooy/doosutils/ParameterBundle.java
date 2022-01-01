@@ -16,6 +16,8 @@
  */
 package eu.debooy.doosutils;
 
+import static eu.debooy.doosutils.Batchjob.PAR_INVOERDIR;
+import static eu.debooy.doosutils.Batchjob.PAR_UITVOERDIR;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,18 +43,18 @@ import org.json.simple.parser.ParseException;
  * @author Marco de Booij
  */
 public class ParameterBundle {
-  public static final String  ERR_ARG_DUBBEL    = "error.arg.dubbel";
-  public static final String  ERR_ARG_FOUTIEF   = "error.arg.foutief";
-  public static final String  ERR_ARG_ONBEKEND  = "error.arg.onbekend";
-  public static final String  ERR_ARG_AFWEZIG   = "error.arg.afwezig";
-  public static final String  ERR_ARGS_AFWEZIG  = "error.args.afwezig";
   public static final String  ERR_CONF_AFWEZIG  = "error.config.param.afwezig";
   public static final String  ERR_CONFS_AFWEZIG = "error.config.params.afwezig";
   public static final String  ERR_CONF_BESTAND  = "error.config.afwezig";
   public static final String  ERR_CONF_FOUTIEF  = "error.config.foutief";
   public static final String  ERR_PAR_AFWEZIG   = "error.param.afwezig";
-  public static final String  ERR_PARS_AFWEZIG  = "error.params.afwezig";
+  public static final String  ERR_PAR_DUBBEL    = "error.param.dubbel";
+  public static final String  ERR_PAR_FOUTIEF   = "error.param.foutief";
   public static final String  ERR_PAR_ONBEKEND  = "error.param.onbekend";
+  public static final String  ERR_PARS_AFWEZIG  = "error.params.afwezig";
+  public static final String  ERR_PARS_DUBBEL   = "error.params.dubbel";
+  public static final String  ERR_PARS_FOUTIEF  = "error.params.foutief";
+  public static final String  ERR_PARS_ONBEKEND = "error.params.onbekend";
 
   protected static final  String  EXT_JSON  = ".json";
 
@@ -61,6 +63,7 @@ public class ParameterBundle {
   public    static final  String  JSON_KEY_APPLICATIE = "applicatie";
   public    static final  String  JSON_KEY_BANNER     = "banner";
   private   static final  String  JSON_KEY_BREEDTE    = "_breedte";
+  public    static final  String  JSON_KEY_EXTRAHELP  = "extrahelp";
   public    static final  String  JSON_KEY_HELP       = "help";
   protected static final  String  JSON_KEY_JAR        = "_jar";
   public    static final  String  JSON_KEY_PARAMETERS = "parameters";
@@ -78,6 +81,7 @@ public class ParameterBundle {
   private String  applicatie  = DoosConstants.NA;
   private String  banner;
   private int     breedte     = 80;
+  private String  extrahelp;
   private String  help;
   private String  jar;
   private int     prefix      = 20;
@@ -165,18 +169,7 @@ public class ParameterBundle {
       }
      });
 
-    if (afwezig.size() == 1) {
-      errors.add(
-          MessageFormat.format(resourceBundle.getString(ERR_ARG_AFWEZIG),
-                               afwezig.get(0)));
-    }
-    if (afwezig.size() > 1) {
-      errors.add(
-          MessageFormat.format(
-              resourceBundle.getString(ERR_ARGS_AFWEZIG),
-              String.join(", ", afwezig.subList(0, afwezig.size()-1)),
-              afwezig.get(afwezig.size()-1)));
-    }
+    setInEnkelDubbelVoud(afwezig, ERR_PAR_AFWEZIG, ERR_PARS_AFWEZIG);
 
     var fouten  = errors.size();
     if (null != validator) {
@@ -204,17 +197,7 @@ public class ParameterBundle {
       return;
     }
 
-    if (afwezig.size() == 1) {
-      errors.add(
-          MessageFormat.format(resourceBundle.getString(ERR_CONF_AFWEZIG),
-                               afwezig.get(0)));
-    } else {
-      errors.add(
-          MessageFormat.format(
-              resourceBundle.getString(ERR_CONFS_AFWEZIG),
-              String.join(", ", afwezig.subList(0, afwezig.size()-1)),
-              afwezig.get(afwezig.size()-1)));
-    }
+    setInEnkelDubbelVoud(afwezig, ERR_CONF_AFWEZIG, ERR_CONFS_AFWEZIG);
   }
 
   private void  checkParam(Parameter parameter) {
@@ -223,6 +206,10 @@ public class ParameterBundle {
 
   private void checkParams() {
     params.values().forEach(this::checkParam);
+  }
+
+  public boolean containsArgument(String parameter) {
+    return argumenten.contains(parameter);
   }
 
   public boolean containsParameter(String parameter) {
@@ -298,6 +285,26 @@ public class ParameterBundle {
     return help;
   }
 
+  private String getInvoer(String invoer) {
+    if (invoer.contains(DoosUtils.getFileSep())) {
+      return invoer;
+    }
+
+    if (argumenten.contains(PAR_INVOERDIR)) {
+      return getString(PAR_INVOERDIR) + DoosUtils.getFileSep() + invoer;
+    }
+
+    return invoer;
+  }
+
+  public String getInvoerbestand(String bestand) {
+    return getInvoer(getBestand(bestand));
+  }
+
+  public String getInvoerbestand(String bestand, String extensie) {
+    return getInvoer(getBestand(bestand, extensie));
+  }
+
   public Locale getLocale() {
     return locale;
   }
@@ -326,6 +333,27 @@ public class ParameterBundle {
     }
 
     return getParameter(parameter).toString();
+  }
+
+  private String getUitvoer(String uitvoer) {
+    if (uitvoer.contains(DoosUtils.getFileSep())) {
+      return uitvoer;
+    }
+
+    if (argumenten.contains(PAR_INVOERDIR)
+        || argumenten.contains(PAR_UITVOERDIR)) {
+      return getString(PAR_UITVOERDIR) + DoosUtils.getFileSep() + uitvoer;
+    }
+
+    return uitvoer;
+  }
+
+  public String getUitvoerbestand(String bestand) {
+    return getUitvoer(getBestand(bestand));
+  }
+
+  public String getUitvoerbestand(String bestand, String extensie) {
+    return getUitvoer(getBestand(bestand, extensie));
   }
 
   public void help() {
@@ -385,6 +413,11 @@ public class ParameterBundle {
                            breedte);
     });
     DoosUtils.naarScherm();
+
+    if (DoosUtils.isNotBlankOrNull(extrahelp)) {
+      DoosUtils.naarScherm(extrahelp, 80);
+      DoosUtils.naarScherm();
+    }
   }
 
   private void init() throws MissingResourceException {
@@ -454,6 +487,9 @@ public class ParameterBundle {
     if (json.containsKey(JSON_KEY_BREEDTE)) {
       breedte     = Integer.valueOf(json.get(JSON_KEY_BREEDTE).toString());
     }
+    if (json.containsKey(JSON_KEY_EXTRAHELP)) {
+      extrahelp   = json.get(JSON_KEY_EXTRAHELP).toString();
+    }
     if (json.containsKey(JSON_KEY_HELP)) {
       help        = json.get(JSON_KEY_HELP).toString();
     }
@@ -509,21 +545,21 @@ public class ParameterBundle {
 
   public boolean setArgs(String[] args) {
     var correct = true;
+    var foutief = new ArrayList<String>();
     var i       = 0;
 
     while (i < args.length) {
+      var arg = args[i];
       if (!args[i].trim().startsWith("-")
           || args[i].trim().startsWith("---")) {
-        errors.add(
-            MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
-                                        args[i]));
+        foutief.add(args[i]);
         correct = false;
         i++;
         continue;
       }
 
-      var parameter = args[i];
-      var waarde    = "";
+      var     parameter = args[i];
+      var     waarde    = "";
       if (i+1 < args.length
           && !args[i+1].trim().startsWith("-")) {
         waarde  = stripQuotes(args[i+1]);
@@ -544,30 +580,61 @@ public class ParameterBundle {
 
       argumenten.add(parameter);
 
-      Parameter param = params.get(parameter);
+      Parameter param;
+      if (correct)  {
+        param = params.get(parameter);
+      } else {
+        param = new Parameter();
+        if (arg.startsWith("--")) {
+          param.setLang(arg.substring(2).split("=")[0]);
+        } else {
+          param.setKort(arg.substring(1));
+        }
+      }
+
       if (!correct
           || DoosUtils.isBlankOrNull(param.getWaarde())) {
-        errors.add(
-            MessageFormat.format(resourceBundle.getString(ERR_ARG_FOUTIEF),
-                "-" + DoosUtils.nullToValue(param.getKort(),
-                    "-" + DoosUtils.nullToEmpty(param.getLang()))));
+        foutief.add("-" + DoosUtils.nullToValue(
+            param.getKort(),
+            "-" + DoosUtils.nullToEmpty(param.getLang())));
       }
 
       i++;
     }
 
+    setInEnkelDubbelVoud(foutief, ERR_PAR_FOUTIEF, ERR_PARS_FOUTIEF);
+
     return correct && checkArgs();
   }
 
+  private void setInEnkelDubbelVoud(List<String> params,
+                                    String enkelvoud, String dubbelvoud) {
+    if (params.isEmpty()) {
+      return;
+    }
+
+    if (params.size() == 1) {
+      errors.add(
+          MessageFormat.format(resourceBundle.getString(enkelvoud),
+                               params.get(0)));
+    }
+    if (params.size() > 1) {
+      errors.add(
+          MessageFormat.format(
+              resourceBundle.getString(dubbelvoud),
+              String.join(", ", params.subList(0, params.size()-1)),
+              params.get(params.size()-1)));
+    }
+  }
+
   private void setParamArg(String arg, String param,
-                           Map<String, String> args) {
+                           Map<String, String> args, List<String> dubbel) {
     if (null == arg) {
       return;
     }
 
     if (args.containsKey(arg)) {
-      errors.add(MessageFormat.format(resourceBundle.getString(ERR_ARG_DUBBEL),
-                                      arg));
+      dubbel.add(arg);
       return;
     }
 
@@ -575,14 +642,14 @@ public class ParameterBundle {
   }
 
   private void setParamArgB(String arg, String param,
-                            Map<String, String> args) {
+                            Map<String, String> args,
+                            List<String> dubbel, List<String> onbekend) {
     if (null == arg) {
       return;
     }
 
     if (!args.containsValue(param)) {
-      errors.add(MessageFormat.format(
-          resourceBundle.getString(ERR_PAR_ONBEKEND), param));
+      onbekend.add(param);
       return;
     }
 
@@ -592,8 +659,7 @@ public class ParameterBundle {
       return;
     }
     if (args.containsKey(arg)) {
-      errors.add(MessageFormat.format(resourceBundle.getString(ERR_ARG_DUBBEL),
-                                      arg));
+      dubbel.add(arg);
       return;
     }
 
@@ -602,31 +668,34 @@ public class ParameterBundle {
   }
 
   private void setParameters(JSONArray parameters) {
-    boolean basis = params.isEmpty();
+    boolean basis     = params.isEmpty();
+    var     dubbel    = new ArrayList<String>();
+    var     onbekend  = new ArrayList<String>();
 
     for (var parameter : parameters.toArray()) {
       var jParam  = (JSONObject) parameter;
       var sleutel = jParam.get(Parameter.JSON_PAR_PARAMETER).toString();
       if (basis) {
         var param = new Parameter(jParam);
-        setParamArg(param.getKort(), param.getParameter(), kort);
-        setParamArg(param.getLang(), param.getParameter(), lang);
+        setParamArg(param.getKort(), param.getParameter(), kort, dubbel);
+        setParamArg(param.getLang(), param.getParameter(), lang, dubbel);
         params.put(sleutel, param);
       } else {
         if (params.containsKey(sleutel)) {
           var param = params.get(sleutel);
           setParamArgB(jParam.get(Parameter.JSON_PAR_KORT).toString(),
-                       param.getParameter(), kort);
+                       param.getParameter(), kort, dubbel, onbekend);
           setParamArgB(jParam.get(Parameter.JSON_PAR_LANG).toString(),
-                       param.getParameter(), lang);
+                       param.getParameter(), lang, dubbel, onbekend);
           setParams(jParam, param);
         } else {
-          errors.add(
-              MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
-                               sleutel, locale.toString()));
+          onbekend.add(sleutel);
         }
       }
     }
+
+    setInEnkelDubbelVoud(onbekend, ERR_PAR_ONBEKEND, ERR_PARS_ONBEKEND);
+    setInEnkelDubbelVoud(dubbel, ERR_PAR_DUBBEL, ERR_PARS_DUBBEL);
   }
 
   private void setParams(JSONObject parameters, Parameter param) {
@@ -653,6 +722,7 @@ public class ParameterBundle {
             + "Applicatie: [" + applicatie + "], "
             + "Banner: [" + banner + "], "
             + "BaseName: [" + baseName + "], "
+            + "Extrahelp: [" + extrahelp + "], "
             + "Help: [" + help + "], "
             + "Locale: [" + locale.toString() + "], "
             + "Parameters: [" + params.values().toString() + "]";

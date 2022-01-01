@@ -55,6 +55,10 @@ public final class DoosUtils {
     return System.getProperty("line.separator");
   }
 
+  public static String getFileSep() {
+    return System.getProperty("file.separator");
+  }
+
   public static String getWachtwoord(String prompt) {
     String  password;
     var     console   = System.console();

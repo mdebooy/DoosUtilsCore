@@ -230,21 +230,25 @@ public final class Parameter {
   }
 
   private void setStandaard() {
-    if (TPY_BOOLEAN.equalsIgnoreCase(type)) {
-      standaard = Boolean.FALSE;
-      waarde    = standaard;
-    }
-    if (TPY_CHARSET.equalsIgnoreCase(type)) {
-      standaard = Charset.defaultCharset().name();
-      waarde    = standaard;
-    }
-    if (TPY_LOCALE.equalsIgnoreCase(type)) {
-      standaard = Locale.getDefault().getLanguage();
-      waarde    = standaard;
-    }
-    if (TPY_MAP.equalsIgnoreCase(type)) {
-      standaard = ".";
-      waarde    = standaard;
+    switch (type.toLowerCase()) {
+      case TPY_BOOLEAN:
+        standaard = Boolean.FALSE;
+        waarde    = standaard;
+        break;
+      case TPY_CHARSET:
+        standaard = Charset.defaultCharset().name();
+        waarde    = standaard;
+        break;
+      case TPY_LOCALE:
+        standaard = Locale.getDefault().getLanguage();
+        waarde    = standaard;
+        break;
+      case TPY_MAP:
+        standaard = ".";
+        waarde    = standaard;
+        break;
+      default:
+        break;
     }
   }
 

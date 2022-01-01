@@ -4,6 +4,7 @@
   "_prefixlengte": 15,
   "applicatie": "TestApplicatie",
   "help": "Een dummy applicatie voor het testen van ParameterBundle.",
+  "extrahelp": "Extra help",
   "banner": "Test Applicatie",
   "parameters": [
     {
