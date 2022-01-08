@@ -16,8 +16,6 @@
  */
 package eu.debooy.doosutils;
 
-import static eu.debooy.doosutils.Batchjob.PAR_INVOERDIR;
-import static eu.debooy.doosutils.Batchjob.PAR_UITVOERDIR;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -290,8 +288,9 @@ public class ParameterBundle {
       return invoer;
     }
 
-    if (argumenten.contains(PAR_INVOERDIR)) {
-      return getString(PAR_INVOERDIR) + DoosUtils.getFileSep() + invoer;
+    if (argumenten.contains(Batchjob.PAR_INVOERDIR)) {
+      return getString(Batchjob.PAR_INVOERDIR)
+              + DoosUtils.getFileSep() + invoer;
     }
 
     return invoer;
@@ -340,9 +339,10 @@ public class ParameterBundle {
       return uitvoer;
     }
 
-    if (argumenten.contains(PAR_INVOERDIR)
-        || argumenten.contains(PAR_UITVOERDIR)) {
-      return getString(PAR_UITVOERDIR) + DoosUtils.getFileSep() + uitvoer;
+    if (argumenten.contains(Batchjob.PAR_INVOERDIR)
+        || argumenten.contains(Batchjob.PAR_UITVOERDIR)) {
+      return getString(Batchjob.PAR_UITVOERDIR)
+              + DoosUtils.getFileSep() + uitvoer;
     }
 
     return uitvoer;
@@ -423,12 +423,12 @@ public class ParameterBundle {
   private void init() throws MissingResourceException {
     // Standaard parameters
     var json  = readJson(baseName + EXT_JSON);
-    setConfiguratie(json);
+    setConfiguratie(json, Boolean.TRUE);
 
     try {
       // In de juiste taal
       json  = readJson(baseName + "_" + locale.getLanguage() + EXT_JSON);
-      setConfiguratie(json);
+      setConfiguratie(json, Boolean.FALSE);
     } catch (MissingResourceException e) {
       // Mag gemist worden.
     }
@@ -436,7 +436,7 @@ public class ParameterBundle {
       // In de juiste taal en land
       json  = readJson(baseName + "_" + locale.getLanguage() + "_"
                         + locale.getCountry() + EXT_JSON);
-      setConfiguratie(json);
+      setConfiguratie(json, Boolean.FALSE);
     } catch (MissingResourceException e) {
       // Mag gemist worden.
     }
@@ -476,9 +476,8 @@ public class ParameterBundle {
     return json;
   }
 
-  private void setConfiguratie(JSONObject json) {
-    if (json.containsKey(JSON_KEY_APPLICATIE)
-        && DoosConstants.NA.equals(applicatie)) {
+  private void setConfiguratie(JSONObject json, Boolean basis) {
+    if (basis && json.containsKey(JSON_KEY_APPLICATIE)) {
       applicatie  = json.get(JSON_KEY_APPLICATIE).toString();
     }
     if (json.containsKey(JSON_KEY_BANNER)) {
@@ -493,11 +492,11 @@ public class ParameterBundle {
     if (json.containsKey(JSON_KEY_HELP)) {
       help        = json.get(JSON_KEY_HELP).toString();
     }
-    if (json.containsKey(JSON_KEY_JAR)) {
+    if (basis && json.containsKey(JSON_KEY_JAR)) {
       jar         = json.get(JSON_KEY_JAR).toString();
     }
     if (json.containsKey(JSON_KEY_PARAMETERS)) {
-      setParameters((JSONArray) json.get(JSON_KEY_PARAMETERS));
+      setParameters((JSONArray) json.get(JSON_KEY_PARAMETERS), basis);
     }
     if (json.containsKey(JSON_KEY_PREFIX)) {
       prefix      = Integer.valueOf(json.get(JSON_KEY_PREFIX).toString());
@@ -508,7 +507,7 @@ public class ParameterBundle {
     params.values().forEach(param -> param.setWaarde(param.getStandaard()));
   }
 
-  public boolean setArg(String parameter, String waarde) {
+  private boolean setArg(String parameter, String waarde) {
     if (!params.containsKey(DoosUtils.nullToEmpty(parameter))) {
       return false;
     }
@@ -529,7 +528,7 @@ public class ParameterBundle {
     return (fouten == errors.size());
   }
 
-  public boolean setArgLang(String arg, String arg2) {
+  private boolean setArgLang(String arg, String arg2) {
     String  parameter;
     String  waarde;
     if (arg.contains("=")) {
@@ -667,25 +666,28 @@ public class ParameterBundle {
     args.put(arg, param);
   }
 
-  private void setParameters(JSONArray parameters) {
-    boolean basis     = params.isEmpty();
+  private void setParameters(JSONArray parameters, Boolean basis) {
     var     dubbel    = new ArrayList<String>();
     var     onbekend  = new ArrayList<String>();
 
     for (var parameter : parameters.toArray()) {
       var jParam  = (JSONObject) parameter;
       var sleutel = jParam.get(Parameter.JSON_PAR_PARAMETER).toString();
-      if (basis) {
-        var param = new Parameter(jParam);
-        setParamArg(param.getKort(), param.getParameter(), kort, dubbel);
-        setParamArg(param.getLang(), param.getParameter(), lang, dubbel);
-        params.put(sleutel, param);
+      if (Boolean.TRUE.equals(basis)) {
+        if (params.containsKey(sleutel)) {
+          dubbel.add(sleutel);
+        } else {
+          var param = new Parameter(jParam);
+          setParamArg(param.getKort(), param.getParameter(), kort, dubbel);
+          setParamArg(param.getLang(), param.getParameter(), lang, dubbel);
+          params.put(sleutel, param);
+        }
       } else {
         if (params.containsKey(sleutel)) {
           var param = params.get(sleutel);
-          setParamArgB(jParam.get(Parameter.JSON_PAR_KORT).toString(),
+          setParamArgB((String) jParam.get(Parameter.JSON_PAR_KORT),
                        param.getParameter(), kort, dubbel, onbekend);
-          setParamArgB(jParam.get(Parameter.JSON_PAR_LANG).toString(),
+          setParamArgB((String) jParam.get(Parameter.JSON_PAR_LANG),
                        param.getParameter(), lang, dubbel, onbekend);
           setParams(jParam, param);
         } else {

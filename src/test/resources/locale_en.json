@@ -1,0 +1,11 @@
+{
+  "parameters": [
+    {
+      "parameter": "info",
+      "kort": "i",
+      "lang": "info",
+      "help": "Give this help text.",
+      "verplicht": false
+    }
+  ]
+}

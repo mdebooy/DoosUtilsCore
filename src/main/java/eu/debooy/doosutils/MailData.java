@@ -60,14 +60,11 @@ public class MailData implements Serializable {
 
   @Override
   public boolean equals(Object object) {
-    if (null == object) {
-      return false;
-    }
-    if (this == object) {
-      return true;
-    }
     if (!(object instanceof MailData)) {
       return false;
+    }
+    if (object == this) {
+      return true;
     }
 
     var mailData  = (MailData) object;

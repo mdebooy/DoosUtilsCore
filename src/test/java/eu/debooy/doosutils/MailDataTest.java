@@ -66,6 +66,7 @@ public class MailDataTest {
     mailData2.setSentDate(new Date(1));
 
     assertNotEquals(null, mailData1);
+    assertNotEquals(mailData1, null);
     assertEquals(mailData1, mailData1);
     assertNotEquals("", mailData1);
     assertNotEquals(mailData2, mailData1);

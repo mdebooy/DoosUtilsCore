@@ -53,7 +53,7 @@ public class DoosUtilsTest {
     var methodes  = DoosUtils.findGetters(this.getClass().getMethods());
 
     // Ook de getClass zit erbij.
-    assertEquals(7, methodes.length);
+    assertEquals(8, methodes.length);
   }
 
   @Test
@@ -67,6 +67,11 @@ public class DoosUtilsTest {
   @Test
   public void getEolTest() {
     assertEquals(System.getProperty("line.separator"), DoosUtils.getEol());
+  }
+
+  @Test
+  public void getFileSepTest() {
+    assertEquals(System.getProperty("file.separator"), DoosUtils.getFileSep());
   }
 
   @Test

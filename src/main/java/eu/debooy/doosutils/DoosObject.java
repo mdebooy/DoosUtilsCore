@@ -17,40 +17,12 @@
 package eu.debooy.doosutils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 /**
  * @author Marco de Booij
  */
 public class DoosObject {
-  private static final String[] GET_METHODS_PREFIXES = {"get", "is"};
-
-  /**
-   * Zoek alle 'getters'.
-   *
-   * @return
-   */
-  protected Collection<Method> findGetters() {
-    List<Method>  getters = new ArrayList<>();
-    for (var method : this.getClass().getMethods()) {
-      for (var prefix : GET_METHODS_PREFIXES) {
-        if (method.getName().startsWith(prefix)) {
-          if (method.getParameterTypes() == null
-              || method.getParameterTypes().length == 0) {
-            getters.add(method);
-          }
-          break;
-        }
-      }
-    }
-
-    return getters;
-  }
-
   /**
    * Maak een String van alle attributen die via een getter te benaderen zijn.
    */
@@ -61,7 +33,7 @@ public class DoosObject {
     Object  waarde;
 
     sb.append(this.getClass().getSimpleName()).append(" (");
-    for (var method : findGetters()) {
+    for (var method : DoosUtils.findGetters(this.getClass().getMethods())) {
       try {
         if (method.getName().startsWith("get")) {
           attribute = method.getName().substring(3);
