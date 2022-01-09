@@ -214,6 +214,12 @@ public class ParameterBundle {
     return DoosUtils.isNotBlankOrNull(get(parameter));
   }
 
+  public void debug() {
+    DoosUtils.naarScherm("kort: " + kort.toString());
+    DoosUtils.naarScherm("lang: " + lang.toString());
+    params.values().forEach(param -> DoosUtils.naarScherm(param.toString()));
+  }
+
   public Object get(String parameter) {
     return getParameter(parameter);
   }
@@ -369,7 +375,7 @@ public class ParameterBundle {
     lijn.append(" -jar ").append(jar).append(" ").append(applicatie);
     params.keySet()
           .stream()
-          .map(sleutel -> params.get(sleutel))
+          .map(params::get)
           .forEachOrdered(param -> {
       var tekst = new StringBuilder();
       tekst.append(" -")
@@ -448,12 +454,6 @@ public class ParameterBundle {
     return errors.isEmpty();
   }
 
-  public void printParameters() {
-    DoosUtils.naarScherm("kort: " + kort.toString());
-    DoosUtils.naarScherm("lang: " + lang.toString());
-    params.values().forEach(param -> DoosUtils.naarScherm(param.toString()));
-  }
-
   private JSONObject readJson(String bestand) {
     var         is    = classloader.getResourceAsStream(bestand);
     JSONObject  json;
@@ -477,7 +477,7 @@ public class ParameterBundle {
   }
 
   private void setConfiguratie(JSONObject json, Boolean basis) {
-    if (basis && json.containsKey(JSON_KEY_APPLICATIE)) {
+    if (Boolean.TRUE.equals(basis) && json.containsKey(JSON_KEY_APPLICATIE)) {
       applicatie  = json.get(JSON_KEY_APPLICATIE).toString();
     }
     if (json.containsKey(JSON_KEY_BANNER)) {
@@ -492,7 +492,7 @@ public class ParameterBundle {
     if (json.containsKey(JSON_KEY_HELP)) {
       help        = json.get(JSON_KEY_HELP).toString();
     }
-    if (basis && json.containsKey(JSON_KEY_JAR)) {
+    if (Boolean.TRUE.equals(basis) && json.containsKey(JSON_KEY_JAR)) {
       jar         = json.get(JSON_KEY_JAR).toString();
     }
     if (json.containsKey(JSON_KEY_PARAMETERS)) {
@@ -703,7 +703,7 @@ public class ParameterBundle {
   private void setParams(JSONObject parameters, Parameter param) {
     Parameter.paramI18N
              .stream()
-             .filter(sleutel -> parameters.containsKey(sleutel))
+             .filter(parameters::containsKey)
              .forEachOrdered(sleutel ->
                      param.set(sleutel, parameters.get(sleutel).toString()));
   }

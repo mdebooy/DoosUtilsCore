@@ -242,11 +242,10 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals("PAR-9000 Datum ligt in de toekomst.", errors.get(1));
   }
 
-  @Test
-  public void testDubbel1() {
+  private void testDubbel(String baseName, Locale locale, String dubbel) {
     ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("dubbel1")
-                                   .setLocale(LOCALE).build();
+      new ParameterBundle.Builder().setBaseName(baseName)
+                                   .setLocale(locale).build();
 
     before();
     parameterBundle.help();
@@ -258,85 +257,51 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals(1, errors.size());
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
-                             "help"), errors.get(0));
+                             dubbel), errors.get(0));
+  }
+
+  private void testDubbels(String baseName, Locale locale,
+                           String dubbel1, String dubbel2) {
+    ParameterBundle parameterBundle =
+      new ParameterBundle.Builder().setBaseName(baseName)
+                                   .setLocale(locale).build();
+
+    before();
+    parameterBundle.help();
+    after();
+
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(1, errors.size());
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
+                             dubbel1, dubbel2), errors.get(0));
+  }
+
+  @Test
+  public void testDubbel1() {
+    testDubbel("dubbel1", LOCALE, "help");
   }
 
   @Test
   public void testDubbel2() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("dubbel2")
-                                   .setLocale(LOCALE).build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
-                             "help", "help1"), errors.get(0));
+    testDubbels("dubbel2", LOCALE, "help", "help1");
   }
 
   @Test
   public void testDubbel3() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("dubbel3")
-                                   .setLocale(LOCALE).build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
-                             "help, help1", "help2"), errors.get(0));
+    testDubbels("dubbel3", LOCALE, "help, help1", "help2");
   }
 
   @Test
-  public void testBubbel4() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("locale")
-                                   .setLocale(new Locale("fr"))
-                                   .build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
-                             "h"), errors.get(0));
+  public void testDubbel4() {
+    testDubbel("locale", new Locale("fr"), "h");
   }
 
   @Test
-  public void testBubbel5() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("locale")
-                                   .setLocale(new Locale("de"))
-                                   .build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
-                             "help"), errors.get(0));
+  public void testDubbel5() {
+    testDubbel("locale", new Locale("de"), "help");
   }
 
   @Test
@@ -488,40 +453,12 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testKort1() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("kort1")
-                                   .setLocale(LOCALE).build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
-                             "h"), errors.get(0));
+    testDubbel("kort1", LOCALE, "h");
   }
 
   @Test
   public void testLang1() {
-    ParameterBundle parameterBundle =
-      new ParameterBundle.Builder().setBaseName("lang1")
-                                   .setLocale(LOCALE).build();
-
-    before();
-    parameterBundle.help();
-    after();
-
-    var errors  = parameterBundle.getErrors();
-
-    assertFalse(parameterBundle.isValid());
-    assertEquals(1, errors.size());
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
-                             "hlp"), errors.get(0));
+    testDubbel("lang1", LOCALE, "hlp");
   }
 
   @Test
