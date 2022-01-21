@@ -45,6 +45,8 @@ public class ParameterBundle {
   public static final String  ERR_CONFS_AFWEZIG = "error.config.params.afwezig";
   public static final String  ERR_CONF_BESTAND  = "error.config.afwezig";
   public static final String  ERR_CONF_FOUTIEF  = "error.config.foutief";
+  public static final String  ERR_CONF_ONBEKEND = "error.config.onbekend";
+  public static final String  ERR_CONF_ONGELIJK = "error.config.types.ongelijk";
   public static final String  ERR_PAR_AFWEZIG   = "error.param.afwezig";
   public static final String  ERR_PAR_DUBBEL    = "error.param.dubbel";
   public static final String  ERR_PAR_FOUTIEF   = "error.param.foutief";
@@ -199,6 +201,27 @@ public class ParameterBundle {
   }
 
   private void  checkParam(Parameter parameter) {
+    var standaard = parameter.getStandaard();
+
+    if (null != standaard
+        && standaard.toString().startsWith("_@")
+        && standaard.toString().endsWith("@_")) {
+      var parent  = getParent(standaard.toString());
+      // Kan nu pas met 'zekerheid' gezet worden.
+      if (params.containsKey(parent)) {
+        if (!parameter.getType()
+                      .equalsIgnoreCase(params.get(parent).getType())) {
+          errors.add(
+              MessageFormat.format(resourceBundle.getString(ERR_CONF_ONGELIJK),
+                                   parameter.getParameter(), parent));
+        }
+      } else {
+          errors.add(
+              MessageFormat.format(resourceBundle.getString(ERR_CONF_ONBEKEND),
+                                   parameter.getParameter(), parent));
+      }
+    }
+
     errors.addAll(parameter.valideer());
   }
 
@@ -215,9 +238,10 @@ public class ParameterBundle {
   }
 
   public void debug() {
-    DoosUtils.naarScherm("kort: " + kort.toString());
-    DoosUtils.naarScherm("lang: " + lang.toString());
+    DoosUtils.naarScherm(Parameter.JSON_PAR_KORT + ": " + kort.toString());
+    DoosUtils.naarScherm(Parameter.JSON_PAR_LANG + ": " + lang.toString());
     params.values().forEach(param -> DoosUtils.naarScherm(param.toString()));
+    errors.forEach(DoosUtils::naarScherm);
   }
 
   public Object get(String parameter) {
@@ -319,15 +343,27 @@ public class ParameterBundle {
   }
 
   public Object getParameter(String parameter) {
-    if (params.containsKey(parameter)) {
-      return params.get(parameter).getWaarde();
+    if (!params.containsKey(parameter)) {
+      return null;
     }
 
-    return null;
+    var standaard = params.get(parameter).getStandaard();
+    if (null != standaard
+        && standaard.toString().startsWith("_@")
+        && standaard.toString().endsWith("@_")
+        && !argumenten.contains(parameter)) {
+      return getParameter(getParent(standaard.toString()));
+    }
+
+    return params.get(parameter).getWaarde();
   }
 
   public Enumeration<String> getParameters() {
     return Collections.enumeration(params.keySet());
+  }
+
+  private String getParent(String standaard) {
+    return standaard.substring(2, standaard.length() - 2);
   }
 
   public String getString(String parameter) {

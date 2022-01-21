@@ -33,6 +33,7 @@ import org.json.simple.JSONObject;
 public final class Parameter {
   public static final String  ERR_PAR_ATTRIBUUT = "error.param.attribuut";
   public static final String  ERR_PAR_DATE      = "error.param.date";
+  public static final String  ERR_PAR_TYPE      = "error.param.type";
 
   public static final String  JSON_PAR_EXTENSIE   = "extensie";
   public static final String  JSON_PAR_FORMAT     = "format";
@@ -64,6 +65,9 @@ public final class Parameter {
                     JSON_PAR_STANDAARD, JSON_PAR_TYPE, JSON_PAR_VERPLICHT);
   protected static final  List<String>  typeIntern    =
       Arrays.asList(TPY_BESTAND, TPY_CHARSET, TPY_LOCALE, TPY_MAP);
+  protected static final  List<String>  types         =
+      Arrays.asList(TPY_BESTAND, TPY_BOOLEAN, TPY_CHARSET, TPY_DATE, TPY_DOUBLE,
+                    TPY_LOCALE, TPY_LONG, TPY_MAP, TPY_STRING);
 
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(ParameterBundle.PARAMBUNDLE,
@@ -222,37 +226,44 @@ public final class Parameter {
     } else {
       this.standaard  = standaard;
     }
-    if (!typeIntern.contains(type)) {
-      type  = this.standaard.getClass().getSimpleName();
+
+    if (null != this.standaard
+        && !typeIntern.contains(type)
+        && !standaard.toString().startsWith("_@")
+        && !standaard.toString().endsWith("@_")) {
+      var sType = this.standaard.getClass().getSimpleName();
+      if (!sType.equalsIgnoreCase(type)) {
+        type  = sType;
+      }
     }
 
-    waarde  = this.standaard;
+    setWaarde(this.standaard);
   }
 
   private void setStandaard() {
     switch (type.toLowerCase()) {
       case TPY_BOOLEAN:
         standaard = Boolean.FALSE;
-        waarde    = standaard;
+        setWaarde(standaard);
         break;
       case TPY_CHARSET:
         standaard = Charset.defaultCharset().name();
-        waarde    = standaard;
+        setWaarde(standaard);
         break;
       case TPY_LOCALE:
         standaard = Locale.getDefault().getLanguage();
-        waarde    = standaard;
+        setWaarde(standaard);
         break;
       case TPY_MAP:
         standaard = ".";
-        waarde    = standaard;
+        setWaarde(standaard);
         break;
       default:
         break;
     }
   }
 
-  private void setType(String type) {
+  protected void setType(String type) {
     this.type       = type;
   }
 
@@ -264,11 +275,22 @@ public final class Parameter {
     if (waarde instanceof String) {
       setWaarde(waarde.toString());
     } else {
-      this.waarde   = waarde;
+      if (null != waarde
+          && !waarde.toString().startsWith("_@")
+          && !waarde.toString().endsWith("@_")) {
+        this.waarde = waarde;
+      } else {
+        this.waarde = null;
+      }
     }
   }
 
   public final void setWaarde(String waarde) {
+    if (waarde.startsWith("_@")
+        && waarde.endsWith("@_")) {
+      return;
+    }
+
     switch (type.toLowerCase()) {
       case TPY_BESTAND:
         if (DoosUtils.isNotBlankOrNull(extensie)
@@ -344,6 +366,11 @@ public final class Parameter {
       errors.add(
           MessageFormat.format(resourceBundle.getString(ERR_PAR_ATTRIBUUT),
                                JSON_PAR_FORMAT, param));
+    }
+    if (!types.contains(type.toLowerCase())) {
+      errors.add(
+          MessageFormat.format(resourceBundle.getString(ERR_PAR_TYPE),
+                               param, type));
     }
 
     if (null == standaard) {

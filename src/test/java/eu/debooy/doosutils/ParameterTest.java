@@ -141,7 +141,7 @@ public class ParameterTest {
       fail("Geen ParseException verwacht.");
     }
     var parameter = new Parameter(json);
-
+    System.out.println(parameter.toString());
     assertEquals("kort", parameter.getParameter());
     assertTrue(parameter.isValid());
     assertNull(parameter.getExtensie());

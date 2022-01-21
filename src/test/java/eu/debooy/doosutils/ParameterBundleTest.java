@@ -112,6 +112,7 @@ public class ParameterBundleTest extends BatchTest {
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
                                      .setLocale(LOCALE).build();
     parameterBundle.setArgs(args);
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -410,7 +411,7 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit6() {
-    String[]  args    = new String[] {"-k", "helptekst"};
+    String[]        args            = new String[] {"-k", "helptekst"};
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMS)
@@ -430,7 +431,7 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit7() {
-    String[]  args    = new String[] {"-k"};
+    String[]        args            = new String[] {"-k"};
 
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMS)
@@ -479,5 +480,52 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
                              "info"), errors.get(0));
+  }
+
+  @Test
+  public void testStandaard1() {
+    String[]        args            = new String[] {"-h", "een helptekst"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("standaard1")
+                                     .setLocale(LOCALE).build();
+    parameterBundle.setArgs(args);
+
+    assertTrue(parameterBundle.isValid());
+    assertEquals("een helptekst", (String) parameterBundle.get("versie"));
+  }
+
+  @Test
+  public void testStandaard2() {
+    String[]        args            = new String[] {"-h", "een helptekst"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("standaard2")
+                                     .setLocale(LOCALE).build();
+    parameterBundle.setArgs(args);
+
+    var             errors          = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(1, errors.size());
+    assertEquals("PAR-0206 Parametertypes van versie en help zijn niet gelijk.",
+                 errors.get(0));
+  }
+
+  @Test
+  public void testStandaard3() {
+    String[]        args            = new String[] {"-h", "een helptekst"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("standaard3")
+                                     .setLocale(LOCALE).build();
+    parameterBundle.setArgs(args);
+
+    var             errors          = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(1, errors.size());
+    assertEquals("PAR-0205 Standaard van parameter versie (bestand) is onbekend.",
+                 errors.get(0));
   }
 }
