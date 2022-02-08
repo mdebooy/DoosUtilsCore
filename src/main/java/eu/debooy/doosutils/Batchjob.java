@@ -62,6 +62,15 @@ public abstract class Batchjob {
 
   public static void execute(String[] args) {}
 
+  protected static String getMelding(String code, Object... parameters) {
+    if (null != parameters
+        && parameters.length > 0) {
+      return MessageFormat.format(batchjobResource.getString(code), parameters);
+    }
+
+    return batchjobResource.getString(code);
+  }
+
   public static void help() {
     if (null == paramBundle) {
       DoosUtils.naarScherm("help()");
@@ -70,13 +79,10 @@ public abstract class Batchjob {
     }
   }
 
-  protected static String getMelding(String code, Object... parameters) {
-    if (null != parameters
-        && parameters.length > 0) {
-      return MessageFormat.format(batchjobResource.getString(code), parameters);
-    }
-
-    return batchjobResource.getString(code);
+  protected static void klaar() {
+    DoosUtils.naarScherm();
+    DoosUtils.naarScherm(getMelding(MSG_KLAAR));
+    DoosUtils.naarScherm();
   }
 
   protected static void printFouten() {
