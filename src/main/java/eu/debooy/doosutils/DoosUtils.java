@@ -52,11 +52,23 @@ public final class DoosUtils {
   }
 
   public static String getEol() {
-    return System.getProperty("line.separator");
+    return System.lineSeparator();
   }
 
   public static String getFileSep() {
     return System.getProperty("file.separator");
+  }
+
+  public static String getInvoer(String prompt) {
+    var     console   = System.console();
+    if (null == console) {
+      try (var invoer = new Scanner(System.in)) {
+        System.out.print(prompt + " ");
+        return invoer.nextLine();
+      }
+    }
+
+    return console.readLine(prompt + " ");
   }
 
   public static String getWachtwoord(String prompt) {
@@ -65,7 +77,7 @@ public final class DoosUtils {
     if (null == console) {
       try (var invoer = new Scanner(System.in)) {
         System.out.print(prompt + " ");
-        password  = invoer.next();
+        password  = invoer.nextLine();
       }
     } else {
       password  = new String(console.readPassword(prompt + " "));
@@ -102,13 +114,6 @@ public final class DoosUtils {
     naarScherm("", pString, maxLengte);
   }
 
-  /**
-   * Schrijf regel(s) van maxLengte op het scherm.
-   *
-   * @param pBegin
-   * @param pString
-   * @param maxLengte
-   */
   public static void naarScherm(String pBegin, String pString, int maxLengte) {
     var beginLengte   = pBegin.length();
     var splitsLengte  = maxLengte - beginLengte;
@@ -119,12 +124,25 @@ public final class DoosUtils {
 
     while (string.length() > splitsLengte) {
       var splits  = string.substring(1, splitsLengte).lastIndexOf(" ");
-      DoosUtils.naarScherm(begin + string.substring(0, splits + 1));
+      naarScherm(begin + string.substring(0, splits + 1));
       begin   = leeg;
       string  = string.substring(splits + 2);
     }
 
-    DoosUtils.naarScherm(begin + string);
+    naarScherm(begin + string);
+  }
+
+  public static void naarScherm(int indent, String pString, int maxLengte) {
+    if (pString.length() <= maxLengte) {
+      naarScherm(pString);
+      return;
+    }
+
+    var splits  = pString.substring(1, maxLengte).lastIndexOf(" ");
+    DoosUtils.naarScherm(pString.substring(0, splits + 1));
+
+    naarScherm(stringMetLengte("", indent), pString.substring(splits + 2),
+               maxLengte);
   }
 
   public static String nullToEmpty(String string) {

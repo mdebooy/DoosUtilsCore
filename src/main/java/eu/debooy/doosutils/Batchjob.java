@@ -71,7 +71,7 @@ public abstract class Batchjob {
     return batchjobResource.getString(code);
   }
 
-  public static void help() {
+  protected static void help() {
     if (null == paramBundle) {
       DoosUtils.naarScherm("help()");
     } else {
