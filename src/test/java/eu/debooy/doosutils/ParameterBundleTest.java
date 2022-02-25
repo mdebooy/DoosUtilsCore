@@ -17,8 +17,10 @@
 package eu.debooy.doosutils;
 
 import static eu.debooy.doosutils.Parameter.TPY_BESTAND;
+import static eu.debooy.doosutils.ParameterBundle.ERR_CONFS_DUBBEL;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_BESTAND;
+import static eu.debooy.doosutils.ParameterBundle.ERR_CONF_DUBBEL;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PARS_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PARS_DUBBEL;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_AFWEZIG;
@@ -243,7 +245,7 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals("PAR-9000 Datum ligt in de toekomst.", errors.get(1));
   }
 
-  private void testDubbel(String baseName, Locale locale, String dubbel) {
+  private void testConfDubbel(String baseName, Locale locale, String dubbel) {
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(baseName)
                                    .setLocale(locale).build();
@@ -257,12 +259,12 @@ public class ParameterBundleTest extends BatchTest {
     assertFalse(parameterBundle.isValid());
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
+        MessageFormat.format(resourceBundle.getString(ERR_CONF_DUBBEL),
                              dubbel), errors.get(0));
   }
 
-  private void testDubbels(String baseName, Locale locale,
-                           String dubbel1, String dubbel2) {
+  private void testConfDubbels(String baseName, Locale locale,
+                               String dubbel1, String dubbel2) {
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(baseName)
                                    .setLocale(locale).build();
@@ -276,33 +278,33 @@ public class ParameterBundleTest extends BatchTest {
     assertFalse(parameterBundle.isValid());
     assertEquals(1, errors.size());
     assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
+        MessageFormat.format(resourceBundle.getString(ERR_CONFS_DUBBEL),
                              dubbel1, dubbel2), errors.get(0));
   }
 
   @Test
-  public void testDubbel1() {
-    testDubbel("dubbel1", LOCALE, "help");
+  public void testConfDubbel1() {
+    testConfDubbel("dubbel1", LOCALE, "help");
   }
 
   @Test
-  public void testDubbel2() {
-    testDubbels("dubbel2", LOCALE, "help", "help1");
+  public void testConfDubbel2() {
+    testConfDubbels("dubbel2", LOCALE, "help", "help1");
   }
 
   @Test
-  public void testDubbel3() {
-    testDubbels("dubbel3", LOCALE, "help, help1", "help2");
+  public void testConfDubbel3() {
+    testConfDubbels("dubbel3", LOCALE, "help, help1", "help2");
   }
 
   @Test
-  public void testDubbel4() {
-    testDubbel("locale", new Locale("fr"), "h");
+  public void testConfDubbel4() {
+    testConfDubbel("locale", new Locale("fr"), "h");
   }
 
   @Test
-  public void testDubbel5() {
-    testDubbel("locale", new Locale("de"), "help");
+  public void testConfDubbel5() {
+    testConfDubbel("locale", new Locale("de"), "help");
   }
 
   @Test
@@ -454,12 +456,12 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testKort1() {
-    testDubbel("kort1", LOCALE, "h");
+    testConfDubbel("kort1", LOCALE, "h");
   }
 
   @Test
   public void testLang1() {
-    testDubbel("lang1", LOCALE, "hlp");
+    testConfDubbel("lang1", LOCALE, "hlp");
   }
 
   @Test
@@ -480,6 +482,89 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
                              "info"), errors.get(0));
+  }
+
+  @Test
+  public void testParamDubbel1() {
+    String[]        args            = new String[] {"-u", "/tmp",
+                                                    "-u", "/dev/null"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("applicatie").build();
+    parameterBundle.setArgs(args);
+
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(2, errors.size());
+    assertEquals("PAR-0001", errors.get(0).split(" ")[0]);
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
+                             "-u"), errors.get(1));
+  }
+
+  @Test
+  public void testParamDubbel2() {
+    String[]        args            = new String[] {"-u", "/tmp",
+                                                    "-u", "/dev/null",
+                                                    "-u", "/home"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("applicatie").build();
+    parameterBundle.setArgs(args);
+
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(2, errors.size());
+    assertEquals("PAR-0001", errors.get(0).split(" ")[0]);
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PAR_DUBBEL),
+                             "-u"), errors.get(1));
+  }
+
+  @Test
+  public void testParamDubbel3() {
+    String[]        args            = new String[] {"-u", "/tmp",
+                                                    "-u", "/dev/null",
+                                                    "--jsonbestand", "json1",
+                                                    "--jsonbestand", "json2"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("applicatie").build();
+    parameterBundle.setArgs(args);
+
+    var errors  = parameterBundle.getErrors();
+
+    assertFalse(parameterBundle.isValid());
+    assertEquals(2, errors.size());
+    assertEquals("PAR-0001", errors.get(0).split(" ")[0]);
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
+                             "-u", "--jsonbestand"), errors.get(1));
+  }
+
+  @Test
+  public void testParamDubbel4() {
+    String[]        args            = new String[] {"-u", "/tmp",
+                                                    "-u", "/dev/null",
+                                                    "--jsonbestand", "json1",
+                                                    "--jsonbestand", "json2",
+                                                    "--csv", "csv1",
+                                                    "--csv", "csv2"};
+
+    ParameterBundle parameterBundle =
+        new ParameterBundle.Builder().setBaseName("applicatie").build();
+    parameterBundle.setArgs(args);
+
+    var errors  = parameterBundle.getErrors();
+
+    System.out.println(errors.get(0));
+    assertFalse(parameterBundle.isValid());
+    assertEquals("PAR-0001", errors.get(0).split(" ")[0]);
+    assertEquals(
+        MessageFormat.format(resourceBundle.getString(ERR_PARS_DUBBEL),
+                             "--csv, -u", "--jsonbestand"), errors.get(1));
   }
 
   @Test
@@ -508,8 +593,7 @@ public class ParameterBundleTest extends BatchTest {
 
     assertFalse(parameterBundle.isValid());
     assertEquals(1, errors.size());
-    assertEquals("PAR-0206 Parametertypes van versie en help zijn niet gelijk.",
-                 errors.get(0));
+    assertEquals("PAR-0206", errors.get(0).split(" ")[0]);
   }
 
   @Test
@@ -525,7 +609,6 @@ public class ParameterBundleTest extends BatchTest {
 
     assertFalse(parameterBundle.isValid());
     assertEquals(1, errors.size());
-    assertEquals("PAR-0205 Standaard van parameter versie (bestand) is onbekend.",
-                 errors.get(0));
+    assertEquals("PAR-0205", errors.get(0).split(" ")[0]);
   }
 }

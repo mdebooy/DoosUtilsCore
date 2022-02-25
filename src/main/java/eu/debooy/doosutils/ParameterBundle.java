@@ -25,11 +25,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,9 +46,11 @@ public class ParameterBundle {
   public static final String  ERR_CONF_AFWEZIG  = "error.config.param.afwezig";
   public static final String  ERR_CONFS_AFWEZIG = "error.config.params.afwezig";
   public static final String  ERR_CONF_BESTAND  = "error.config.afwezig";
+  public static final String  ERR_CONF_DUBBEL   = "error.config.param.dubbel";
   public static final String  ERR_CONF_FOUTIEF  = "error.config.foutief";
   public static final String  ERR_CONF_ONBEKEND = "error.config.onbekend";
   public static final String  ERR_CONF_ONGELIJK = "error.config.types.ongelijk";
+  public static final String  ERR_CONFS_DUBBEL   = "error.config.params.dubbel";
   public static final String  ERR_PAR_AFWEZIG   = "error.param.afwezig";
   public static final String  ERR_PAR_DUBBEL    = "error.param.dubbel";
   public static final String  ERR_PAR_FOUTIEF   = "error.param.foutief";
@@ -89,6 +93,7 @@ public class ParameterBundle {
   private final List<String>              argumenten  = new ArrayList<>();
   private final String                    baseName;
   private final ClassLoader               classloader;
+  private final List<String>              dubbel      = new ArrayList<>();
   private final List<String>              errors      = new ArrayList<>();
   private final Map<String, String>       kort        = new TreeMap<>();
   private final Map<String, String>       lang        = new TreeMap<>();
@@ -168,8 +173,19 @@ public class ParameterBundle {
         }
       }
      });
-
     setInEnkelDubbelVoud(afwezig, ERR_PAR_AFWEZIG, ERR_PARS_AFWEZIG);
+
+    Set<String> dParam  = new HashSet<>();
+    dubbel.forEach(sleutel -> {
+      if (kort.containsValue(sleutel)) {
+        dParam.add("-" + getArgument(sleutel, kort));
+      } else {
+        dParam.add("--" + getArgument(sleutel, lang));
+      }
+    });
+    afwezig.clear();
+    afwezig.addAll(dParam);
+    setInEnkelDubbelVoud(afwezig, ERR_PAR_DUBBEL, ERR_PARS_DUBBEL);
 
     var fouten  = errors.size();
     if (null != validator) {
@@ -583,6 +599,7 @@ public class ParameterBundle {
     var foutief = new ArrayList<String>();
     var i       = 0;
 
+    dubbel.clear();
     while (i < args.length) {
       var arg = args[i];
       if (!args[i].trim().startsWith("-")
@@ -613,7 +630,11 @@ public class ParameterBundle {
         correct     = setArg(parameter, waarde);
       }
 
-      argumenten.add(parameter);
+      if (!argumenten.contains(parameter)) {
+        argumenten.add(parameter);
+      } else {
+        dubbel.add(parameter);
+      }
 
       Parameter param;
       if (correct)  {
@@ -703,9 +724,9 @@ public class ParameterBundle {
   }
 
   private void setParameters(JSONArray parameters, Boolean basis) {
-    var     dubbel    = new ArrayList<String>();
     var     onbekend  = new ArrayList<String>();
 
+    dubbel.clear();
     for (var parameter : parameters.toArray()) {
       var jParam  = (JSONObject) parameter;
       var sleutel = jParam.get(Parameter.JSON_PAR_PARAMETER).toString();
@@ -733,7 +754,7 @@ public class ParameterBundle {
     }
 
     setInEnkelDubbelVoud(onbekend, ERR_PAR_ONBEKEND, ERR_PARS_ONBEKEND);
-    setInEnkelDubbelVoud(dubbel, ERR_PAR_DUBBEL, ERR_PARS_DUBBEL);
+    setInEnkelDubbelVoud(dubbel, ERR_CONF_DUBBEL, ERR_CONFS_DUBBEL);
   }
 
   private void setParams(JSONObject parameters, Parameter param) {
