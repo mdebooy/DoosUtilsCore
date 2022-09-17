@@ -16,6 +16,7 @@
  */
 package eu.debooy.doosutils;
 
+//import static eu.debooy.doosutils.Batchjob.printFouten;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,7 +43,7 @@ import org.json.simple.parser.ParseException;
 /**
  * @author Marco de Booij
  */
-public class ParameterBundle {
+public final class ParameterBundle {
   public static final String  ERR_CONF_AFWEZIG  = "error.config.param.afwezig";
   public static final String  ERR_CONFS_AFWEZIG = "error.config.params.afwezig";
   public static final String  ERR_CONF_BESTAND  = "error.config.afwezig";
@@ -82,15 +83,16 @@ public class ParameterBundle {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private String  applicatie  = DoosConstants.NA;
-  private String  banner;
-  private int     breedte     = 80;
-  private String  extrahelp;
-  private String  help;
-  private String  jar;
-  private int     prefix      = 20;
+  private String                              applicatie  = DoosConstants.NA;
+  private String                              bannertekst;
+  private int                                 breedte     = 80;
+  private String                              extrahelp;
+  private String                              help;
+  private String                              jar;
+  private int                                 prefix      = 20;
 
   private final List<String>              argumenten  = new ArrayList<>();
+  private final IBanner                   banner;
   private final String                    baseName;
   private final ClassLoader               classloader;
   private final List<String>              dubbel      = new ArrayList<>();
@@ -102,19 +104,32 @@ public class ParameterBundle {
   private final IParameterBundleValidator validator;
 
   private ParameterBundle(Builder builder) {
+    banner      = builder.getBanner();
     baseName    = builder.getBaseName();
     classloader = builder.getClassloader();
     locale      = builder.getLocale();
     validator   = builder.getValidator();
 
     init();
+
+    if (null != banner) {
+      banner.print(DoosUtils.nullToValue(bannertekst, DoosConstants.NULL));
+    }
+
+    if (!isValid() || setArgs(builder.getArgs())) {
+      help();
+      Batchjob.printFouten(errors);
+    }
   }
 
   public static final class Builder {
-    private String                    baseName    = PARAMBUNDLE;
+    private String[]                  args;
+    private IBanner                   banner;
+    private String                    baseName    = ParameterBundle.PARAMBUNDLE;
     private ClassLoader               classloader =
         ParameterBundle.class.getClassLoader();
-    private Locale                    locale      = Locale.getDefault();
+    private Locale                    locale      =
+        Locale.getDefault();
     private IParameterBundleValidator validator;
 
     public ParameterBundle build() {
@@ -123,6 +138,14 @@ public class ParameterBundle {
 
     public ClassLoader getClassloader() {
       return classloader;
+    }
+
+    public String[] getArgs() {
+      return args;
+    }
+
+    public IBanner getBanner() {
+      return banner;
     }
 
     public String getBaseName() {
@@ -137,23 +160,33 @@ public class ParameterBundle {
       return validator;
     }
 
-    public Builder setClassloader(ClassLoader classloader) {
-      this.classloader = classloader;
+    public Builder setArgs(String[] args) {
+      this.args         = args;
+      return this;
+    }
+
+    public Builder setBanner(IBanner banner) {
+      this.banner       = banner;
       return this;
     }
 
     public Builder setBaseName(String baseName) {
-      this.baseName = baseName;
+      this.baseName     = baseName;
+      return this;
+    }
+
+    public Builder setClassloader(ClassLoader classloader) {
+      this.classloader  = classloader;
       return this;
     }
 
     public Builder setLocale(Locale locale) {
-      this.locale = locale;
+      this.locale       = locale;
       return this;
     }
 
     public Builder setValidator(IParameterBundleValidator validator) {
-      this.validator = validator;
+      this.validator    = validator;
       return this;
     }
   }
@@ -202,7 +235,7 @@ public class ParameterBundle {
         || DoosConstants.NA.equalsIgnoreCase(applicatie)) {
       afwezig.add(JSON_KEY_APPLICATIE);
     }
-    if (DoosUtils.isBlankOrNull(banner)) {
+    if (null != banner && DoosUtils.isBlankOrNull(bannertekst)) {
       afwezig.add(JSON_KEY_BANNER);
     }
     if (DoosUtils.isBlankOrNull(jar)) {
@@ -278,8 +311,8 @@ public class ParameterBundle {
                      .orElse("");
   }
 
-  public String getBanner() {
-    return banner;
+  public String getBannertekst() {
+    return bannertekst;
   }
 
   public String getBaseName() {
@@ -322,6 +355,8 @@ public class ParameterBundle {
   }
 
   public List<String> getErrors() {
+    Collections.sort(errors);
+
     return new ArrayList<>(errors);
   }
 
@@ -533,7 +568,7 @@ public class ParameterBundle {
       applicatie  = json.get(JSON_KEY_APPLICATIE).toString();
     }
     if (json.containsKey(JSON_KEY_BANNER)) {
-      banner      = json.get(JSON_KEY_BANNER).toString();
+      bannertekst = json.get(JSON_KEY_BANNER).toString();
     }
     if (json.containsKey(JSON_KEY_BREEDTE)) {
       breedte     = Integer.valueOf(json.get(JSON_KEY_BREEDTE).toString());
@@ -594,7 +629,11 @@ public class ParameterBundle {
     return setArg(parameter, waarde);
   }
 
-  public boolean setArgs(String[] args) {
+  private boolean setArgs(String[] args) {
+    if (null == args) {
+      return true;
+    }
+
     var correct = true;
     var foutief = new ArrayList<String>();
     var i       = 0;
@@ -779,7 +818,8 @@ public class ParameterBundle {
   public String toString() {
     return "ParameterBundle: "
             + "Applicatie: [" + applicatie + "], "
-            + "Banner: [" + banner + "], "
+            + "Banner: [" + banner.getClass().getSimpleName() + "], "
+            + "Bannertekst: [" + bannertekst + "], "
             + "BaseName: [" + baseName + "], "
             + "Extrahelp: [" + extrahelp + "], "
             + "Help: [" + help + "], "

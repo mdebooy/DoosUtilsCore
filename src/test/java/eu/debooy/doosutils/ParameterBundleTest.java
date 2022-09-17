@@ -25,7 +25,6 @@ import static eu.debooy.doosutils.ParameterBundle.ERR_PARS_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PARS_DUBBEL;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_AFWEZIG;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_DUBBEL;
-import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_FOUTIEF;
 import static eu.debooy.doosutils.ParameterBundle.ERR_PAR_ONBEKEND;
 import static eu.debooy.doosutils.ParameterBundle.EXT_JSON;
 import static eu.debooy.doosutils.ParameterBundle.JSON_KEY_BANNER;
@@ -74,9 +73,12 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testApplicatie1() {
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
-                                     .setLocale(LOCALE).build();
+                                     .setLocale(LOCALE)
+                                     .build();
+    after();
 
     assertTrue(parameterBundle.isValid());
   }
@@ -87,10 +89,13 @@ public class ParameterBundleTest extends BatchTest {
                                         "-u", "/tmp", "-x", "-h", "-b",
                                         "bestand"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
+                                     .setArgs(args)
                                      .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -110,10 +115,12 @@ public class ParameterBundleTest extends BatchTest {
     String[]  args      = new String[] {"-a", "230", "-k", "2112/12/21",
                                         "-u", "/tmp", "-x", "-h"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
+                                     .setArgs(args)
                                      .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+    after();
 
     var errors  = parameterBundle.getErrors();
 
@@ -136,10 +143,13 @@ public class ParameterBundleTest extends BatchTest {
                                         "--uitvoerdir", "/tmp", "--exclude",
                                         "--help"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
+                                     .setArgs(args)
                                      .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -160,10 +170,13 @@ public class ParameterBundleTest extends BatchTest {
                                         "--uitvoerdir=\"/tmp\"", "--exclude",
                                         "--help"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(APPLICATIE)
+                                     .setArgs(args)
                                      .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -185,13 +198,16 @@ public class ParameterBundleTest extends BatchTest {
                                         "--uitvoerdir=\"/tmp\"", "--exclude",
                                         "--help"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder()
+                           .setArgs(args)
                            .setBaseName(APPLICATIE)
                            .setLocale(LOCALE)
                            .setValidator(new ParameterBundleValidator())
                            .build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -217,13 +233,16 @@ public class ParameterBundleTest extends BatchTest {
                                         "--csv", "invoer.json",
                                         "--jsonbestand", "invoer.json"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder()
+                           .setArgs(args)
                            .setBaseName(APPLICATIE)
                            .setLocale(LOCALE)
                            .setValidator(new ParameterBundleValidator())
                            .build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -246,11 +265,11 @@ public class ParameterBundleTest extends BatchTest {
   }
 
   private void testConfDubbel(String baseName, Locale locale, String dubbel) {
+    before();
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(baseName)
                                    .setLocale(locale).build();
 
-    before();
     parameterBundle.help();
     after();
 
@@ -265,11 +284,11 @@ public class ParameterBundleTest extends BatchTest {
 
   private void testConfDubbels(String baseName, Locale locale,
                                String dubbel1, String dubbel2) {
+    before();
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(baseName)
                                    .setLocale(locale).build();
 
-    before();
     parameterBundle.help();
     after();
 
@@ -309,9 +328,11 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testHelp() {
+    before();
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName(APPLICATIE)
                                    .setLocale(LOCALE).build();
+    after();
 
     before();
     parameterBundle.help();
@@ -324,9 +345,11 @@ public class ParameterBundleTest extends BatchTest {
   public void testInit1() {
     ParameterBundle parameterBundle;
     try {
+      before();
       parameterBundle =
           new ParameterBundle.Builder().setBaseName(PARAMBUNDLE)
                                        .setLocale(LOCALE).build();
+      after();
       fail("Er had een MissingResourceException moeten wezen.");
     } catch (MissingResourceException e) {
       assertEquals(MessageFormat.format(
@@ -335,7 +358,9 @@ public class ParameterBundleTest extends BatchTest {
     }
 
     try {
+      before();
       parameterBundle = new ParameterBundle.Builder().build();
+      after();
       fail("Er had een MissingResourceException moeten wezen.");
     } catch (MissingResourceException e) {
       assertEquals(MessageFormat.format(
@@ -346,14 +371,17 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit2() {
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMETERS)
-                                     .setLocale(LOCALE).build();
+                                     .setLocale(LOCALE)
+                                     .build();
+    after();
 
     assertTrue(parameterBundle.isValid());
     assertFalse(parameterBundle.containsParameter(JSON_KEY_HELP));
     assertFalse(parameterBundle.containsParameter(PARAMETERS));
-    assertEquals("Parameter Bundle", parameterBundle.getBanner());
+    assertEquals("Parameter Bundle", parameterBundle.getBannertekst());
     assertEquals(PARAMETERS, parameterBundle.getBaseName());
     assertEquals("Hiermee kunnen de parameters voor een applicatie worden gedefinieerd.",
                  parameterBundle.getHelp());
@@ -361,9 +389,13 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit3() {
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName(PARAMS)
-                                     .setLocale(new Locale("nl-BE")).build();
+        new ParameterBundle.Builder().setBanner(new MarcoBanner())
+                                     .setBaseName(PARAMS)
+                                     .setLocale(new Locale("nl-BE"))
+                                     .build();
+    after();
 
     assertTrue(parameterBundle.isValid());
     assertEquals("ParameterBundle", parameterBundle.getApplicatie());
@@ -371,9 +403,14 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit4() {
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName(PARAMS)
-                                     .setLocale(new Locale("en")).build();
+        new ParameterBundle.Builder().setBanner(new MarcoBanner())
+                                     .setBaseName(PARAMS)
+                                     .setLocale(new Locale("en"))
+                                     .build();
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -390,9 +427,13 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testInit5() {
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName(PARAMS)
+        new ParameterBundle.Builder().setBanner(new MarcoBanner())
+                                     .setBaseName(PARAMS)
                                      .setLocale(new Locale("fr")).build();
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -401,12 +442,13 @@ public class ParameterBundleTest extends BatchTest {
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_CONF_AFWEZIG),
                              JSON_KEY_BANNER), errors.get(0));
-    assertEquals("ParameterBundle: Applicatie: [ParameterBundle], Banner: [], "
-                  + "BaseName: [params], Extrahelp: [null], Help: [L'aide.], "
-                  + "Locale: [fr], Parameters: [[help: [kort: [h], lang: "
-                  + "[help], standaard: [<null>], type: [string], format: "
-                  + "[<null>], extensie: [<null>], verplicht: [true], waarde: "
-                  + "[<null>], help: [Gives this helptext.]]]",
+    assertEquals("ParameterBundle: Applicatie: [ParameterBundle], "
+                  + "Banner: [MarcoBanner], Bannertekst: [], BaseName: "
+                  + "[params], Extrahelp: [null], Help: [L'aide.], Locale: "
+                  + "[fr], Parameters: [[help: [kort: [h], lang: [help], "
+                  + "standaard: [<null>], type: [string], format: [<null>], "
+                  + "extensie: [<null>], verplicht: [true], waarde: [<null>], "
+                  + "help: [Donnez ce texte d'aide.]]]",
                  parameterBundle.toString());
     assertEquals("fr", parameterBundle.getLocale().toString());
   }
@@ -415,10 +457,13 @@ public class ParameterBundleTest extends BatchTest {
   public void testInit6() {
     String[]        args            = new String[] {"-k", "helptekst"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMS)
+                                     .setArgs(args)
                                      .setLocale(new Locale("en", "uk")).build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
@@ -435,22 +480,22 @@ public class ParameterBundleTest extends BatchTest {
   public void testInit7() {
     String[]        args            = new String[] {"-k"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName(PARAMS)
+                                     .setArgs(args)
                                      .setLocale(new Locale("en", "uk")).build();
-    parameterBundle.setArgs(args);
+    after();
+
     var errors  = parameterBundle.getErrors();
 
     assertFalse(parameterBundle.isValid());
     assertEquals("ParameterBundle", parameterBundle.getApplicatie());
-    assertEquals(2, errors.size());
+    assertEquals(1, errors.size());
     Locale.setDefault(new Locale("en", "uk"));
     assertEquals(
         MessageFormat.format(resourceBundle.getString(ERR_PAR_ONBEKEND),
                              "helpEN"), errors.get(0));
-    assertEquals(
-        MessageFormat.format(resourceBundle.getString(ERR_PAR_FOUTIEF),
-                             "-k"), errors.get(1));
     assertEquals("en_UK", parameterBundle.getLocale().toString());
   }
 
@@ -466,12 +511,12 @@ public class ParameterBundleTest extends BatchTest {
 
   @Test
   public void testOnbekend1() {
+    before();
     ParameterBundle parameterBundle =
       new ParameterBundle.Builder().setBaseName("locale")
                                    .setLocale(new Locale("en"))
                                    .build();
 
-    before();
     parameterBundle.help();
     after();
 
@@ -489,9 +534,12 @@ public class ParameterBundleTest extends BatchTest {
     String[]        args            = new String[] {"-u", "/tmp",
                                                     "-u", "/dev/null"};
 
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName("applicatie").build();
-    parameterBundle.setArgs(args);
+        new ParameterBundle.Builder().setBaseName("applicatie")
+                                     .setArgs(args)
+                                     .build();
+    after();
 
     var errors  = parameterBundle.getErrors();
 
@@ -509,9 +557,12 @@ public class ParameterBundleTest extends BatchTest {
                                                     "-u", "/dev/null",
                                                     "-u", "/home"};
 
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName("applicatie").build();
-    parameterBundle.setArgs(args);
+        new ParameterBundle.Builder().setBaseName("applicatie")
+                                     .setArgs(args)
+                                     .build();
+    after();
 
     var errors  = parameterBundle.getErrors();
 
@@ -530,9 +581,12 @@ public class ParameterBundleTest extends BatchTest {
                                                     "--jsonbestand", "json1",
                                                     "--jsonbestand", "json2"};
 
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName("applicatie").build();
-    parameterBundle.setArgs(args);
+        new ParameterBundle.Builder().setBaseName("applicatie")
+                                     .setArgs(args)
+                                     .build();
+    after();
 
     var errors  = parameterBundle.getErrors();
 
@@ -553,13 +607,15 @@ public class ParameterBundleTest extends BatchTest {
                                                     "--csv", "csv1",
                                                     "--csv", "csv2"};
 
+    before();
     ParameterBundle parameterBundle =
-        new ParameterBundle.Builder().setBaseName("applicatie").build();
-    parameterBundle.setArgs(args);
+        new ParameterBundle.Builder().setBaseName("applicatie")
+                                     .setArgs(args)
+                                     .build();
+    after();
 
     var errors  = parameterBundle.getErrors();
 
-    System.out.println(errors.get(0));
     assertFalse(parameterBundle.isValid());
     assertEquals("PAR-0001", errors.get(0).split(" ")[0]);
     assertEquals(
@@ -571,10 +627,13 @@ public class ParameterBundleTest extends BatchTest {
   public void testStandaard1() {
     String[]        args            = new String[] {"-h", "een helptekst"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName("standaard1")
-                                     .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+                                     .setArgs(args)
+                                     .setLocale(LOCALE)
+                                     .build();
+    after();
 
     assertTrue(parameterBundle.isValid());
     assertEquals("een helptekst", (String) parameterBundle.get("versie"));
@@ -584,10 +643,13 @@ public class ParameterBundleTest extends BatchTest {
   public void testStandaard2() {
     String[]        args            = new String[] {"-h", "een helptekst"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName("standaard2")
-                                     .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+                                     .setArgs(args)
+                                     .setLocale(LOCALE)
+                                     .build();
+    after();
 
     var             errors          = parameterBundle.getErrors();
 
@@ -600,10 +662,13 @@ public class ParameterBundleTest extends BatchTest {
   public void testStandaard3() {
     String[]        args            = new String[] {"-h", "een helptekst"};
 
+    before();
     ParameterBundle parameterBundle =
         new ParameterBundle.Builder().setBaseName("standaard3")
-                                     .setLocale(LOCALE).build();
-    parameterBundle.setArgs(args);
+                                     .setArgs(args)
+                                     .setLocale(LOCALE)
+                                     .build();
+    after();
 
     var             errors          = parameterBundle.getErrors();
 

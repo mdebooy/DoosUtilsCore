@@ -8,7 +8,7 @@
       "parameter": "help",
       "kort": "h",
       "lang": "help",
-      "help": "Gives this helptext.",
+      "help": "Donnez ce texte d'aide.",
       "verplicht": false
     }
   ]

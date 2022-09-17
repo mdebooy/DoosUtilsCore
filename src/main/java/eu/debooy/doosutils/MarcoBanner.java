@@ -19,32 +19,12 @@ package eu.debooy.doosutils;
 
 /**
  * @author Marco de Booy
- * @Deprecated Gebruik IBanner
  */
-@Deprecated(forRemoval = true, since = "2.1.4")
-public final class Banner {
-  private static final  ManifestInfo  manifestInfo  = new ManifestInfo();
+public final class MarcoBanner implements IBanner {
+  @Override
+  public void print(String titel) {
+    ManifestInfo  manifestInfo  = new ManifestInfo();
 
-  private Banner() {}
-
-  public static void printDoosBanner(String titel) {
-    DoosUtils.naarScherm("________________________________________________________________________________");
-    DoosUtils.naarScherm("     _  ____   ____   _____ ");
-    DoosUtils.naarScherm("    | |/ __ \\ / __ \\ / ____|");
-    DoosUtils.naarScherm("  __| | |  | | |  | | |___");
-    DoosUtils.naarScherm(" / _  | |  | | |  | |\\___ \\      " + titel);
-    DoosUtils.naarScherm("| (_| | |__| | |__| |____| |");
-    DoosUtils.naarScherm(" \\____|\\____/ \\____/|_____/" +
-                         String.format("%53s",
-                                       "v" + manifestInfo.getBuildVersion()
-                                       + " | " + manifestInfo.getBuildDate()));
-    DoosUtils.naarScherm("");
-    DoosUtils.naarScherm("de Booij Ontwikkeling en Onderhoud van Systemen");
-    DoosUtils.naarScherm("________________________________________________________________________________");
-    DoosUtils.naarScherm("");
-  }
-
-  public static void printMarcoBanner(String titel) {
     DoosUtils.naarScherm("+----------+----------+----------+----------+----------+----------+----------+");
     DoosUtils.naarScherm("|          |          |");
     DoosUtils.naarScherm("|   |\\__   *   __/|   | " + titel);
