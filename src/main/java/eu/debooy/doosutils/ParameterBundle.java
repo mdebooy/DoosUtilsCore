@@ -116,7 +116,7 @@ public final class ParameterBundle {
       banner.print(DoosUtils.nullToValue(bannertekst, DoosConstants.NULL));
     }
 
-    if (!isValid() || setArgs(builder.getArgs())) {
+    if (!isValid() || !setArgs(builder.getArgs())) {
       help();
       Batchjob.printFouten(errors);
     }
@@ -192,7 +192,7 @@ public final class ParameterBundle {
   }
 
   private boolean checkArgs() {
-    List<String>  afwezig = new ArrayList<>();
+    List<String>  fouten = new ArrayList<>();
     params.values()
           .stream()
           .filter(Parameter::isVerplicht)
@@ -200,13 +200,13 @@ public final class ParameterBundle {
           .forEach(sleutel -> {
       if (!argumenten.contains(sleutel)) {
         if (kort.containsValue(sleutel)) {
-          afwezig.add("-" + getArgument(sleutel, kort));
+          fouten.add("-" + getArgument(sleutel, kort));
         } else {
-          afwezig.add("--" + getArgument(sleutel, lang));
+          fouten.add("--" + getArgument(sleutel, lang));
         }
       }
      });
-    setInEnkelDubbelVoud(afwezig, ERR_PAR_AFWEZIG, ERR_PARS_AFWEZIG);
+    setInEnkelDubbelVoud(fouten, ERR_PAR_AFWEZIG, ERR_PARS_AFWEZIG);
 
     Set<String> dParam  = new HashSet<>();
     dubbel.forEach(sleutel -> {
@@ -216,16 +216,15 @@ public final class ParameterBundle {
         dParam.add("--" + getArgument(sleutel, lang));
       }
     });
-    afwezig.clear();
-    afwezig.addAll(dParam);
-    setInEnkelDubbelVoud(afwezig, ERR_PAR_DUBBEL, ERR_PARS_DUBBEL);
+    fouten.clear();
+    fouten.addAll(dParam);
+    setInEnkelDubbelVoud(fouten, ERR_PAR_DUBBEL, ERR_PARS_DUBBEL);
 
-    var fouten  = errors.size();
     if (null != validator) {
       errors.addAll(validator.valideer(params, argumenten));
     }
 
-    return afwezig.isEmpty() && fouten == errors.size();
+    return errors.isEmpty();
   }
 
   private void checkConfiguratie() {
