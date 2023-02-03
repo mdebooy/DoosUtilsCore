@@ -30,35 +30,35 @@ public abstract class Batchjob {
 
   protected static  ParameterBundle paramBundle;
 
-  protected static final  String  ERR_BEVATDIRECTORY  = "error.bevatdirectory";
-  protected static final  String  ERR_INVALIDPARAMS   = "error.invalid.params";
-  protected static final  String  ERR_NOBOOLEAN       = "error.no.boolean";
-  protected static final  String  ERR_TOOLONBEKEND    = "error.tool.onbekend";
+  public static final String  ERR_BEVATDIRECTORY  = "error.bevatdirectory";
+  public static final String  ERR_INVALIDPARAMS   = "error.invalid.params";
+  public static final String  ERR_NOBOOLEAN       = "error.no.boolean";
+  public static final String  ERR_TOOLONBEKEND    = "error.tool.onbekend";
 
-  protected static final  String  HLP_CHARSETIN       = "help.charsetin";
-  protected static final  String  HLP_CHARSETUIT      = "help.charsetuit";
-  protected static final  String  HLP_INVOERDIR       = "help.invoerdir";
-  protected static final  String  HLP_PARAMSVERPLICHT = "help.paramsverplicht";
-  protected static final  String  HLP_PARAMVERPLICHT  = "help.paramverplicht";
-  protected static final  String  HLP_TEXBESTAND      = "help.texbestand";
-  protected static final  String  HLP_UITVOERDIR      = "help.uitvoerdir";
+  public static final String  HLP_CHARSETIN       = "help.charsetin";
+  public static final String  HLP_CHARSETUIT      = "help.charsetuit";
+  public static final String  HLP_INVOERDIR       = "help.invoerdir";
+  public static final String  HLP_PARAMSVERPLICHT = "help.paramsverplicht";
+  public static final String  HLP_PARAMVERPLICHT  = "help.paramverplicht";
+  public static final String  HLP_TEXBESTAND      = "help.texbestand";
+  public static final String  HLP_UITVOERDIR      = "help.uitvoerdir";
 
-  protected static final  String  LBL_FOUT        = "label.fout";
-  protected static final  String  LBL_OPTIE       = "label.optie";
-  protected static final  String  LBL_PARAM       = "label.param";
-  protected static final  String  LBL_TEXBESTAND  = "label.texbestand";
+  public static final String  LBL_FOUT        = "label.fout";
+  public static final String  LBL_OPTIE       = "label.optie";
+  public static final String  LBL_PARAM       = "label.param";
+  public static final String  LBL_TEXBESTAND  = "label.texbestand";
 
-  protected static final  String  MSG_KLAAR = "msg.klaar";
+  public static final String  MSG_KLAAR = "msg.klaar";
 
-  protected static final  String  PAR_CHARSETIN   = "charsetin";
-  protected static final  String  PAR_CHARSETUIT  = "charsetuit";
-  protected static final  String  PAR_CSVBESTAND  = "csvbestand";
-  protected static final  String  PAR_INVOERDIR   = "invoerdir";
-  protected static final  String  PAR_JSONBESTAND = "jsonbestand";
-  protected static final  String  PAR_READONLY    = "readonly";
-  protected static final  String  PAR_TAAL        = "taal";
-  protected static final  String  PAR_TEXBESTAND  = "texbestand";
-  protected static final  String  PAR_UITVOERDIR  = "uitvoerdir";
+  public static final String  PAR_CHARSETIN   = "charsetin";
+  public static final String  PAR_CHARSETUIT  = "charsetuit";
+  public static final String  PAR_CSVBESTAND  = "csvbestand";
+  public static final String  PAR_INVOERDIR   = "invoerdir";
+  public static final String  PAR_JSONBESTAND = "jsonbestand";
+  public static final String  PAR_READONLY    = "readonly";
+  public static final String  PAR_TAAL        = "taal";
+  public static final String  PAR_TEXBESTAND  = "texbestand";
+  public static final String  PAR_UITVOERDIR  = "uitvoerdir";
 
   public static void execute(String[] args) {}
 
