@@ -83,13 +83,13 @@ public final class ParameterBundle {
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(PARAMBUNDLE, Locale.getDefault());
 
-  private String                              applicatie  = DoosConstants.NA;
-  private String                              bannertekst;
-  private int                                 breedte     = 80;
-  private String                              extrahelp;
-  private String                              help;
-  private String                              jar;
-  private int                                 prefix      = 20;
+  private String  applicatie  = DoosConstants.NA;
+  private String  bannertekst;
+  private int     breedte     = 80;
+  private String  extrahelp;
+  private String  help;
+  private String  jar;
+  private int     prefix      = 20;
 
   private final List<String>              argumenten  = new ArrayList<>();
   private final IBanner                   banner;
