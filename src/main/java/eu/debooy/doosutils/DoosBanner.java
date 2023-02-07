@@ -21,8 +21,6 @@ package eu.debooy.doosutils;
  * @author Marco de Booy
  */
 public final class DoosBanner implements IBanner {
-  private DoosBanner() {}
-
   @Override
   public void print(String titel) {
     ManifestInfo  manifestInfo  = new ManifestInfo();
