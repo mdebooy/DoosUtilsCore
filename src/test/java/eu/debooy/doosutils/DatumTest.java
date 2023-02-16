@@ -29,7 +29,7 @@ public class DatumTest extends TestCase {
   @Test
   public void testToDate1() {
     try {
-      var datum = Datum.toDate("01/01/2010");
+      var datum = Datum.toDate("01-01-2010");
     } catch (ParseException e) {
       fail("Geen ParseException verwacht.");
     }
@@ -38,7 +38,7 @@ public class DatumTest extends TestCase {
   @Test
   public void testToDate2() {
     try {
-      var datum = Datum.toDate("01/01/2010 01:01:01",
+      var datum = Datum.toDate("01-01-2010 01:01:01",
                                DoosConstants.DATUM_TIJD);
     } catch (ParseException e) {
       fail("Geen ParseException verwacht.");
@@ -71,27 +71,27 @@ public class DatumTest extends TestCase {
   public void testFromDate1() {
     String  datumString = null;
     try {
-      var datum   = Datum.toDate("01/01/2010");
+      var datum   = Datum.toDate("01-01-2010");
       datumString = Datum.fromDate(datum);
     } catch (ParseException e) {
       fail("Geen ParseException verwacht.");
     }
 
-    assertEquals("01/01/2010", datumString);
+    assertEquals("01-01-2010", datumString);
   }
 
   @Test
   public void testFromDate2() {
     String  datumString = null;
     try {
-      var datum   = Datum.toDate("01/01/2010 01:01:01",
+      var datum   = Datum.toDate("01-01-2010 01:01:01",
                                DoosConstants.DATUM_TIJD);
       datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
     } catch (ParseException e) {
       fail("Geen ParseException verwacht.");
     }
 
-    assertEquals("01/01/2010 01:01:01", datumString);
+    assertEquals("01-01-2010 01:01:01", datumString);
   }
 
   @Test
