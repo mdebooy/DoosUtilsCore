@@ -41,4 +41,6 @@ public final class DoosConstants {
   public static final String  RESOURCEBUNDLE  = "ApplicatieResources";
 
   public static final String  SMTP_HOST = "smtp.debooy.eu";
+
+  public static final String  ERR_UNK_PARAM = "errors.notfound.parameter";
 }
