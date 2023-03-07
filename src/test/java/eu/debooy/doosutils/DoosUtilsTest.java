@@ -53,7 +53,7 @@ public class DoosUtilsTest {
     var methodes  = DoosUtils.findGetters(this.getClass().getMethods());
 
     // Ook de getClass zit erbij.
-    assertEquals(8, methodes.length);
+    assertEquals(8, methodes.size());
   }
 
   @Test
