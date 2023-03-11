@@ -16,7 +16,6 @@
  */
 package eu.debooy.doosutils;
 
-//import static eu.debooy.doosutils.Batchjob.printFouten;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,7 +50,7 @@ public final class ParameterBundle {
   public static final String  ERR_CONF_FOUTIEF  = "error.config.foutief";
   public static final String  ERR_CONF_ONBEKEND = "error.config.onbekend";
   public static final String  ERR_CONF_ONGELIJK = "error.config.types.ongelijk";
-  public static final String  ERR_CONFS_DUBBEL   = "error.config.params.dubbel";
+  public static final String  ERR_CONFS_DUBBEL  = "error.config.params.dubbel";
   public static final String  ERR_PAR_AFWEZIG   = "error.param.afwezig";
   public static final String  ERR_PAR_DUBBEL    = "error.param.dubbel";
   public static final String  ERR_PAR_FOUTIEF   = "error.param.foutief";
@@ -377,11 +376,23 @@ public final class ParameterBundle {
   }
 
   public String getInvoerbestand(String bestand) {
-    return getInvoer(getBestand(bestand));
+    var uitvoer = getBestand(bestand);
+
+    if (null == uitvoer) {
+      return null;
+    }
+
+    return getInvoer(uitvoer);
   }
 
   public String getInvoerbestand(String bestand, String extensie) {
-    return getInvoer(getBestand(bestand, extensie));
+    var uitvoer = getBestand(bestand, extensie);
+
+    if (null == uitvoer) {
+      return null;
+    }
+
+    return getInvoer(uitvoer);
   }
 
   public Locale getLocale() {
@@ -423,7 +434,7 @@ public final class ParameterBundle {
       return null;
     }
 
-    return getParameter(parameter).toString();
+    return param.toString();
   }
 
   private String getUitvoer(String uitvoer) {
@@ -441,7 +452,13 @@ public final class ParameterBundle {
   }
 
   public String getUitvoerbestand(String bestand) {
-    return getUitvoer(getBestand(bestand));
+    var uitvoer = getBestand(bestand);
+
+    if (null == uitvoer) {
+      return null;
+    }
+
+    return getUitvoer(uitvoer);
   }
 
   public String getUitvoerbestand(String bestand, String extensie) {

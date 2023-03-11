@@ -23,7 +23,7 @@ package eu.debooy.doosutils;
 public final class MarcoBanner implements IBanner {
   @Override
   public void print(String titel) {
-    ManifestInfo  manifestInfo  = new ManifestInfo();
+    var manifestInfo  = new ManifestInfo();
 
     DoosUtils.naarScherm("+----------+----------+----------+----------+----------+----------+----------+");
     DoosUtils.naarScherm("|          |          |");
