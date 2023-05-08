@@ -220,4 +220,15 @@ public final class DoosUtils {
 
     return aantal;
   }
+
+  public static String uniekeCharacters(String tekst){
+    var uniek = "";
+    for (int i = 0; i < tekst.length(); i++){
+      if (uniek.indexOf(tekst.charAt(i)) < 0){
+        uniek = uniek + tekst.charAt(i);
+      }
+    }
+
+    return uniek;
+  }
 }
