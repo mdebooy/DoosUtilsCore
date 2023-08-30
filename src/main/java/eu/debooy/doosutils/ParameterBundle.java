@@ -362,6 +362,10 @@ public final class ParameterBundle {
     return help;
   }
 
+  public Integer getInteger(String parameter) {
+    return ((Long) getParameter(parameter)).intValue();
+  }
+
   private String getInvoer(String invoer) {
     if (invoer.contains(DoosUtils.getFileSep())) {
       return invoer;
