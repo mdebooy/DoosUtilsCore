@@ -26,6 +26,92 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class DatumTest extends TestCase {
+  public static final String  FORMAAT   = "yyyy-MM-dd";
+  public static final String  RUSHDATUM = "2112-21-12";
+  public static final String  VANDAAG   = Datum.fromDate(new Date(), FORMAAT);
+
+  @Test
+  public void testFromDate1() {
+    String  datumString = null;
+    try {
+      var datum   = Datum.toDate("01-01-2010");
+      datumString = Datum.fromDate(datum);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+
+    assertEquals("01-01-2010", datumString);
+  }
+
+  @Test
+  public void testFromDate2() {
+    String  datumString = null;
+    try {
+      var datum   = Datum.toDate("01-01-2010 01:01:01",
+                               DoosConstants.DATUM_TIJD);
+      datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
+    } catch (ParseException e) {
+      fail("Geen ParseException verwacht.");
+    }
+
+    assertEquals("01-01-2010 01:01:01", datumString);
+  }
+
+  @Test
+  public void testFromDate3() {
+    var datumString = Datum.fromDate(null, DoosConstants.DATUM_TIJD);
+
+    assertNull(datumString);
+  }
+
+  @Test
+  public void testMax1() {
+    var datum = Datum.max(RUSHDATUM, VANDAAG);
+
+    assertEquals(RUSHDATUM, datum);
+
+    datum = Datum.max(VANDAAG, RUSHDATUM);
+
+    assertEquals(RUSHDATUM, datum);
+  }
+
+  @Test
+  public void testMax2() throws ParseException {
+    var datum = Datum.max(Datum.toDate(RUSHDATUM, FORMAAT),
+                          Datum.toDate(VANDAAG, FORMAAT));
+
+    assertEquals(Datum.toDate(RUSHDATUM, FORMAAT), datum);
+
+    datum = Datum.max(Datum.toDate(VANDAAG, FORMAAT),
+                      Datum.toDate(RUSHDATUM, FORMAAT));
+
+    assertEquals(Datum.toDate(RUSHDATUM, FORMAAT), datum);
+  }
+
+  @Test
+  public void testMin1() {
+    var datum = Datum.min(RUSHDATUM, VANDAAG);
+
+    assertEquals(VANDAAG, datum);
+
+    datum = Datum.min(VANDAAG, RUSHDATUM);
+
+    assertEquals(VANDAAG, datum);
+  }
+
+  @Test
+  public void testMin2() throws ParseException {
+    var datum = Datum.min(Datum.toDate(RUSHDATUM, FORMAAT),
+                          Datum.toDate(VANDAAG, FORMAAT));
+
+    assertEquals(Datum.toDate(VANDAAG, FORMAAT), datum);
+
+    datum = Datum.min(Datum.toDate(VANDAAG, FORMAAT),
+                      Datum.toDate(RUSHDATUM, FORMAAT));
+
+    assertEquals(Datum.toDate(VANDAAG, FORMAAT), datum);
+  }
+
   @Test
   public void testToDate1() {
     try {
@@ -65,39 +151,5 @@ public class DatumTest extends TestCase {
     }
 
     assertNull(datum);
-  }
-
-  @Test
-  public void testFromDate1() {
-    String  datumString = null;
-    try {
-      var datum   = Datum.toDate("01-01-2010");
-      datumString = Datum.fromDate(datum);
-    } catch (ParseException e) {
-      fail("Geen ParseException verwacht.");
-    }
-
-    assertEquals("01-01-2010", datumString);
-  }
-
-  @Test
-  public void testFromDate2() {
-    String  datumString = null;
-    try {
-      var datum   = Datum.toDate("01-01-2010 01:01:01",
-                               DoosConstants.DATUM_TIJD);
-      datumString = Datum.fromDate(datum, DoosConstants.DATUM_TIJD);
-    } catch (ParseException e) {
-      fail("Geen ParseException verwacht.");
-    }
-
-    assertEquals("01-01-2010 01:01:01", datumString);
-  }
-
-  @Test
-  public void testFromDate3() {
-    var datumString = Datum.fromDate(null, DoosConstants.DATUM_TIJD);
-
-    assertNull(datumString);
   }
 }

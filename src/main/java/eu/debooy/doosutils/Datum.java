@@ -44,6 +44,22 @@ public final class Datum {
     return datumFormaat.format(datum);
   }
 
+  public static Date max(Date datum1, Date datum2) {
+    return datum1.after(datum2) ? datum1 : datum2;
+  }
+
+  public static String max(String datum1, String datum2) {
+    return datum1.compareToIgnoreCase(datum2) > 0 ? datum1 : datum2;
+  }
+
+  public static Date min(Date datum1, Date datum2) {
+    return datum1.before(datum2) ? datum1 : datum2;
+  }
+
+  public static String min(String datum1, String datum2) {
+    return datum1.compareToIgnoreCase(datum2) < 0 ? datum1 : datum2;
+  }
+
   public static Date toDate(String datum) throws ParseException {
     return toDate(datum, DoosConstants.DATUM);
   }
