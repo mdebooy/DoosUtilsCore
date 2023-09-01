@@ -332,8 +332,9 @@ public final class ParameterBundle {
   public String getBestand(String parameter, String extensie) {
     var bestand = DoosUtils.nullToValue(getString(parameter),
                                         Parameter.TPY_BESTAND);
+    var deel    = bestand.split("\\.");
 
-    if (bestand.endsWith(extensie)) {
+    if (extensie.equals(deel[deel.length-1])) {
       return bestand;
     }
 
@@ -363,7 +364,13 @@ public final class ParameterBundle {
   }
 
   public Integer getInteger(String parameter) {
-    return ((Long) getParameter(parameter)).intValue();
+    var waarde  = getLong(parameter);
+
+    if (null == waarde) {
+      return null;
+    }
+
+    return waarde.intValue();
   }
 
   private String getInvoer(String invoer) {
@@ -390,13 +397,7 @@ public final class ParameterBundle {
   }
 
   public String getInvoerbestand(String bestand, String extensie) {
-    var uitvoer = getBestand(bestand, extensie);
-
-    if (null == uitvoer) {
-      return null;
-    }
-
-    return getInvoer(uitvoer);
+    return getBestand(bestand, extensie);
   }
 
   public Locale getLocale() {
@@ -591,7 +592,7 @@ public final class ParameterBundle {
       bannertekst = json.get(JSON_KEY_BANNER).toString();
     }
     if (json.containsKey(JSON_KEY_BREEDTE)) {
-      breedte     = Integer.valueOf(json.get(JSON_KEY_BREEDTE).toString());
+      breedte     = Integer.parseInt(json.get(JSON_KEY_BREEDTE).toString());
     }
     if (json.containsKey(JSON_KEY_EXTRAHELP)) {
       extrahelp   = json.get(JSON_KEY_EXTRAHELP).toString();
@@ -606,7 +607,7 @@ public final class ParameterBundle {
       setParameters((JSONArray) json.get(JSON_KEY_PARAMETERS), basis);
     }
     if (json.containsKey(JSON_KEY_PREFIX)) {
-      prefix      = Integer.valueOf(json.get(JSON_KEY_PREFIX).toString());
+      prefix      = Integer.parseInt(json.get(JSON_KEY_PREFIX).toString());
     }
   }
 

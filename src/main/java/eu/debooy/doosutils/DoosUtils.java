@@ -222,13 +222,13 @@ public final class DoosUtils {
   }
 
   public static String uniekeCharacters(String tekst){
-    var uniek = "";
-    for (int i = 0; i < tekst.length(); i++){
-      if (uniek.indexOf(tekst.charAt(i)) < 0){
-        uniek = uniek + tekst.charAt(i);
+    var uniek = new StringBuilder();
+    for (var i = 0; i < tekst.length(); i++){
+      if (uniek.indexOf(String.valueOf(tekst.charAt(i))) < 0){
+        uniek.append(tekst.charAt(i));
       }
     }
 
-    return uniek;
+    return uniek.toString();
   }
 }

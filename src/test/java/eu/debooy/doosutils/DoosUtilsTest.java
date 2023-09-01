@@ -219,4 +219,11 @@ public class DoosUtilsTest {
     assertEquals(4, DoosUtils.telTeken("xyzxyzxyzx", 'x'));
     assertEquals(3, DoosUtils.telTeken("xyzxyzxyzx", 'y'));
   }
+
+  @Test
+  public void testUniekeCharacters() {
+    assertEquals("xyz",     DoosUtils.uniekeCharacters("xyzxyzxyzx"));
+    assertEquals("tesxyz",  DoosUtils.uniekeCharacters("testxyzxyz"));
+    assertEquals(" tes",    DoosUtils.uniekeCharacters("      test"));
+  }
 }
