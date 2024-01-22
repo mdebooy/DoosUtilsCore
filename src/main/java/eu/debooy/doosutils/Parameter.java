@@ -51,6 +51,7 @@ public final class Parameter {
   public static final String  TPY_CHARSET = "charset";
   public static final String  TPY_DATE    = "date";
   public static final String  TPY_DOUBLE  = "double";
+  public static final String  TPY_INTEGER = "integer";
   public static final String  TPY_LOCALE  = "locale";
   public static final String  TPY_LONG    = "long";
   public static final String  TPY_MAP     = "map";
@@ -67,7 +68,7 @@ public final class Parameter {
       Arrays.asList(TPY_BESTAND, TPY_CHARSET, TPY_LOCALE, TPY_MAP);
   protected static final  List<String>  types         =
       Arrays.asList(TPY_BESTAND, TPY_BOOLEAN, TPY_CHARSET, TPY_DATE, TPY_DOUBLE,
-                    TPY_LOCALE, TPY_LONG, TPY_MAP, TPY_STRING);
+                    TPY_INTEGER, TPY_LOCALE, TPY_LONG, TPY_MAP, TPY_STRING);
 
   private static final  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle(ParameterBundle.PARAMBUNDLE,
@@ -305,7 +306,7 @@ public final class Parameter {
         if (waarde.isBlank()) {
           this.waarde = !((Boolean) standaard);
         } else {
-          this.waarde = Boolean.parseBoolean(waarde);
+          this.waarde = Boolean.valueOf(waarde);
         }
         break;
       case TPY_DATE:
@@ -317,6 +318,9 @@ public final class Parameter {
         break;
       case TPY_DOUBLE:
         this.waarde   = Double.valueOf(waarde);
+        break;
+      case TPY_INTEGER:
+        this.waarde   = Integer.valueOf(waarde);
         break;
       case TPY_LONG:
         this.waarde   = Long.valueOf(waarde);
