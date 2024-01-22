@@ -221,6 +221,20 @@ public final class DoosUtils {
     return aantal;
   }
 
+  public static String stripBeginEnEind(String tekst, String fix) {
+    return stripBeginEnEind(tekst, fix, fix);
+  }
+
+  public static String stripBeginEnEind(String tekst,
+                                        String prefix, String suffix) {
+    if (tekst.startsWith(prefix)
+        && tekst.endsWith(suffix)) {
+      return tekst.substring(prefix.length(), tekst.length()-suffix.length());
+    }
+
+    return tekst;
+  }
+
   public static String uniekeCharacters(String tekst){
     var uniek = new StringBuilder();
     for (var i = 0; i < tekst.length(); i++){

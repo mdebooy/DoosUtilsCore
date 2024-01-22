@@ -36,6 +36,8 @@ public class DoosUtilsTest {
   private final PrintStream originalOut = System.out;
   private final PrintStream originalErr = System.err;
 
+  private final String  TEKST = "tekst";
+
   @Before
   public void setUpStreams() {
     System.setOut(new PrintStream(outContent));
@@ -211,6 +213,21 @@ public class DoosUtilsTest {
                               .length());
     assertEquals("abcdefghij", DoosUtils.stringMetLengte("abcdefghijklm", 10,
                                                          "xyz"));
+  }
+
+  @Test
+  public void stripBeginEnEindTest1() {
+    assertEquals(TEKST, DoosUtils.stripBeginEnEind(TEKST, "x"));
+  }
+
+  @Test
+  public void stripBeginEnEindTest2() {
+    assertEquals("eks", DoosUtils.stripBeginEnEind(TEKST, "t"));
+  }
+
+  @Test
+  public void stripBeginEnEindTest3() {
+    assertEquals("k", DoosUtils.stripBeginEnEind(TEKST, "te", "st"));
   }
 
   @Test
