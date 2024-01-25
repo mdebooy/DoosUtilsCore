@@ -33,6 +33,7 @@ public final class DoosConstants {
   public static final String  WAAR    = "J";
 
   public static final String  DATUM         = "dd-MM-yyyy";
+  public static final String  DATUM_SLASH   = "dd/MM/yyyy";
   public static final String  DATUM_TIJD    = "dd-MM-yyyy HH:mm:ss";
   public static final String  SORTEERDATUM  = "yyyyDDD";
 
