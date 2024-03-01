@@ -243,6 +243,22 @@ public final class DoosUtils {
     return tekst;
   }
 
+  public static String stripToLowercase(String tekst) {
+    if (null == tekst) {
+      return null;
+    }
+
+    return tekst.strip().toLowerCase();
+  }
+
+  public static String stripToUppercase(String tekst) {
+    if (null == tekst) {
+      return null;
+    }
+
+    return tekst.strip().toUpperCase();
+  }
+
   public static String uniekeCharacters(String tekst){
     var uniek = new StringBuilder();
     for (var i = 0; i < tekst.length(); i++){

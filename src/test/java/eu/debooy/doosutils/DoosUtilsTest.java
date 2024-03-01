@@ -37,7 +37,8 @@ public class DoosUtilsTest {
   private final PrintStream originalOut = System.out;
   private final PrintStream originalErr = System.err;
 
-  private final String  TEKST = "tekst";
+  private final String  TEKST   = "tekst";
+  private final String  TEKSTU  = "TEKST";
 
   @Before
   public void setUpStreams() {
@@ -217,6 +218,21 @@ public class DoosUtilsTest {
   }
 
   @Test
+  public void stripBeginEnEindTest1() {
+    assertEquals(TEKST, DoosUtils.stripBeginEnEind(TEKST, "x"));
+  }
+
+  @Test
+  public void stripBeginEnEindTest2() {
+    assertEquals("eks", DoosUtils.stripBeginEnEind(TEKST, "t"));
+  }
+
+  @Test
+  public void stripBeginEnEindTest3() {
+    assertEquals("k", DoosUtils.stripBeginEnEind(TEKST, "te", "st"));
+  }
+
+  @Test
   public void stripTest1() {
     assertNull(DoosUtils.strip(null));
   }
@@ -252,18 +268,73 @@ public class DoosUtilsTest {
   }
 
   @Test
-  public void stripBeginEnEindTest1() {
-    assertEquals(TEKST, DoosUtils.stripBeginEnEind(TEKST, "x"));
+  public void stripToLowercaseTest1() {
+    assertNull(DoosUtils.strip(null));
   }
 
   @Test
-  public void stripBeginEnEindTest2() {
-    assertEquals("eks", DoosUtils.stripBeginEnEind(TEKST, "t"));
+  public void stripToLowercaseTest2() {
+    assertEquals(TEKST, DoosUtils.stripToLowercase(TEKSTU + "  "));
   }
 
   @Test
-  public void stripBeginEnEindTest3() {
-    assertEquals("k", DoosUtils.stripBeginEnEind(TEKST, "te", "st"));
+  public void stripToLowercaseTest3() {
+    assertEquals(TEKST, DoosUtils.stripToLowercase("  " + TEKSTU));
+  }
+
+  @Test
+  public void stripToLowercaseTest4() {
+    assertEquals(TEKST, DoosUtils.stripToLowercase("  " + TEKSTU + "  "));
+  }
+
+  @Test
+  public void stripToLowercaseTest5() {
+    assertEquals(TEKST, DoosUtils.stripToLowercase("\t" + TEKSTU + "\t"));
+  }
+
+  @Test
+  public void stripToLowercaseTest6() {
+    assertEquals(TEKST, DoosUtils.stripToLowercase("\t" + TEKSTU + "\n"));
+  }
+
+  @Test
+  public void stripToLowercaseTest7() {
+    assertEquals("", DoosUtils.stripToLowercase("\t \n"));
+  }
+
+  @Test
+  public void stripToUppercaseTest1() {
+    assertNull(DoosUtils.strip(null));
+  }
+
+  @Test
+  public void stripToUppercaseTest2() {
+    assertEquals(TEKSTU, DoosUtils.stripToUppercase(TEKST + "  "));
+  }
+
+  @Test
+  public void stripToUppercaseTest3() {
+    assertEquals(TEKSTU, DoosUtils.stripToUppercase("  " + TEKST));
+  }
+
+  @Test
+  public void stripToUppercaseTest4() {
+    assertEquals(TEKSTU, DoosUtils.stripToUppercase("  " + TEKST + "  "));
+  }
+
+  @Test
+  public void stripToUppercaseTest5() {
+    assertEquals(TEKSTU, DoosUtils.stripToUppercase("\t" + TEKST + "\t"));
+  }
+
+  @Test
+  public void stripToUppercaseTest6() {
+    assertEquals(TEKSTU, DoosUtils.stripToUppercase("\t" + TEKST + "\n"));
+  }
+
+  @Test
+  public void stripToUppercaseTest7() {
+    assertEquals("", DoosUtils.stripToLowercase("\t \n"));
   }
 
   @Test
