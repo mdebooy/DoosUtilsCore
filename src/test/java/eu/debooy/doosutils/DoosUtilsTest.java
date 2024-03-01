@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import org.junit.After;
 import org.junit.Before;
@@ -213,6 +214,41 @@ public class DoosUtilsTest {
                               .length());
     assertEquals("abcdefghij", DoosUtils.stringMetLengte("abcdefghijklm", 10,
                                                          "xyz"));
+  }
+
+  @Test
+  public void stripTest1() {
+    assertNull(DoosUtils.strip(null));
+  }
+
+  @Test
+  public void stripTest2() {
+    assertEquals(TEKST, DoosUtils.strip(TEKST + "  "));
+  }
+
+  @Test
+  public void stripTest3() {
+    assertEquals(TEKST, DoosUtils.strip("  " + TEKST));
+  }
+
+  @Test
+  public void stripTest4() {
+    assertEquals(TEKST, DoosUtils.strip("  " + TEKST + "  "));
+  }
+
+  @Test
+  public void stripTest5() {
+    assertEquals(TEKST, DoosUtils.strip("\t" + TEKST + "\t"));
+  }
+
+  @Test
+  public void stripTest6() {
+    assertEquals(TEKST, DoosUtils.strip("\t" + TEKST + "\n"));
+  }
+
+  @Test
+  public void stripTest7() {
+    assertEquals("", DoosUtils.strip("\t \n"));
   }
 
   @Test

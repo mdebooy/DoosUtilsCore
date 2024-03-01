@@ -221,6 +221,14 @@ public final class DoosUtils {
     return aantal;
   }
 
+  public static String strip(String tekst) {
+    if (null == tekst) {
+      return null;
+    }
+
+    return tekst.strip();
+  }
+
   public static String stripBeginEnEind(String tekst, String fix) {
     return stripBeginEnEind(tekst, fix, fix);
   }
