@@ -250,7 +250,7 @@ public class ParameterBundleTest extends BatchTest {
     assertNull(parameterBundle.getBestand("invoer.csv"));
     assertEquals(TPY_BESTAND, parameterBundle.getBestand(TPY_BESTAND));
     assertEquals("invoer.json.csv", parameterBundle.getBestand("csv"));
-    assertEquals("invoer.csv", parameterBundle.getBestand("csvbestand"));
+    assertEquals("invoer.csv", parameterBundle.getBestand("csvbestand", "csv"));
     assertEquals("invoer.json", parameterBundle.getBestand("jsonbestand"));
     assertEquals(d2112, parameterBundle.getDate("kort"));
     assertEquals(".", parameterBundle.getString("indir"));

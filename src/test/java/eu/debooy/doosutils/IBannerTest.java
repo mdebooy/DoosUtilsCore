@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Marco de Booij
+ * Copyright (c) 2024 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -14,6 +14,7 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
+
 package eu.debooy.doosutils;
 
 import java.io.ByteArrayOutputStream;
@@ -28,12 +29,13 @@ import org.junit.Test;
 /**
  * @author Marco de Booij
  */
-@Deprecated(forRemoval = true, since = "2.1.4")
-public class BannerTest {
+public class IBannerTest {
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
   private final PrintStream originalErr = System.err;
+
+  private IBanner banner;
 
   @Before
   public void setUpStreams() {
@@ -49,23 +51,27 @@ public class BannerTest {
 
   @Test
   public void printDoosBannerTest() {
-    Banner.printDoosBanner("printDoosBannerTest");
+    banner  = new DoosBanner();
 
-    var banner  = outContent.toString().split("\\n");
+    banner.print("printDoosBannerTest");
 
-    assertEquals(10, banner.length);
-    assertTrue(banner[4].endsWith("printDoosBannerTest"));
+    var uitvoer = outContent.toString().split("\\n");
+
+    assertEquals(10, uitvoer.length);
+    assertTrue(uitvoer[4].endsWith("printDoosBannerTest"));
     assertEquals(0, errContent.size());
   }
 
   @Test
   public void printMarcoBannerTest() {
-    Banner.printMarcoBanner("printMarcoBannerTest");
+    banner  = new MarcoBanner();
 
-    var banner  = outContent.toString().split("\\n");
+    banner.print("printMarcoBannerTest");
 
-    assertEquals(12, banner.length);
-    assertTrue(banner[2].endsWith("printMarcoBannerTest"));
+    var uitvoer = outContent.toString().split("\\n");
+
+    assertEquals(12, uitvoer.length);
+    assertTrue(uitvoer[2].endsWith("printMarcoBannerTest"));
     assertEquals(0, errContent.size());
   }
 }
