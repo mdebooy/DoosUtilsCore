@@ -338,7 +338,7 @@ public final class ParameterBundle {
       return bestand;
     }
 
-    return bestand + extensie;
+    return bestand + "." + extensie;
   }
 
   public Boolean getBoolean(String parameter) {

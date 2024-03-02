@@ -187,11 +187,7 @@ public final class Parameter {
   }
 
   public void setExtensie(String extensie) {
-    if (extensie.startsWith(".")) {
-      this.extensie   = extensie;
-    } else {
-      this.extensie   = "." + extensie;
-    }
+    this.extensie   = DoosUtils.stripBeginEnEind(extensie, ".", "");
   }
 
   public void setFormat(String format) {
@@ -295,11 +291,11 @@ public final class Parameter {
     switch (type.toLowerCase()) {
       case TPY_BESTAND:
         if (DoosUtils.isNotBlankOrNull(extensie)
-            && waarde.endsWith(extensie)) {
+            && waarde.endsWith("." + extensie)) {
           this.waarde =
-              waarde.substring(0, waarde.length() - extensie.length());
+              waarde.substring(0, waarde.length() - extensie.length() - 1);
         } else {
-          this.waarde = waarde;
+          this.waarde = DoosUtils.stripBeginEnEind(waarde, "", ".");
         }
         break;
       case TPY_BOOLEAN:

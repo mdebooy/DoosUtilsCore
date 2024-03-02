@@ -115,7 +115,7 @@ public class ParameterTest {
 
     assertEquals("kort", parameter.getParameter());
     assertTrue(parameter.isValid());
-    assertEquals(".csv", parameter.getExtensie());
+    assertEquals("csv", parameter.getExtensie());
     assertNull(parameter.getFormat());
     assertNull(parameter.getHelp());
     assertNull(parameter.getKort());
@@ -129,19 +129,20 @@ public class ParameterTest {
   @Test
   public void testInit5() {
     var         jParam  = "    {\n" +
-"      \"parameter\": \"kort\",\n" +
-"      \"standaard\": \"UTF-8\",\n" +
-"      \"type\": \"charset\",\n" +
-"      \"verplicht\": true\n" +
-"    }";
+                                "      \"parameter\": \"kort\",\n" +
+                                "      \"standaard\": \"UTF-8\",\n" +
+                                "      \"type\": \"charset\",\n" +
+                                "      \"verplicht\": true\n" +
+                                "    }";
     JSONObject  json    = null;
     try {
       json  = (JSONObject) parser.parse(jParam);
     } catch (ParseException e) {
       fail("Geen ParseException verwacht.");
     }
+
     var parameter = new Parameter(json);
-    System.out.println(parameter.toString());
+
     assertEquals("kort", parameter.getParameter());
     assertTrue(parameter.isValid());
     assertNull(parameter.getExtensie());
