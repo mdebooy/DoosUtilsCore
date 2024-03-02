@@ -243,7 +243,7 @@ public final class DoosUtils {
     return tekst;
   }
 
-  public static String stripToLowercase(String tekst) {
+  public static String stripToLowerCase(String tekst) {
     if (null == tekst) {
       return null;
     }
@@ -251,7 +251,7 @@ public final class DoosUtils {
     return tekst.strip().toLowerCase();
   }
 
-  public static String stripToUppercase(String tekst) {
+  public static String stripToUpperCase(String tekst) {
     if (null == tekst) {
       return null;
     }
