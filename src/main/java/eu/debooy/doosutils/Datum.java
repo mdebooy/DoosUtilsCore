@@ -19,6 +19,8 @@ package eu.debooy.doosutils;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 
@@ -62,6 +64,16 @@ public final class Datum {
 
   public static Date toDate(String datum) throws ParseException {
     return toDate(datum, DoosConstants.DATUM);
+  }
+
+  public static Date stripTime(Date datum) {
+    if (null == datum) {
+      return null;
+    }
+
+    var datumTijd  = datum.toInstant().atZone(ZoneId.systemDefault());
+
+    return Date.from(datumTijd.truncatedTo(ChronoUnit.DAYS).toInstant());
   }
 
   public static Date toDate(String datum, String formaat)

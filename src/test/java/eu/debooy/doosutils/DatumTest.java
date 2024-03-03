@@ -113,6 +113,21 @@ public class DatumTest extends TestCase {
   }
 
   @Test
+  public void testStripTime1() {
+    assertNull(Datum.stripTime(null));
+  }
+
+  @Test
+  public void testStripTime2() {
+    var datumTijd = new Date();
+    var tekst     = Datum.fromDate(datumTijd);
+    var datum     = Datum.stripTime(datumTijd);
+
+    assertFalse(datum.equals(datumTijd));
+    assertEquals(tekst, Datum.fromDate(datumTijd));
+  }
+
+  @Test
   public void testToDate1() {
     try {
       var datum = Datum.toDate("01-01-2010");
