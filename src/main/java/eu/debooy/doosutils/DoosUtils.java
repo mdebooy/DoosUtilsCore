@@ -19,7 +19,6 @@ package eu.debooy.doosutils;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import org.apache.commons.beanutils.BeanComparator;
@@ -34,8 +33,8 @@ public final class DoosUtils {
   private DoosUtils() {}
 
   public static List<Method> findGetters(Method[] methodes) {
-    Comparator<Method>  comparator  = new BeanComparator("name");
-    List<Method>        getters     = new ArrayList<>();
+    var           comparator  = new BeanComparator<Method>("name");
+    List<Method>  getters     = new ArrayList<>();
     for (var method : methodes) {
       if (method.getParameterTypes().length == 0) {
         for (String prefix : GET_METHODS_PREFIXES) {

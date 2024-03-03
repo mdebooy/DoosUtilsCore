@@ -636,6 +636,48 @@ public final class ParameterBundle {
     return (fouten == errors.size());
   }
 
+  private void setArg(String parameter, String waarde, String arg,
+                      List<String> foutief) {
+    boolean correct;
+
+    if (parameter.trim().startsWith("--")) {
+      parameter   = parameter.substring(2);
+      correct     = setArgLang(parameter, waarde);
+      if (parameter.contains("=")) {
+        parameter = parameter.split("=")[0];
+      }
+      parameter   = lang.get(parameter);
+    } else {
+      parameter   = kort.get(parameter.substring(1));
+      correct     = setArg(parameter, waarde);
+    }
+
+    if (!argumenten.contains(parameter)) {
+      argumenten.add(parameter);
+    } else {
+      dubbel.add(parameter);
+    }
+
+    Parameter param;
+    if (correct)  {
+      param = params.get(parameter);
+    } else {
+      param = new Parameter();
+      if (arg.startsWith("--")) {
+        param.setLang(arg.substring(2).split("=")[0]);
+      } else {
+        param.setKort(arg.substring(1));
+      }
+    }
+
+    if (!correct
+        || DoosUtils.isBlankOrNull(param.getWaarde())) {
+      foutief.add("-" + DoosUtils.nullToValue(
+          param.getKort(),
+          "-" + DoosUtils.nullToEmpty(param.getLang())));
+    }
+  }
+
   private boolean setArgLang(String arg, String arg2) {
     String  parameter;
     String  waarde;
@@ -655,9 +697,8 @@ public final class ParameterBundle {
       return true;
     }
 
-    var correct = true;
-    var foutief = new ArrayList<String>();
-    var i       = 0;
+    List<String>  foutief = new ArrayList<>();
+    var           i       = 0;
 
     dubbel.clear();
     while (i < args.length) {
@@ -665,62 +706,26 @@ public final class ParameterBundle {
       if (!args[i].trim().startsWith("-")
           || args[i].trim().startsWith("---")) {
         foutief.add(args[i]);
-        correct = false;
         i++;
         continue;
       }
 
-      var     parameter = args[i];
-      var     waarde    = "";
+      var parameter = args[i];
+      var waarde    = "";
       if (i+1 < args.length
           && !args[i+1].trim().startsWith("-")) {
         waarde  = stripQuotes(args[i+1]);
         i++;
       }
 
-      if (parameter.trim().startsWith("--")) {
-        parameter   = parameter.substring(2);
-        correct     = setArgLang(parameter, waarde);
-        if (parameter.contains("=")) {
-          parameter = parameter.split("=")[0];
-        }
-        parameter   = lang.get(parameter);
-      } else {
-        parameter   = kort.get(parameter.substring(1));
-        correct     = setArg(parameter, waarde);
-      }
-
-      if (!argumenten.contains(parameter)) {
-        argumenten.add(parameter);
-      } else {
-        dubbel.add(parameter);
-      }
-
-      Parameter param;
-      if (correct)  {
-        param = params.get(parameter);
-      } else {
-        param = new Parameter();
-        if (arg.startsWith("--")) {
-          param.setLang(arg.substring(2).split("=")[0]);
-        } else {
-          param.setKort(arg.substring(1));
-        }
-      }
-
-      if (!correct
-          || DoosUtils.isBlankOrNull(param.getWaarde())) {
-        foutief.add("-" + DoosUtils.nullToValue(
-            param.getKort(),
-            "-" + DoosUtils.nullToEmpty(param.getLang())));
-      }
+      setArg(parameter, waarde, arg, foutief);
 
       i++;
     }
 
     setInEnkelDubbelVoud(foutief, ERR_PAR_FOUTIEF, ERR_PARS_FOUTIEF);
 
-    return correct && checkArgs();
+    return foutief.isEmpty() && checkArgs();
   }
 
   private void setInEnkelDubbelVoud(List<String> params,

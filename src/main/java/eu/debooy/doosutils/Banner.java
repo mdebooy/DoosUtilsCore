@@ -19,7 +19,9 @@ package eu.debooy.doosutils;
 
 /**
  * @author Marco de Booy
- * @Deprecated Gebruik IBanner
+ *
+ * @deprecated
+ * Gebruik de DoosBanner
  */
 @Deprecated(forRemoval = true, since = "2.1.4")
 public final class Banner {
