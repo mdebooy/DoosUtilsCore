@@ -19,6 +19,7 @@ package eu.debooy.doosutils;
 import java.text.ParseException;
 import java.util.Date;
 import junit.framework.TestCase;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 
@@ -123,7 +124,7 @@ public class DatumTest extends TestCase {
     var tekst     = Datum.fromDate(datumTijd);
     var datum     = Datum.stripTime(datumTijd);
 
-    assertFalse(datum.equals(datumTijd));
+    assertNotEquals(datumTijd, datum);
     assertEquals(tekst, Datum.fromDate(datumTijd));
   }
 
